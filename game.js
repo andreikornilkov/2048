@@ -1,4 +1,4 @@
-// GAME.js - ПОЛНАЯ ВЕРСИЯ С ИСПРАВЛЕННЫМИ БОНУСАМИ
+// GAME.js - ПОЛНАЯ ВЕРСИЯ С ИСПРАВЛЕННЫМИ БОНУСАМИ И СЧЕТАМИ
 class Game2048 {
     constructor() {
         this.config = window.AppConfig || {
@@ -81,7 +81,7 @@ class Game2048 {
             explode: { uses: 2, maxUses: 2 }
         };
         
-        this.updateDisplay();
+        this.updateAllScores();
         this.setupBoardDOM();
         this.updateAbilitiesDisplay();
         
@@ -168,17 +168,40 @@ class Game2048 {
             this.state.score += scoreIncrease;
             this.state.moveCount++;
             
-            // ДОБАВЛЯЕМ ПЛИТКУ ПОСЛЕ КАЖДОГО УСПЕШНОГО ХОДА
             this.addRandomTile();
             
             this.render();
-            this.updateBestScore();
+            // ОБНОВЛЯЕМ ОБА СЧЕТА ОДНОВРЕМЕННО
+            this.updateAllScores();
             
             this.checkWinCondition();
             
             if (!this.canMove(this.state.board)) {
                 this.gameOver();
             }
+        }
+    }
+    
+    // НОВЫЙ МЕТОД ДЛЯ ОБНОВЛЕНИЯ ОБОИХ СЧЕТОВ
+    updateAllScores() {
+        // Обновляем текущий счет
+        if (this.elements.score) {
+            this.elements.score.textContent = this.state.score;
+        }
+        
+        // Проверяем и обновляем рекорд
+        if (this.state.score > this.state.bestScore) {
+            this.state.bestScore = this.state.score;
+            localStorage.setItem('tg_2048_best', this.state.bestScore);
+            
+            if (window.TelegramApp) {
+                window.TelegramApp.showShareButton(this.state.score);
+            }
+        }
+        
+        // Обновляем отображение рекорда
+        if (this.elements.bestScore) {
+            this.elements.bestScore.textContent = this.state.bestScore;
         }
     }
     
@@ -242,6 +265,7 @@ class Game2048 {
         
         this.updateAbilitiesDisplay();
         this.render();
+        this.updateAllScores(); // Обновляем оба счета
         this.showNotice('Действие отменено!');
         return true;
     }
@@ -543,18 +567,11 @@ class Game2048 {
             }
         }
         
-        this.updateDisplay();
+        // УБИРАЕМ вызов updateDisplay() - заменяем на updateAllScores()
         this.state.lastAddedTile = null;
     }
     
-    updateDisplay() {
-        if (this.elements.score) {
-            this.elements.score.textContent = this.state.score;
-        }
-        if (this.elements.bestScore) {
-            this.elements.bestScore.textContent = this.state.bestScore;
-        }
-    }
+    // УДАЛЯЕМ старый метод updateDisplay() и заменяем его на updateAllScores()
     
     gameOver() {
         this.state.isGameOver = true;
@@ -672,17 +689,6 @@ class Game2048 {
         this.state.bestScore = parseInt(localStorage.getItem('tg_2048_best')) || 0;
     }
     
-    updateBestScore() {
-        if (this.state.score > this.state.bestScore) {
-            this.state.bestScore = this.state.score;
-            localStorage.setItem('tg_2048_best', this.state.bestScore);
-            
-            if (window.TelegramApp) {
-                window.TelegramApp.showShareButton(this.state.score);
-            }
-        }
-    }
-    
     showNotice(message, duration = 2000) {
         const notice = this.elements.notice;
         if (notice) {
@@ -709,5 +715,5 @@ if (typeof window.AppConfig === 'undefined') {
 
 document.addEventListener('DOMContentLoaded', () => {
     window.Game2048 = new Game2048();
-    console.log('Игра 2048 с исправленными бонусами и историей инициализирована!');
+    console.log('Игра 2048 с исправленными счетами и бонусами инициализирована!');
 });
