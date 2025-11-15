@@ -12,16 +12,44 @@
         <!-- Главное меню -->
         <div class="main-menu" id="main-menu">
             <div class="menu-content">
-                <h1 class="game-title">2048</h1>
-                <p class="menu-subtitle">Выберите режим игры</p>
+                <div class="top-bar">
+                    <button class="icon-btn" id="main-menu-btn">☰</button>
+                    <button class="icon-btn" id="main-themes-btn">🎨</button>
+                </div>
+
+                <div class="stats-header">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value" id="total-games">0</div>
+                            <div class="stat-label">Всего игр</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="total-wins">0</div>
+                            <div class="stat-label">Побед</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="best-score-overall">0</div>
+                            <div class="stat-label">Рекорд</div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="menu-buttons">
-                    <button class="tg-button large" id="play-4x4">
-                        <span class="button-title">Игра 4×4</span>
-                        <span class="button-desc">Цель: 2048</span>
+                    <button class="tg-button large mode-btn" data-mode="4x4">
+                        <span class="button-title">4×4</span>
+                        <span class="button-desc">Классический (2048)</span>
                     </button>
-                    <button class="tg-button large" id="play-5x5">
-                        <span class="button-title">Игра 5×5</span>
-                        <span class="button-desc">Цель: 4096</span>
+                    <button class="tg-button large mode-btn" data-mode="5x5">
+                        <span class="button-title">5×5</span>
+                        <span class="button-desc">Релакс (4096)</span>
+                    </button>
+                    <button class="tg-button large mode-btn" data-mode="4x4-time">
+                        <span class="button-title">4×4</span>
+                        <span class="button-desc">На время (90 секунд)</span>
+                    </button>
+                    <button class="tg-button large mode-btn" data-mode="5x5-zen">
+                        <span class="button-title">5×5</span>
+                        <span class="button-desc">Бесконечный дзен</span>
                     </button>
                 </div>
             </div>
@@ -31,89 +59,136 @@
         <div class="game-screen" id="game-screen" style="display: none;">
             <header class="app-header">
                 <div class="header-content">
-                    <h1 class="game-title">2048</h1>
-                    <div class="scores">
-                        <div class="score-box">
-                            <span>Счет</span>
+                    <button class="menu-btn" id="game-menu-btn">☰</button>
+                    <div class="game-stats">
+                        <div class="stat-display" id="best-tile-container">
+                            <span>Лучшая плитка:</span>
+                            <strong id="best-tile">0</strong>
+                        </div>
+                        <div class="stat-display" id="time-container" style="display: none;">
+                            <span>Время:</span>
+                            <strong id="time-left">90</strong>
+                        </div>
+                        <div class="stat-display">
+                            <span>Счет игры:</span>
                             <strong id="score">0</strong>
                         </div>
-                        <div class="score-box">
-                            <span>Рекорд</span>
-                            <strong id="best-score">0</strong>
-                        </div>
+                    </div>
+                    <div class="new-record-badge" id="new-record-badge" style="display: none;">
+                        Новый рекорд!
                     </div>
                 </div>
             </header>
 
             <main class="game-container">
                 <div class="game-board" id="board"></div>
-                
-                <!-- Панель способностей -->
-                <div class="abilities-panel">
-                    <div class="ability-buttons">
-                        <button class="ability-btn" id="undo-btn" data-uses="2">
-                            <span class="ability-icon">↶</span>
-                            <span class="ability-text">Отменить ход</span>
-                            <span class="ability-uses">2</span>
-                        </button>
-                        <button class="ability-btn" id="remove-twos-btn" data-uses="2">
-                            <span class="ability-icon">2</span>
-                            <span class="ability-text">Убрать двойки</span>
-                            <span class="ability-uses">2</span>
-                        </button>
-                        <button class="ability-btn" id="explode-btn" data-uses="2">
-                            <span class="ability-icon">💥</span>
-                            <span class="ability-text">Взорвать 35%</span>
-                            <span class="ability-uses">2</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Основные кнопки управления -->
-                <div class="game-controls">
-                    <button class="tg-button secondary" id="menu-btn">Меню</button>
-                    <button class="tg-button" id="restart-btn">Новая игра</button>
-                </div>
             </main>
         </div>
 
-        <!-- Модальное окно победы -->
-        <div class="modal" id="win-modal">
-            <div class="modal-content win-modal">
-                <div class="win-icon">🎉</div>
-                <h3>Вы победили!</h3>
-                <div class="win-stats">
-                    <div class="win-stat">
-                        <span>Ваш счет:</span>
-                        <strong id="win-score">0</strong>
-                    </div>
-                    <div class="win-stat">
-                        <span>Достигнутая цель:</span>
-                        <strong id="win-target">2048</strong>
-                    </div>
-                </div>
-                <p class="win-message">Можете продолжить игру для улучшения результата!</p>
-                <button class="tg-button large" id="continue-btn">Продолжить</button>
-            </div>
-        </div>
+        <!-- Модальные окна -->
+        <div class="modal" id="game-end-modal"></div>
+        <div class="modal" id="stats-modal"></div>
 
-        <!-- Модальное окно настроек -->
-        <div class="modal" id="settings-modal">
+        <div class="modal" id="main-menu-modal">
             <div class="modal-content">
-                <h3>Настройки игры</h3>
-                <div class="setting-group">
-                    <label>Размер поля:</label>
-                    <select id="board-size">
-                        <option value="4">4×4 (цель: 2048)</option>
-                        <option value="5">5×5 (цель: 4096)</option>
-                    </select>
+                <button class="close-btn" id="close-main-menu">×</button>
+                <h3>Меню</h3>
+                <div class="menu-options">
+                    <button class="tg-button secondary" id="main-stats-btn">Моя статистика</button>
+                    <button class="tg-button secondary" id="main-cheat-btn">Чит код</button>
+                    <div class="setting-option">
+                        <span>Вибрация</span>
+                        <label class="switch">
+                            <input type="checkbox" id="main-vibration-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
                 </div>
-                <button class="tg-button" id="save-settings">Сохранить</button>
             </div>
         </div>
 
-        <!-- Уведомления -->
-        <div class="tg-notice" id="notice"></div>
+        <div class="modal" id="in-game-menu-modal">
+            <div class="modal-content">
+                <button class="close-btn" id="close-game-menu">×</button>
+                <h3>Меню</h3>
+                <div class="menu-options">
+                    <button class="tg-button" id="restart-game-btn">Начать заново</button>
+                    <button class="tg-button secondary" id="to-lobby-btn">Выйти в лобби</button>
+                    <button class="tg-button secondary" id="game-stats-btn">Моя статистика</button>
+                    <button class="tg-button secondary" id="game-cheat-btn">Чит код</button>
+                    <div class="setting-option">
+                        <span>Вибрация</span>
+                        <label class="switch">
+                            <input type="checkbox" id="vibration-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="themes-modal">
+            <div class="modal-content">
+                <button class="close-btn" id="close-themes">×</button>
+                <h3>Темы</h3>
+                <div class="themes-grid">
+                    <div class="theme-option" data-theme="default">
+                        <div class="theme-preview" style="background: linear-gradient(135deg, #635BFF, #8B85FF);"></div>
+                        <span>По умолчанию</span>
+                    </div>
+                    <div class="theme-option" data-theme="green">
+                        <div class="theme-preview" style="background: linear-gradient(135deg, #4CAF50, #45a049);"></div>
+                        <span>Зеленая</span>
+                    </div>
+                    <div class="theme-option" data-theme="purple">
+                        <div class="theme-preview" style="background: linear-gradient(135deg, #9C27B0, #7B1FA2);"></div>
+                        <span>Фиолетовая</span>
+                    </div>
+                    <div class="theme-option" data-theme="orange">
+                        <div class="theme-preview" style="background: linear-gradient(135deg, #FF9800, #F57C00);"></div>
+                        <span>Оранжевая</span>
+                    </div>
+                    <div class="theme-option" data-theme="blue">
+                        <div class="theme-preview" style="background: linear-gradient(135deg, #2196F3, #1976D2);"></div>
+                        <span>Синяя</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="cheat-modal">
+            <div class="modal-content">
+                <button class="close-btn" id="close-cheat">×</button>
+                <h3>Чит код</h3>
+                <div class="cheat-content">
+                    <input type="text" 
+                           id="cheat-input" 
+                           placeholder="Введите чит код..."
+                           maxlength="20"
+                           class="cheat-input">
+                    <button class="tg-button large" id="apply-cheat-btn">Применить</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="confirm-modal">
+            <div class="modal-content">
+                <h3 id="confirm-title">Подтверждение</h3>
+                <p id="confirm-message">Вы уверены?</p>
+                <div class="confirm-actions">
+                    <button class="tg-button" id="confirm-yes">Да</button>
+                    <button class="tg-button secondary" id="confirm-no">Нет</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="start-time-modal">
+            <div class="modal-content">
+                <h3>Готовы?</h3>
+                <p>У вас есть 90 секунд!</p>
+                <button class="tg-button large" id="start-time-btn">Начать!</button>
+            </div>
+        </div>
     </div>
 
     <script src="config.js"></script>

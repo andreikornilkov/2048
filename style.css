@@ -1,24 +1,22 @@
-/* CSS переменные для легкой настройки под ваш дизайн из Figma */
+/* style.css - полные стили игры */
 :root {
-    /* Цвета - настройте под свой дизайн */
     --tg-bg-color: #faf8ef;
     --tg-primary-color: #635BFF;
     --tg-secondary-color: #8B85FF;
     --tg-text-color: #222222;
     --tg-border-color: #dddddd;
     --tg-success-color: #4CAF50;
+    --tg-warning-color: #FF9800;
+    --tg-danger-color: #F44336;
     
-    /* Размеры */
     --tile-size: 70px;
     --gap-size: 5px;
     --border-radius: 10px;
     
-    /* Анимации */
     --transition-fast: 0.15s;
     --transition-slow: 0.3s;
 }
 
-/* Базовые стили */
 * {
     margin: 0;
     padding: 0;
@@ -27,8 +25,8 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: var(--tg-bg-color, #faf8ef);
-    color: var(--tg-text-color, #222);
+    background: var(--tg-bg-color);
+    color: var(--tg-text-color);
     height: 100vh;
     overflow: hidden;
 }
@@ -49,6 +47,8 @@ body {
     justify-content: center;
     background: linear-gradient(135deg, var(--tg-primary-color), var(--tg-secondary-color));
     color: white;
+    position: relative;
+    z-index: 1;
 }
 
 .menu-content {
@@ -56,18 +56,124 @@ body {
     padding: 20px;
     max-width: 400px;
     width: 90%;
+    position: relative;
+    z-index: 2;
 }
 
-.menu-subtitle {
-    margin: 10px 0 30px;
-    font-size: 18px;
-    opacity: 0.9;
-}
-
-.menu-buttons {
+/* Верхняя панель */
+.top-bar {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.icon-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    transition: background var(--transition-fast);
+}
+
+.icon-btn:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+/* Статистика */
+.stats-header {
+    margin-bottom: 30px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 15px;
+}
+
+.stat-item {
+    background: rgba(255,255,255,0.15);
+    padding: 15px 8px;
+    border-radius: var(--border-radius);
+    backdrop-filter: blur(10px);
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: white;
+}
+
+.stat-label {
+    font-size: 12px;
+    opacity: 0.9;
+    font-weight: 500;
+    color: white;
+}
+
+/* Кнопки режимов */
+.menu-buttons {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.tg-button {
+    background: rgba(255,255,255,0.9);
+    color: var(--tg-primary-color);
+    border: none;
+    padding: 16px 20px;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    backdrop-filter: blur(10px);
+}
+
+.tg-button:hover {
+    background: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.tg-button.large {
+    padding: 18px 20px;
+}
+
+.tg-button.secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid rgba(255,255,255,0.3);
+}
+
+.tg-button.secondary:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: white;
+}
+
+.button-title {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--tg-primary-color);
+}
+
+.button-desc {
+    display: block;
+    font-size: 13px;
+    opacity: 0.8;
+    color: var(--tg-primary-color);
 }
 
 /* Игровой экран */
@@ -79,7 +185,7 @@ body {
 
 /* Header */
 .app-header {
-    background: var(--tg-primary-color, #635BFF);
+    background: var(--tg-primary-color);
     color: white;
     padding: 12px 16px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -87,38 +193,70 @@ body {
 
 .header-content {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
     max-width: 500px;
     margin: 0 auto;
+    gap: 10px;
+    flex-wrap: nowrap;
 }
 
-.game-title {
-    font-size: 24px;
-    font-weight: 700;
-}
-
-.scores {
-    display: flex;
-    gap: 12px;
-}
-
-.score-box {
-    background: rgba(255,255,255,0.2);
-    padding: 8px 12px;
+.menu-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 8px;
     border-radius: 6px;
-    text-align: center;
-    min-width: 70px;
+    transition: background var(--transition-fast);
 }
 
-.score-box span {
-    display: block;
+.menu-btn:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.game-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.stat-display {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    gap: 8px;
+}
+
+.stat-display span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.stat-display strong {
+    white-space: nowrap;
+    min-width: 40px;
+    text-align: right;
+}
+
+.new-record-badge {
+    background: var(--tg-warning-color);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 12px;
     font-size: 12px;
-    opacity: 0.9;
+    font-weight: 600;
+    animation: pulse 2s infinite;
+    white-space: nowrap;
 }
 
-.score-box strong {
-    font-size: 18px;
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
 }
 
 /* Игровое поле */
@@ -163,7 +301,7 @@ body {
     font-weight: 700;
     font-size: 20px;
     user-select: none;
-    transition: all var(--transition-fast) ease;
+    transition: all var(--transition-fast);
 }
 
 /* Цвета плиток */
@@ -180,128 +318,6 @@ body {
 .tile[data-value="2048"] { background: #edc22e; color: white; font-size: 16px; }
 .tile[data-value="4096"] { background: #3c3a32; color: white; font-size: 16px; }
 
-/* Панель способностей */
-.abilities-panel {
-    margin: 15px 0;
-    width: 100%;
-    max-width: 400px;
-}
-
-.ability-buttons {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-}
-
-.ability-btn {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px 8px;
-    background: white;
-    border: 2px solid var(--tg-border-color);
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: all var(--transition-fast) ease;
-    min-height: 60px;
-}
-
-.ability-btn:hover:not(:disabled) {
-    border-color: var(--tg-primary-color);
-    transform: translateY(-2px);
-}
-
-.ability-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.ability-icon {
-    font-size: 16px;
-    margin-bottom: 4px;
-}
-
-.ability-text {
-    font-size: 11px;
-    text-align: center;
-    margin-bottom: 4px;
-    font-weight: 600;
-}
-
-.ability-uses {
-    font-size: 10px;
-    background: var(--tg-primary-color);
-    color: white;
-    padding: 2px 6px;
-    border-radius: 10px;
-    min-width: 20px;
-}
-
-/* Кнопки */
-.tg-button {
-    background: var(--tg-primary-color, #635BFF);
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: var(--border-radius);
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all var(--transition-fast) ease;
-    margin: 5px;
-}
-
-.tg-button:hover {
-    background: var(--tg-secondary-color, #8B85FF);
-    transform: translateY(-1px);
-}
-
-.tg-button.secondary {
-    background: transparent;
-    color: var(--tg-primary-color);
-    border: 2px solid var(--tg-primary-color);
-}
-
-.tg-button.large {
-    padding: 16px 24px;
-    font-size: 18px;
-}
-
-.tg-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-}
-
-/* Специальные стили для кнопок меню */
-.button-title {
-    display: block;
-    font-size: 20px;
-    font-weight: 700;
-}
-
-.button-desc {
-    display: block;
-    font-size: 14px;
-    opacity: 0.8;
-    margin-top: 4px;
-}
-
-/* Уведомления */
-.tg-notice {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0,0,0,0.8);
-    color: white;
-    padding: 16px 24px;
-    border-radius: var(--border-radius);
-    display: none;
-    z-index: 1000;
-}
-
 /* Модальные окна */
 .modal {
     display: none;
@@ -311,7 +327,7 @@ body {
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,0.5);
-    z-index: 999;
+    z-index: 1000;
 }
 
 .modal-content {
@@ -325,23 +341,47 @@ body {
     max-width: 90%;
     width: 320px;
     text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
-.win-modal {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--tg-text-color);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--transition-fast);
+}
+
+.close-btn:hover {
+    background: var(--tg-bg-color);
+}
+
+/* Окно завершения игры */
+.game-end-modal {
+    background: linear-gradient(135deg, var(--tg-primary-color), var(--tg-secondary-color));
     color: white;
 }
 
-.win-icon {
+.game-end-icon {
     font-size: 48px;
     margin-bottom: 16px;
 }
 
-.win-stats {
+.game-end-stats {
     margin: 20px 0;
 }
 
-.win-stat {
+.game-end-stat {
     display: flex;
     justify-content: space-between;
     margin: 10px 0;
@@ -349,72 +389,212 @@ body {
     border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 
-.win-message {
-    margin: 16px 0;
-    opacity: 0.9;
-    line-height: 1.4;
+/* Отображение плитки в окне завершения */
+.tile-display {
+    margin: 20px 0;
+    text-align: center;
 }
 
-.setting-group {
-    margin: 16px 0;
+.tile-value {
+    font-size: 48px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 8px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Меню в игре */
+.menu-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.menu-options .tg-button {
+    width: 100%;
+    margin: 5px 0;
+    padding: 12px 16px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.menu-options .tg-button.secondary {
+    background: transparent;
+    color: var(--tg-primary-color);
+    border: 2px solid var(--tg-primary-color);
+}
+
+.menu-options .tg-button.secondary:hover {
+    background: var(--tg-primary-color);
+    color: white;
+}
+
+.setting-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--tg-border-color);
+}
+
+/* Переключатель */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--tg-primary-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+/* Статистика */
+.stats-content {
     text-align: left;
 }
 
-.setting-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
+.stats-section {
+    margin-bottom: 20px;
 }
 
-.setting-group select {
-    width: 100%;
-    padding: 10px;
-    border: 2px solid var(--tg-border-color);
-    border-radius: 6px;
-    font-size: 16px;
-}
-
-/* Game Over Overlay */
-.game-over {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.9);
+.stat-row {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: bold;
-    border-radius: var(--border-radius);
-    z-index: 100;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--tg-border-color);
+    font-size: 15px;
 }
 
-/* Адаптивность */
-@media (max-width: 480px) {
-    :root {
-        --tile-size: 60px;
-    }
-    
-    .header-content {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .scores {
-        width: 100%;
-        justify-content: space-around;
-    }
-    
-    .ability-text {
-        font-size: 10px;
-    }
-    
-    .ability-btn {
-        padding: 8px 4px;
-        min-height: 55px;
-    }
+.stats-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.stats-actions .tg-button {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    margin: 5px 0;
+}
+
+/* Гарантируем видимость всех кнопок */
+#reset-best-score-btn,
+#reset-all-stats-btn {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+    position: relative;
+    z-index: 10;
+}
+
+/* Темы */
+.themes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.theme-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 15px 10px;
+    border-radius: var(--border-radius);
+    transition: background var(--transition-fast);
+    border: 2px solid transparent;
+}
+
+.theme-option:hover {
+    background: var(--tg-bg-color);
+}
+
+.theme-option.active {
+    border-color: var(--tg-primary-color);
+}
+
+.theme-preview {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid var(--tg-border-color);
+}
+
+/* Подтверждение */
+.confirm-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.confirm-actions .tg-button {
+    flex: 1;
+}
+
+/* Чит-коды */
+.cheat-content {
+    padding: 20px 0;
+    text-align: center;
+}
+
+.cheat-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--tg-border-color);
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-family: monospace;
+    text-transform: uppercase;
+}
+
+.cheat-input:focus {
+    outline: none;
+    border-color: var(--tg-primary-color);
 }
 
 /* Анимации */
@@ -436,4 +616,104 @@ body {
 
 .tile.merged {
     animation: tileMerge 0.2s ease;
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+    :root {
+        --tile-size: 60px;
+    }
+    
+    .menu-content {
+        padding: 15px;
+    }
+    
+    .stats-grid {
+        gap: 10px;
+    }
+    
+    .stat-value {
+        font-size: 20px;
+    }
+    
+    .stat-item {
+        padding: 12px 6px;
+    }
+    
+    .header-content {
+        flex-direction: row;
+        gap: 8px;
+    }
+    
+    .game-stats {
+        gap: 3px;
+    }
+    
+    .stat-display {
+        font-size: 12px;
+    }
+    
+    .stat-display strong {
+        min-width: 35px;
+        font-size: 12px;
+    }
+    
+    .new-record-badge {
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+    
+    .menu-btn {
+        font-size: 18px;
+        padding: 6px;
+    }
+    
+    .modal-content {
+        padding: 20px;
+        width: 300px;
+    }
+    
+    .tile-value {
+        font-size: 36px;
+    }
+}
+
+@media (max-width: 380px) {
+    .stat-display {
+        font-size: 11px;
+    }
+    
+    .stat-display strong {
+        min-width: 30px;
+        font-size: 11px;
+    }
+    
+    .game-stats {
+        gap: 2px;
+    }
+    
+    .modal-content {
+        width: 280px;
+        padding: 16px;
+    }
+    
+    .menu-content {
+        padding: 12px;
+    }
+    
+    .stats-grid {
+        gap: 8px;
+    }
+    
+    .stat-item {
+        padding: 10px 4px;
+    }
+    
+    .stat-value {
+        font-size: 18px;
+    }
+    
+    .tile-value {
+        font-size: 32px;
+    }
 }
