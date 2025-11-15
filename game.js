@@ -1,4 +1,4 @@
-// game.js - полный файл с исправленным таймером и форматированием счетов
+// game.js - полный файл с исправленным отображением поля
 class Game2048 {
     constructor() {
         this.config = window.AppConfig;
@@ -45,7 +45,6 @@ class Game2048 {
             timerInterval: null,
             totalGames: 0,
             totalWins: 0,
-            vibration: true,
             currentTheme: 'default',
             gamePaused: false
         };
@@ -81,19 +80,6 @@ class Game2048 {
             return (num / 1000000000).toFixed(2).replace('.', ',') + ' B';
         } else {
             return (num / 1000000000000).toFixed(2).replace('.', ',') + ' T';
-        }
-    }
-    
-    // ВИБРАЦИЯ
-    vibrate(duration) {
-        if (!this.state.vibration) return;
-        
-        try {
-            if (navigator.vibrate) {
-                navigator.vibrate(duration);
-            }
-        } catch (error) {
-            console.log('Вибрация не поддерживается');
         }
     }
     
@@ -222,9 +208,9 @@ class Game2048 {
     
     setupBoardDOM() {
         const { size } = this.state;
-        const tileSize = 70;
+        const tileSize = 70; // Красивый размер плиток
         const gap = 5;
-        const boardSize = size * tileSize + (size - 1) * gap + 10;
+        const boardSize = size * tileSize + (size - 1) * gap + 10; // Аккуратные отступы
         
         const board = this.elements['board'];
         if (!board) return;
@@ -233,6 +219,7 @@ class Game2048 {
         board.style.height = `${boardSize}px`;
         board.style.gridTemplateColumns = `repeat(${size}, ${tileSize}px)`;
         board.style.gridTemplateRows = `repeat(${size}, ${tileSize}px)`;
+        board.style.gap = `${gap}px`;
         
         board.innerHTML = '';
         const fragment = document.createDocumentFragment();
@@ -295,14 +282,6 @@ class Game2048 {
         const { moved, newBoard, scoreIncrease, merged } = this.move(this.state.board, direction);
         
         if (moved) {
-            this.vibrate(this.config.VIBRATION.MOVE);
-            
-            if (merged > 0) {
-                setTimeout(() => {
-                    this.vibrate(this.config.VIBRATION.MERGE);
-                }, 100);
-            }
-            
             this.saveToHistory('move', { direction, scoreIncrease });
             
             this.state.board = newBoard;
@@ -350,7 +329,6 @@ class Game2048 {
         for (let r = 0; r < this.state.size; r++) {
             for (let c = 0; c < this.state.size; c++) {
                 if (this.state.board[r][c] === this.state.targetTile) {
-                    this.vibrate(this.config.VIBRATION.WIN);
                     this.showGameEndScreen(true);
                     return;
                 }
@@ -368,8 +346,6 @@ class Game2048 {
             this.state.totalWins++;
             isWin = true;
         }
-        
-        this.vibrate(isWin ? this.config.VIBRATION.WIN : this.config.VIBRATION.LOSE);
         
         this.saveStatistics();
         
@@ -408,7 +384,6 @@ class Game2048 {
         const menuButton = modal.querySelector('#to-main-menu-btn');
         if (menuButton) {
             menuButton.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
                 this.showMainMenu();
             });
         }
@@ -434,7 +409,7 @@ class Game2048 {
         this.showGameEndScreen(false);
     }
     
-    // ЧИТ-КОДЫ - ИСПРАВЛЕННАЯ ЛОГИКА ТАЙМЕРА
+    // ЧИТ-КОДЫ
     applyCheatCode(code) {
         const upperCode = code.toUpperCase().trim();
         
@@ -452,18 +427,14 @@ class Game2048 {
         };
         
         if (cheats[upperCode]) {
-            this.vibrate(this.config.VIBRATION.BUTTON);
-            
             const success = cheats[upperCode]();
             
             if (success) {
-                // После успешного применения чита закрываем модальное окно
                 const cheatModal = document.getElementById('cheat-modal');
                 const cheatInput = document.getElementById('cheat-input');
                 if (cheatModal) cheatModal.style.display = 'none';
                 if (cheatInput) cheatInput.value = '';
                 
-                // В режиме на время возобновляем таймер после применения чита
                 if (this.state.gameMode === '4x4-time' && this.state.gamePaused) {
                     this.resumeTimer();
                 }
@@ -581,7 +552,6 @@ class Game2048 {
     cheatOrganizeTilesDiagonal() {
         const tiles = [];
         
-        // Собираем все ненулевые плитки
         for (let r = 0; r < this.state.size; r++) {
             for (let c = 0; c < this.state.size; c++) {
                 if (this.state.board[r][c] > 0) {
@@ -590,16 +560,12 @@ class Game2048 {
             }
         }
         
-        // Сортируем плитки по убыванию (самые большие в начале)
         tiles.sort((a, b) => b - a);
         
-        // Создаем новую пустую доску
         const newBoard = this.createEmptyBoard(this.state.size);
         
         let tileIndex = 0;
         
-        // Заполняем диагонали от правого верхнего угла к левому нижнему
-        // Главная диагональ и выше - от правого верхнего угла
         for (let diag = this.state.size - 1; diag >= 0; diag--) {
             let r = 0;
             let c = diag;
@@ -613,7 +579,6 @@ class Game2048 {
             }
         }
         
-        // Диагонали ниже главной - продолжаем заполнение
         for (let diag = 1; diag < this.state.size; diag++) {
             let r = diag;
             let c = 0;
@@ -627,7 +592,6 @@ class Game2048 {
             }
         }
         
-        // Копируем новую доску в состояние игры
         for (let r = 0; r < this.state.size; r++) {
             for (let c = 0; c < this.state.size; c++) {
                 this.state.board[r][c] = newBoard[r][c];
@@ -643,7 +607,6 @@ class Game2048 {
         const tiles = [];
         const positions = [];
         
-        // Собираем все плитки и их позиции
         for (let r = 0; r < this.state.size; r++) {
             for (let c = 0; c < this.state.size; c++) {
                 if (this.state.board[r][c] > 0) {
@@ -653,13 +616,11 @@ class Game2048 {
             }
         }
         
-        // Перемешиваем плитки
         for (let i = tiles.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
         }
         
-        // Заполняем поле перемешанными плитками
         for (let i = 0; i < positions.length; i++) {
             const { r, c } = positions[i];
             this.state.board[r][c] = tiles[i];
@@ -766,22 +727,14 @@ class Game2048 {
     
     loadSettings() {
         const settings = JSON.parse(localStorage.getItem('tg_2048_settings')) || {
-            vibration: true, theme: 'default'
+            theme: 'default'
         };
         
-        this.state.vibration = settings.vibration;
         this.state.currentTheme = settings.theme;
-        
-        const toggles = ['main-vibration-toggle', 'vibration-toggle'];
-        toggles.forEach(id => {
-            const toggle = document.getElementById(id);
-            if (toggle) toggle.checked = this.state.vibration;
-        });
     }
     
     saveSettings() {
         const settings = {
-            vibration: this.state.vibration,
             theme: this.state.currentTheme
         };
         localStorage.setItem('tg_2048_settings', JSON.stringify(settings));
@@ -923,7 +876,6 @@ class Game2048 {
         // Кнопки режимов игры
         document.querySelectorAll('.mode-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
                 const mode = e.currentTarget.getAttribute('data-mode');
                 if (mode) this.start(mode);
             });
@@ -933,7 +885,6 @@ class Game2048 {
         const mainMenuBtn = document.getElementById('main-menu-btn');
         if (mainMenuBtn) {
             mainMenuBtn.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
                 document.getElementById('main-menu-modal').style.display = 'block';
             });
         }
@@ -941,7 +892,6 @@ class Game2048 {
         const mainThemesBtn = document.getElementById('main-themes-btn');
         if (mainThemesBtn) {
             mainThemesBtn.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
                 document.getElementById('themes-modal').style.display = 'block';
             });
         }
@@ -949,17 +899,14 @@ class Game2048 {
         const closeMainMenu = document.getElementById('close-main-menu');
         if (closeMainMenu) {
             closeMainMenu.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
                 document.getElementById('main-menu-modal').style.display = 'none';
             });
         }
         
-        // Чит-коды - ИСПРАВЛЕННАЯ ЛОГИКА ОТКРЫТИЯ/ЗАКРЫТИЯ
+        // Чит-коды
         const mainCheatBtn = document.getElementById('main-cheat-btn');
         if (mainCheatBtn) {
             mainCheatBtn.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
-                // В режиме на время паузим таймер при открытии модального окна
                 if (this.state.gameMode === '4x4-time') {
                     this.pauseTimer();
                 }
@@ -971,8 +918,6 @@ class Game2048 {
         const gameCheatBtn = document.getElementById('game-cheat-btn');
         if (gameCheatBtn) {
             gameCheatBtn.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
-                // В режиме на время паузим таймер при открытии модального окна
                 if (this.state.gameMode === '4x4-time') {
                     this.pauseTimer();
                 }
@@ -984,13 +929,10 @@ class Game2048 {
         const closeCheat = document.getElementById('close-cheat');
         if (closeCheat) {
             closeCheat.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
                 document.getElementById('cheat-modal').style.display = 'none';
-                // В режиме на время возобновляем таймер при закрытии модального окна
                 if (this.state.gameMode === '4x4-time' && this.state.gamePaused) {
                     this.resumeTimer();
                 }
-                // Возвращаемся в предыдущее меню
                 if (this.state.gamePaused) {
                     document.getElementById('in-game-menu-modal').style.display = 'block';
                 } else {
@@ -1002,7 +944,6 @@ class Game2048 {
         const applyCheatBtn = document.getElementById('apply-cheat-btn');
         if (applyCheatBtn) {
             applyCheatBtn.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
                 const cheatInput = document.getElementById('cheat-input');
                 const code = cheatInput ? cheatInput.value : '';
                 
@@ -1016,34 +957,19 @@ class Game2048 {
             });
         }
         
-        // Вибрация
-        const mainVibrationToggle = document.getElementById('main-vibration-toggle');
-        if (mainVibrationToggle) {
-            mainVibrationToggle.addEventListener('change', (e) => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
-                this.state.vibration = e.target.checked;
-                const vibrationToggle = document.getElementById('vibration-toggle');
-                if (vibrationToggle) vibrationToggle.checked = this.state.vibration;
-                this.saveSettings();
-            });
-        }
-        
-        // Статистика - ИСПРАВЛЕННАЯ ЛОГИКА
+        // Статистика
         const mainStatsBtn = document.getElementById('main-stats-btn');
         if (mainStatsBtn) {
             mainStatsBtn.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
-                // Закрываем основное меню и открываем статистику
                 document.getElementById('main-menu-modal').style.display = 'none';
                 this.showStatsModal();
             });
         }
         
-        // Кнопки управления в игре - ИСПРАВЛЕННАЯ ЛОГИКА ПЕРЕЗАПУСКА
+        // Кнопки управления в игре
         const gameMenuBtn = document.getElementById('game-menu-btn');
         if (gameMenuBtn) {
             gameMenuBtn.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
                 this.pauseTimer();
                 document.getElementById('in-game-menu-modal').style.display = 'block';
             });
@@ -1052,7 +978,6 @@ class Game2048 {
         const toMainMenuBtn = document.getElementById('to-main-menu-btn');
         if (toMainMenuBtn) {
             toMainMenuBtn.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
                 this.showMainMenu();
             });
         }
@@ -1060,7 +985,6 @@ class Game2048 {
         const startTimeBtn = document.getElementById('start-time-btn');
         if (startTimeBtn) {
             startTimeBtn.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
                 document.getElementById('start-time-modal').style.display = 'none';
                 this.startTimer();
             });
@@ -1069,16 +993,11 @@ class Game2048 {
         const restartGameBtn = document.getElementById('restart-game-btn');
         if (restartGameBtn) {
             restartGameBtn.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
-                // Останавливаем текущий таймер
                 this.stopTimer();
-                // Сбрасываем состояние паузы
                 this.state.gamePaused = false;
-                // Перезапускаем игру
                 this.initializeGame(this.state.gameMode);
                 document.getElementById('in-game-menu-modal').style.display = 'none';
                 
-                // В режиме на время запускаем таймер после перезапуска
                 if (this.state.gameMode === '4x4-time') {
                     setTimeout(() => this.showStartTimeModal(), 100);
                 }
@@ -1088,7 +1007,6 @@ class Game2048 {
         const toLobbyBtn = document.getElementById('to-lobby-btn');
         if (toLobbyBtn) {
             toLobbyBtn.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
                 this.showMainMenu();
                 document.getElementById('in-game-menu-modal').style.display = 'none';
             });
@@ -1097,18 +1015,15 @@ class Game2048 {
         const closeGameMenu = document.getElementById('close-game-menu');
         if (closeGameMenu) {
             closeGameMenu.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
                 this.resumeTimer();
                 document.getElementById('in-game-menu-modal').style.display = 'none';
             });
         }
         
-        // Статистика из игры - ИСПРАВЛЕННАЯ ЛОГИКА
+        // Статистика из игры
         const gameStatsBtn = document.getElementById('game-stats-btn');
         if (gameStatsBtn) {
             gameStatsBtn.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
-                // Закрываем игровое меню и открываем статистику
                 document.getElementById('in-game-menu-modal').style.display = 'none';
                 this.showStatsModal();
             });
@@ -1118,14 +1033,12 @@ class Game2048 {
         const closeThemes = document.getElementById('close-themes');
         if (closeThemes) {
             closeThemes.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
                 document.getElementById('themes-modal').style.display = 'none';
             });
         }
         
         document.querySelectorAll('.theme-option').forEach(theme => {
             theme.addEventListener('click', (e) => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
                 const themeName = e.currentTarget.dataset.theme;
                 this.applyTheme(themeName);
             });
@@ -1135,7 +1048,6 @@ class Game2048 {
         const confirmYes = document.getElementById('confirm-yes');
         if (confirmYes) {
             confirmYes.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
                 if (this.confirmCallback) this.confirmCallback();
             });
         }
@@ -1143,20 +1055,7 @@ class Game2048 {
         const confirmNo = document.getElementById('confirm-no');
         if (confirmNo) {
             confirmNo.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
                 document.getElementById('confirm-modal').style.display = 'none';
-            });
-        }
-        
-        // Вибрация в игре
-        const vibrationToggle = document.getElementById('vibration-toggle');
-        if (vibrationToggle) {
-            vibrationToggle.addEventListener('change', (e) => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
-                this.state.vibration = e.target.checked;
-                const mainVibrationToggle = document.getElementById('main-vibration-toggle');
-                if (mainVibrationToggle) mainVibrationToggle.checked = this.state.vibration;
-                this.saveSettings();
             });
         }
         
@@ -1202,13 +1101,10 @@ class Game2048 {
         
         modal.style.display = 'block';
         
-        // Добавляем обработчики для новых кнопок
         const closeStats = modal.querySelector('#close-stats');
         if (closeStats) {
             closeStats.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
                 modal.style.display = 'none';
-                // Возвращаемся в предыдущее меню
                 if (this.state.gamePaused) {
                     document.getElementById('in-game-menu-modal').style.display = 'block';
                 } else {
@@ -1220,7 +1116,6 @@ class Game2048 {
         const resetBestScoreBtn = modal.querySelector('#reset-best-score-btn');
         if (resetBestScoreBtn) {
             resetBestScoreBtn.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
                 this.showConfirmModal('Стереть лучший счет?', 'Вы точно хотите стереть лучший счет?', 
                     () => this.resetBestScore()
                 );
@@ -1230,7 +1125,6 @@ class Game2048 {
         const resetAllStatsBtn = modal.querySelector('#reset-all-stats-btn');
         if (resetAllStatsBtn) {
             resetAllStatsBtn.addEventListener('click', () => {
-                this.vibrate(this.config.VIBRATION.BUTTON);
                 this.showConfirmModal('Стереть всю статистику?', 'Вы точно хотите стереть всю статистику?', 
                     () => this.resetAllStatistics()
                 );

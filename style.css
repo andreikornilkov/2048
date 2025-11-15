@@ -259,7 +259,7 @@ body {
     50% { transform: scale(1.05); }
 }
 
-/* Игровое поле */
+/* Игровое поле - ИСПРАВЛЕННОЕ */
 .game-container {
     flex: 1;
     display: flex;
@@ -273,21 +273,25 @@ body {
 
 #board {
     background: #bbada0;
-    padding: var(--gap-size);
-    border-radius: var(--border-radius);
+    padding: 10px;
+    border-radius: 6px;
     display: grid;
-    gap: var(--gap-size);
+    gap: 5px;
     margin: 20px 0;
     touch-action: none;
     position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .cell {
-    width: var(--tile-size);
-    height: var(--tile-size);
-    background: #cdc1b4;
-    border-radius: calc(var(--border-radius) - 2px);
+    width: 70px;
+    height: 70px;
+    background: rgba(238, 228, 218, 0.35);
+    border-radius: 3px;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .tile {
@@ -297,26 +301,75 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: calc(var(--border-radius) - 2px);
+    border-radius: 3px;
     font-weight: 700;
-    font-size: 20px;
+    font-size: 32px;
     user-select: none;
     transition: all var(--transition-fast);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Цвета плиток */
-.tile[data-value="2"] { background: #eee4da; color: #776e65; }
-.tile[data-value="4"] { background: #ede0c8; color: #776e65; }
-.tile[data-value="8"] { background: #f2b179; color: white; }
-.tile[data-value="16"] { background: #f59563; color: white; }
-.tile[data-value="32"] { background: #f67c5f; color: white; }
-.tile[data-value="64"] { background: #f65e3b; color: white; }
-.tile[data-value="128"] { background: #edcf72; color: white; font-size: 18px; }
-.tile[data-value="256"] { background: #edcc61; color: white; font-size: 18px; }
-.tile[data-value="512"] { background: #edc850; color: white; font-size: 18px; }
-.tile[data-value="1024"] { background: #edc53f; color: white; font-size: 16px; }
-.tile[data-value="2048"] { background: #edc22e; color: white; font-size: 16px; }
-.tile[data-value="4096"] { background: #3c3a32; color: white; font-size: 16px; }
+/* Цвета плиток - УЛУЧШЕННЫЕ */
+.tile[data-value="2"] { 
+    background: #eee4da; 
+    color: #776e65; 
+    font-size: 32px;
+}
+.tile[data-value="4"] { 
+    background: #ede0c8; 
+    color: #776e65; 
+    font-size: 32px;
+}
+.tile[data-value="8"] { 
+    background: #f2b179; 
+    color: white; 
+    font-size: 32px;
+}
+.tile[data-value="16"] { 
+    background: #f59563; 
+    color: white; 
+    font-size: 28px;
+}
+.tile[data-value="32"] { 
+    background: #f67c5f; 
+    color: white; 
+    font-size: 28px;
+}
+.tile[data-value="64"] { 
+    background: #f65e3b; 
+    color: white; 
+    font-size: 28px;
+}
+.tile[data-value="128"] { 
+    background: #edcf72; 
+    color: white; 
+    font-size: 24px;
+}
+.tile[data-value="256"] { 
+    background: #edcc61; 
+    color: white; 
+    font-size: 24px;
+}
+.tile[data-value="512"] { 
+    background: #edc850; 
+    color: white; 
+    font-size: 24px;
+}
+.tile[data-value="1024"] { 
+    background: #edc53f; 
+    color: white; 
+    font-size: 20px;
+}
+.tile[data-value="2048"] { 
+    background: #edc22e; 
+    color: white; 
+    font-size: 20px;
+}
+.tile[data-value="4096"] { 
+    background: #3c3a32; 
+    color: white; 
+    font-size: 18px;
+}
 
 /* Модальные окна */
 .modal {
@@ -430,59 +483,7 @@ body {
     color: white;
 }
 
-.setting-option {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--tg-border-color);
-}
-
-/* Переключатель */
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 24px;
-}
-
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-    border-radius: 24px;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 16px;
-    width: 16px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: .4s;
-    border-radius: 50%;
-}
-
-input:checked + .slider {
-    background-color: var(--tg-primary-color);
-}
-
-input:checked + .slider:before {
-    transform: translateX(26px);
-}
+/* УДАЛЕНЫ СТИЛИ ПЕРЕКЛЮЧАТЕЛЯ ВИБРАЦИИ */
 
 /* Статистика */
 .stats-content {
@@ -620,8 +621,36 @@ input:checked + .slider:before {
 
 /* Адаптивность */
 @media (max-width: 480px) {
-    :root {
-        --tile-size: 60px;
+    .cell {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .tile[data-value="2"],
+    .tile[data-value="4"],
+    .tile[data-value="8"] {
+        font-size: 28px;
+    }
+    
+    .tile[data-value="16"],
+    .tile[data-value="32"], 
+    .tile[data-value="64"] {
+        font-size: 24px;
+    }
+    
+    .tile[data-value="128"],
+    .tile[data-value="256"],
+    .tile[data-value="512"] {
+        font-size: 20px;
+    }
+    
+    .tile[data-value="1024"],
+    .tile[data-value="2048"] {
+        font-size: 18px;
+    }
+    
+    .tile[data-value="4096"] {
+        font-size: 16px;
     }
     
     .menu-content {
@@ -679,6 +708,38 @@ input:checked + .slider:before {
 }
 
 @media (max-width: 380px) {
+    .cell {
+        width: 55px;
+        height: 55px;
+    }
+    
+    .tile[data-value="2"],
+    .tile[data-value="4"],
+    .tile[data-value="8"] {
+        font-size: 24px;
+    }
+    
+    .tile[data-value="16"],
+    .tile[data-value="32"], 
+    .tile[data-value="64"] {
+        font-size: 22px;
+    }
+    
+    .tile[data-value="128"],
+    .tile[data-value="256"],
+    .tile[data-value="512"] {
+        font-size: 18px;
+    }
+    
+    .tile[data-value="1024"],
+    .tile[data-value="2048"] {
+        font-size: 16px;
+    }
+    
+    .tile[data-value="4096"] {
+        font-size: 14px;
+    }
+    
     .stat-display {
         font-size: 11px;
     }
