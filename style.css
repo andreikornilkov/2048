@@ -1,4 +1,4 @@
-/* style.css - ОБНОВЛЕННЫЙ С НОВЫМИ ПЛИТКАМИ И ИСПРАВЛЕННЫМ ВВОДОМ */
+/* style.css - ОБНОВЛЕННЫЙ С НОВЫМИ ПЛИТКАМИ */
 :root {
     --tg-bg-color: #63697B;
     --tg-primary-color: #635BFF;
@@ -1169,15 +1169,6 @@ body[data-theme="unicorn-dream"] .modal {
     transform: none;
     top: auto;
     left: auto;
-    transition: transform 0.3s ease, top 0.3s ease; /* Добавляем плавный переход */
-}
-
-/* НОВЫЙ СТИЛЬ ДЛЯ МОБИЛЬНОГО ВВОДА */
-@media (max-height: 700px) {
-    .modal .canvas {
-        transform: translateX(-50%) translateY(-20%) !important;
-        top: 20% !important;
-    }
 }
 
 /* СТИЛИ ДЛЯ МЕНЮ ГЛАВНОЙ СТРАНИЦЫ */
