@@ -1,4 +1,4 @@
-// game.js - ОБНОВЛЕННАЯ ВЕРСИЯ С НОВЫМИ ПЛИТКАМИ
+// game.js - ОБНОВЛЕННАЯ ВЕРСИЯ С НОВЫМИ ПЛИТКАМИ И ИСПРАВЛЕННЫМ ВВОДОМ
 class Game2048 {
     constructor() {
         this.config = window.AppConfig;
@@ -1078,6 +1078,43 @@ class Game2048 {
         }
     }
     
+    // НОВЫЙ МЕТОД ДЛЯ ОБРАБОТКИ ФОКУСА НА ПОЛЕ ВВОДА (РЕШЕНИЕ ПРОБЛЕМЫ С КЛАВИАТУРОЙ)
+    setupMobileInputFix() {
+        const cheatInput = document.getElementById('game-cheat-input');
+        if (!cheatInput) return;
+        
+        let originalTransform = '';
+        let originalTop = '';
+        
+        cheatInput.addEventListener('focus', () => {
+            const modal = document.getElementById('game-cheat-modal');
+            if (!modal) return;
+            
+            // Сохраняем оригинальные значения
+            const canvas = modal.querySelector('.canvas');
+            if (canvas) {
+                originalTransform = canvas.style.transform || '';
+                originalTop = canvas.style.top || '';
+                
+                // Сдвигаем модальное окно вверх для лучшей видимости
+                canvas.style.transform = 'translateX(-50%) translateY(-20%)';
+                canvas.style.top = '20%';
+            }
+        });
+        
+        cheatInput.addEventListener('blur', () => {
+            const modal = document.getElementById('game-cheat-modal');
+            if (!modal) return;
+            
+            // Восстанавливаем оригинальные значения
+            const canvas = modal.querySelector('.canvas');
+            if (canvas) {
+                canvas.style.transform = originalTransform;
+                canvas.style.top = originalTop;
+            }
+        });
+    }
+    
     setupEventListeners() {
         // Кнопки режимов игры
         document.querySelectorAll('.mode-btn').forEach(btn => {
@@ -1145,6 +1182,9 @@ class Game2048 {
                 }, 100);
             });
         }
+        
+        // НАСТРОЙКА ФИКСА ДЛЯ МОБИЛЬНОГО ВВОДА
+        this.setupMobileInputFix();
         
         // ОБРАБОТЧИК ДЛЯ ПОЛЯ ВВОДА ЧИТ-КОДА В ИГРЕ
         const gameCheatInput = document.getElementById('game-cheat-input');
