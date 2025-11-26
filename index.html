@@ -5,176 +5,424 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <title>2048 — Telegram Game</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
     <div class="telegram-app">
         <!-- Главное меню -->
         <div class="main-menu" id="main-menu">
-            <div class="menu-content">
-                <div class="top-bar">
-                    <button class="icon-btn" id="main-menu-btn">☰</button>
-                    <button class="icon-btn" id="main-themes-btn">🎨</button>
-                </div>
+            <div class="canvas">
+                <!-- Основная панель -->
+                <div class="panel">
+                    <div class="panel-fill"></div>
+                    
+                    <!-- Текст "Начать игру" -->
+                    <div class="start-text">Начать игру</div>
 
-                <div class="stats-header">
-                    <div class="stats-grid">
-                        <div class="stat-item">
+                    <!-- Статистика -->
+                    <div class="stats-container">
+                        <div class="stat-item" style="left: 55px;">
                             <div class="stat-value" id="total-games">0</div>
                             <div class="stat-label">Всего игр</div>
                         </div>
-                        <div class="stat-item">
+                        <div class="stat-item" style="left: 137px;">
                             <div class="stat-value" id="total-wins">0</div>
                             <div class="stat-label">Побед</div>
                         </div>
-                        <div class="stat-item">
+                        <div class="stat-item" style="left: 238px;">
                             <div class="stat-value" id="best-score-overall">0</div>
                             <div class="stat-label">Рекорд</div>
                         </div>
                     </div>
                 </div>
 
-                <div class="menu-buttons">
-                    <button class="tg-button large mode-btn" data-mode="4x4">
-                        <span class="button-title">4×4</span>
-                        <span class="button-desc">Классический (2048)</span>
-                    </button>
-                    <button class="tg-button large mode-btn" data-mode="5x5">
-                        <span class="button-title">5×5</span>
-                        <span class="button-desc">Релакс (4096)</span>
-                    </button>
-                    <button class="tg-button large mode-btn" data-mode="4x4-time">
-                        <span class="button-title">4×4</span>
-                        <span class="button-desc">На время (90 секунд)</span>
-                    </button>
-                    <button class="tg-button large mode-btn" data-mode="5x5-zen">
-                        <span class="button-title">5×5</span>
-                        <span class="button-desc">Бесконечный дзен</span>
-                    </button>
-                </div>
+                <!-- Верхние кнопки -->
+                <button class="menu-button" id="main-menu-btn">
+                    <div class="burger-icon"></div>
+                    <div class="button-text">Меню</div>
+                </button>
+                
+                <button class="menu-button-right" id="main-themes-btn">
+                    <div class="button-text">Темы</div>
+                </button>
+
+                <!-- Первый ряд кнопок режимов -->
+                <button class="big-button mode-btn" data-mode="4x4">
+                    <div class="button-fill"></div>
+                    <div class="big-button-title">4×4</div>
+                    <div class="big-button-subtitle line1">Классический</div>
+                    <div class="big-button-subtitle line2">(2048)</div>
+                </button>
+                
+                <button class="big-button-right mode-btn" data-mode="5x5">
+                    <div class="button-fill"></div>
+                    <div class="big-button-title">5×5</div>
+                    <div class="big-button-subtitle line1">Релакс</div>
+                    <div class="big-button-subtitle line2">(4096)</div>
+                </button>
+
+                <!-- Второй ряд кнопок режимов -->
+                <button class="big-button-bottom mode-btn" data-mode="4x4-time">
+                    <div class="button-fill"></div>
+                    <div class="big-button-title">4×4</div>
+                    <div class="big-button-subtitle line1">На время</div>
+                    <div class="big-button-subtitle line2">(90 секунд)</div>
+                </button>
+                
+                <button class="big-button-bottom-right mode-btn" data-mode="5x5-zen">
+                    <div class="button-fill"></div>
+                    <div class="big-button-title">5×5</div>
+                    <div class="big-button-subtitle line1">Бесконечный</div>
+                    <div class="big-button-subtitle line2">дзен</div>
+                </button>
             </div>
         </div>
 
         <!-- Игровой экран -->
         <div class="game-screen" id="game-screen" style="display: none;">
-            <header class="app-header">
-                <div class="header-content">
-                    <button class="menu-btn" id="game-menu-btn">☰</button>
-                    <div class="game-stats">
-                        <div class="stat-display" id="best-tile-container">
-                            <span>Лучшая плитка:</span>
-                            <strong id="best-tile">0</strong>
+            <div class="canvas">
+                <!-- Верхняя панель со статистикой - 303x107px -->
+                <div class="game-panel-top">
+                    <div class="panel-fill"></div>
+                    
+                    <!-- Статистика -->
+                    <div class="stats-container">
+                        <div class="stat-item" id="best-tile-container" style="left: 72px;">
+                            <div class="stat-value" id="best-tile">0</div>
+                            <div class="stat-label">Лучшая плитка</div>
                         </div>
-                        <div class="stat-display" id="time-container" style="display: none;">
-                            <span>Время:</span>
-                            <strong id="time-left">90</strong>
+                        <div class="stat-item" id="time-container" style="display: none; left: 72px;">
+                            <div class="stat-value" id="time-left">90</div>
+                            <div class="stat-label">Время</div>
                         </div>
-                        <div class="stat-display">
-                            <span>Счет игры:</span>
-                            <strong id="score">0</strong>
+                        <div class="stat-item" style="left: 230px;">
+                            <div class="stat-value" id="score">0</div>
+                            <div class="stat-label">Счёт игры</div>
                         </div>
                     </div>
-                    <div class="new-record-badge" id="new-record-badge" style="display: none;">
-                        Новый рекорд!
+                </div>
+
+                <!-- Игровая панель с полем 4x4 - 303x303px -->
+                <div class="game-panel-bottom">
+                    <div class="panel-fill"></div>
+                    
+                    <!-- Игровое поле 282x282px -->
+                    <div class="game-board-container">
+                        <div class="game-board" id="board"></div>
                     </div>
                 </div>
-            </header>
 
-            <main class="game-container">
-                <div class="game-board" id="board"></div>
-            </main>
-        </div>
-
-        <!-- Модальные окна -->
-        <div class="modal" id="game-end-modal"></div>
-        <div class="modal" id="stats-modal"></div>
-
-        <div class="modal" id="main-menu-modal">
-            <div class="modal-content">
-                <button class="close-btn" id="close-main-menu">×</button>
-                <h3>Меню</h3>
-                <div class="menu-options">
-                    <button class="tg-button secondary" id="main-stats-btn">Моя статистика</button>
-                    <button class="tg-button secondary" id="main-cheat-btn">Чит код</button>
-                    <!-- УДАЛЕН ПЕРЕКЛЮЧАТЕЛЬ ВИБРАЦИИ -->
+                <!-- Верхние кнопки -->
+                <button class="menu-button" id="game-menu-btn">
+                    <div class="burger-icon"></div>
+                    <div class="button-text">Меню</div>
+                </button>
+                
+                <div class="menu-button-right new-record-badge" id="new-record-badge" style="display: none;">
+                    <div class="button-text">Новый рекорд</div>
                 </div>
             </div>
         </div>
 
-        <div class="modal" id="in-game-menu-modal">
-            <div class="modal-content">
-                <button class="close-btn" id="close-game-menu">×</button>
-                <h3>Меню</h3>
-                <div class="menu-options">
-                    <button class="tg-button" id="restart-game-btn">Начать заново</button>
-                    <button class="tg-button secondary" id="to-lobby-btn">Выйти в лобби</button>
-                    <button class="tg-button secondary" id="game-stats-btn">Моя статистика</button>
-                    <button class="tg-button secondary" id="game-cheat-btn">Чит код</button>
-                    <!-- УДАЛЕН ПЕРЕКЛЮЧАТЕЛЬ ВИБРАЦИИ -->
+        <!-- НОВОЕ Окно завершения игры -->
+        <div class="modal" id="game-end-modal">
+            <div class="canvas">
+                <!-- Панель меню -->
+                <div class="menu-panel">
+                    <div class="panel-fill"></div>
                 </div>
+
+                <!-- Заголовок победы -->
+                <div class="victory-title" id="game-end-title">
+                    Вы победили!
+                </div>
+
+                <!-- Число 2048 или лучшая плитка -->
+                <div class="score-number" id="game-end-tile">
+                    2048
+                </div>
+
+                <!-- Счёт игры -->
+                <div class="game-score-container">
+                    <span class="game-score-label">Счёт игры</span>
+                    <span class="game-score-value" id="game-end-score">55 600</span>
+                </div>
+
+                <!-- Кнопка главного меню -->
+                <button class="menu-button-item main-menu-button" id="game-end-main-menu-btn">
+                    <div class="button-fill"></div>
+                    <div class="menu-button-text">Главное меню</div>
+                </button>
             </div>
         </div>
 
-        <div class="modal" id="themes-modal">
-            <div class="modal-content">
-                <button class="close-btn" id="close-themes">×</button>
-                <h3>Темы</h3>
-                <div class="themes-grid">
-                    <div class="theme-option" data-theme="default">
-                        <div class="theme-preview" style="background: linear-gradient(135deg, #635BFF, #8B85FF);"></div>
-                        <span>По умолчанию</span>
-                    </div>
-                    <div class="theme-option" data-theme="green">
-                        <div class="theme-preview" style="background: linear-gradient(135deg, #4CAF50, #45a049);"></div>
-                        <span>Зеленая</span>
-                    </div>
-                    <div class="theme-option" data-theme="purple">
-                        <div class="theme-preview" style="background: linear-gradient(135deg, #9C27B0, #7B1FA2);"></div>
-                        <span>Фиолетовая</span>
-                    </div>
-                    <div class="theme-option" data-theme="orange">
-                        <div class="theme-preview" style="background: linear-gradient(135deg, #FF9800, #F57C00);"></div>
-                        <span>Оранжевая</span>
-                    </div>
-                    <div class="theme-option" data-theme="blue">
-                        <div class="theme-preview" style="background: linear-gradient(135deg, #2196F3, #1976D2);"></div>
-                        <span>Синяя</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal" id="cheat-modal">
-            <div class="modal-content">
-                <button class="close-btn" id="close-cheat">×</button>
-                <h3>Чит код</h3>
-                <div class="cheat-content">
-                    <input type="text" 
-                           id="cheat-input" 
-                           placeholder="Введите чит код..."
-                           maxlength="20"
-                           class="cheat-input">
-                    <button class="tg-button large" id="apply-cheat-btn">Применить</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal" id="confirm-modal">
-            <div class="modal-content">
-                <h3 id="confirm-title">Подтверждение</h3>
-                <p id="confirm-message">Вы уверены?</p>
-                <div class="confirm-actions">
-                    <button class="tg-button" id="confirm-yes">Да</button>
-                    <button class="tg-button secondary" id="confirm-no">Нет</button>
-                </div>
-            </div>
-        </div>
-
+        <!-- НОВОЕ Окно начала игры на время -->
         <div class="modal" id="start-time-modal">
-            <div class="modal-content">
-                <h3>Готовы?</h3>
-                <p>У вас есть 90 секунд!</p>
-                <button class="tg-button large" id="start-time-btn">Начать!</button>
+            <div class="canvas">
+                <!-- Панель меню -->
+                <div class="menu-panel">
+                    <div class="panel-fill"></div>
+                    
+                    <!-- Текст над кнопкой -->
+                    <div class="description-text">
+                        У вас есть 90 секунд. Готовы?
+                    </div>
+                    
+                    <!-- Кнопка "Начать" -->
+                    <button class="menu-button-item cheat-button" id="start-time-btn">
+                        <div class="button-fill"></div>
+                        <div class="menu-button-text">Начать</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальное окно статистики -->
+        <div class="modal" id="stats-modal">
+            <div class="canvas">
+                <!-- Панель меню -->
+                <div class="menu-panel">
+                    <div class="panel-fill"></div>
+                </div>
+
+                <!-- Кнопка закрытия -->
+                <button class="menu-button-right-close" id="close-stats">
+                    <div class="close-icon"></div>
+                    <div class="button-fill-small"></div>
+                </button>
+
+                <!-- Статистическая информация -->
+                <div class="stats-container-modal">
+                    <div class="stats-item">
+                        <span class="stats-label">Всего игр</span>
+                        <span class="stats-value" id="stats-total-games">0</span>
+                    </div>
+                    <div class="stats-item">
+                        <span class="stats-label">Побед</span>
+                        <span class="stats-value" id="stats-total-wins">0</span>
+                    </div>
+                    <div class="stats-item">
+                        <span class="stats-label">Лучший счёт</span>
+                        <span class="stats-value" id="stats-best-score">0</span>
+                    </div>
+                    <div class="stats-item">
+                        <span class="stats-label">Лучший счёт на время</span>
+                        <span class="stats-value" id="stats-best-speed-score">0</span>
+                    </div>
+                </div>
+
+                <!-- Кнопки управления статистикой -->
+                <button class="menu-button-item clear-best-score-button" id="reset-best-score-btn">
+                    <div class="button-fill"></div>
+                    <div class="menu-button-text">Стереть лучший счёт</div>
+                </button>
+
+                <button class="menu-button-item clear-all-stats-button" id="reset-all-stats-btn">
+                    <div class="button-fill"></div>
+                    <div class="menu-button-text">Стереть всю статистику</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Модальное окно главного меню -->
+        <div class="modal" id="main-menu-modal">
+            <div class="canvas">
+                <!-- Панель меню -->
+                <div class="menu-panel">
+                    <div class="panel-fill"></div>
+                </div>
+
+                <!-- Кнопка закрытия -->
+                <button class="menu-button-right-close" id="close-main-menu">
+                    <div class="close-icon"></div>
+                    <div class="button-fill-small"></div>
+                </button>
+
+                <!-- Кнопки меню -->
+                <button class="menu-button-item stats-button" id="main-stats-btn">
+                    <div class="button-fill"></div>
+                    <div class="menu-button-text">Статистика</div>
+                </button>
+
+                <button class="menu-button-item cheat-button" id="main-cheat-btn">
+                    <div class="button-fill"></div>
+                    <div class="menu-button-text">Чит-код</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Модальное окно тем -->
+        <div class="modal" id="themes-modal">
+            <div class="canvas">
+                <!-- Панель меню -->
+                <div class="menu-panel">
+                    <div class="panel-fill"></div>
+                </div>
+
+                <!-- Кнопка закрытия -->
+                <button class="menu-button-right-close" id="close-themes">
+                    <div class="close-icon"></div>
+                    <div class="button-fill-small"></div>
+                </button>
+
+                <!-- Кнопки тем -->
+                <button class="menu-button-item moon-dust-button theme-btn" data-theme="moon-dust">
+                    <div class="button-fill"></div>
+                    <div class="menu-button-text">Лунная пыль</div>
+                </button>
+                
+                <button class="menu-button-item whisper-leaves-button theme-btn" data-theme="whisper-leaves">
+                    <div class="button-fill"></div>
+                    <div class="menu-button-text">Осенний лес</div>
+                </button>
+
+                <button class="menu-button-item wet-stone-button theme-btn" data-theme="wet-stone">
+                    <div class="button-fill"></div>
+                    <div class="menu-button-text">Каменная долина</div>
+                </button>
+
+                <button class="menu-button-item deep-space-button theme-btn" data-theme="deep-space">
+                    <div class="button-fill"></div>
+                    <div class="menu-button-text">Глубокий космос</div>
+                </button>
+
+                <button class="menu-button-item unicorn-dream-button theme-btn" data-theme="unicorn-dream">
+                    <div class="button-fill"></div>
+                    <div class="menu-button-text">Сон единорога</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Модальное окно меню в игре (4 КНОПКИ) -->
+        <div class="modal" id="in-game-menu-modal">
+            <div class="canvas">
+                <!-- Панель меню -->
+                <div class="menu-panel">
+                    <div class="panel-fill"></div>
+                </div>
+
+                <!-- Кнопка закрытия с крестиком -->
+                <button class="menu-button-right-close" id="close-game-menu">
+                    <div class="close-icon"></div>
+                    <div class="button-fill-small"></div>
+                </button>
+
+                <!-- Кнопки меню - ВСЕ 4 КНОПКИ -->
+                <button class="menu-button-item restart-button" id="restart-game-btn">
+                    <div class="button-fill"></div>
+                    <div class="menu-button-text">Начать заново</div>
+                </button>
+                
+                <button class="menu-button-item main-menu-button" id="to-lobby-btn">
+                    <div class="button-fill"></div>
+                    <div class="menu-button-text">Главное меню</div>
+                </button>
+
+                <button class="menu-button-item stats-button" id="game-stats-btn">
+                    <div class="button-fill"></div>
+                    <div class="menu-button-text">Статистика</div>
+                </button>
+
+                <button class="menu-button-item cheat-button" id="game-cheat-btn">
+                    <div class="button-fill"></div>
+                    <div class="menu-button-text">Чит-код</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Модальное окно чит-кодов (ТОЛЬКО для главного меню - информация) -->
+        <div class="modal" id="cheat-modal">
+            <div class="canvas">
+                <!-- Панель меню -->
+                <div class="menu-panel">
+                    <div class="panel-fill"></div>
+                    <!-- Текст описания ВНУТРИ панели -->
+                    <div class="description-text">
+                        В этом меню во время игры можно будет ввести чит-код, если вы его знаете. Удачи!
+                    </div>
+                </div>
+
+                <!-- Кнопка закрытия -->
+                <button class="menu-button-right-close" id="close-cheat">
+                    <div class="close-icon"></div>
+                    <div class="button-fill-small"></div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Модальное окно чит-кодов для игры (с полем ввода) -->
+        <div class="modal" id="game-cheat-modal">
+            <div class="canvas">
+                <!-- Панель меню -->
+                <div class="menu-panel">
+                    <div class="panel-fill"></div>
+                    <!-- Контейнер для поля ввода - ВНУТРИ панели -->
+                    <div class="cheat-input-container">
+                        <input type="text" class="cheat-input" id="game-cheat-input" placeholder="Введите чит-код здесь" maxlength="20">
+                        <div class="input-fill"></div>
+                    </div>
+                </div>
+
+                <!-- Кнопка закрытия -->
+                <button class="menu-button-right-close" id="close-game-cheat">
+                    <div class="close-icon"></div>
+                    <div class="button-fill-small"></div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Модальное окно Yazhopka -->
+        <div class="modal" id="yazhopka-modal">
+            <div class="canvas">
+                <!-- Панель меню -->
+                <div class="menu-panel">
+                    <div class="panel-fill"></div>
+                    <!-- Текст описания ВНУТРИ панели -->
+                    <div class="description-text">
+                        Малышка моя, ты чудо. Я тебя люблю! Покажи этим циферкам!
+                    </div>
+                </div>
+
+                <!-- Кнопка закрытия -->
+                <button class="menu-button-right-close" id="close-yazhopka">
+                    <div class="close-icon"></div>
+                    <div class="button-fill-small"></div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Модальное окно подтверждения -->
+        <div class="modal" id="confirm-modal">
+            <div class="canvas">
+                <!-- Панель меню -->
+                <div class="menu-panel">
+                    <div class="panel-fill"></div>
+                </div>
+
+                <!-- Кнопка закрытия с крестиком -->
+                <button class="menu-button-right-close" id="confirm-close">
+                    <div class="close-icon"></div>
+                    <div class="button-fill-small"></div>
+                </button>
+
+                <!-- Текст подтверждения -->
+                <div class="confirmation-text" id="confirm-message">
+                    Вы точно хотите стереть лучший счёт?
+                </div>
+
+                <!-- Кнопки Да/Нет -->
+                <div class="buttons-horizontal">
+                    <button class="menu-button-item no-button" id="confirm-no">
+                        <div class="button-fill"></div>
+                        <div class="menu-button-text">Нет</div>
+                    </button>
+
+                    <button class="menu-button-item yes-button" id="confirm-yes">
+                        <div class="button-fill"></div>
+                        <div class="menu-button-text">Да</div>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

@@ -4,11 +4,19 @@ class TelegramIntegration {
         this.tg = window.Telegram?.WebApp;
         this.isTelegram = !!this.tg;
         this.user = null;
+        
         this.init();
     }
     
     init() {
-        this.isTelegram ? this.setupTelegramMode() : this.setupStandaloneMode();
+        if (!this.isTelegram) {
+            console.log('Запуск вне Telegram');
+            this.setupStandaloneMode();
+            return;
+        }
+        
+        console.log('Запуск в Telegram Web App');
+        this.setupTelegramMode();
     }
     
     setupTelegramMode() {
@@ -16,26 +24,38 @@ class TelegramIntegration {
         this.user = this.tg.initDataUnsafe?.user;
         this.applyTelegramTheme();
         this.setupMainButton();
+        
         this.tg.onEvent('themeChanged', this.applyTelegramTheme.bind(this));
+        this.tg.onEvent('viewportChanged', this.onViewportChanged.bind(this));
+        
+        console.log('Telegram user:', this.user);
     }
     
     setupStandaloneMode() {
         document.body.classList.add('standalone-mode');
+        console.log('Режим тестирования (вне Telegram)');
     }
     
     applyTelegramTheme() {
         if (!this.isTelegram) return;
         
-        const theme = this.tg.themeParams;
-        const docStyle = document.documentElement.style;
-        
-        docStyle.setProperty('--tg-bg-color', theme.bg_color || '#faf8ef');
-        docStyle.setProperty('--tg-primary-color', theme.button_color || '#635BFF');
-        docStyle.setProperty('--tg-text-color', theme.text_color || '#222222');
+        document.documentElement.style.setProperty(
+            '--tg-bg-color', 
+            this.tg.themeParams.bg_color || '#faf8ef'
+        );
+        document.documentElement.style.setProperty(
+            '--tg-primary-color',
+            this.tg.themeParams.button_color || '#635BFF'
+        );
+        document.documentElement.style.setProperty(
+            '--tg-text-color',
+            this.tg.themeParams.text_color || '#222222'
+        );
     }
     
     setupMainButton() {
         if (!this.isTelegram) return;
+        
         this.tg.MainButton.setText('Поделиться результатом');
         this.tg.MainButton.hide();
     }
@@ -43,8 +63,8 @@ class TelegramIntegration {
     showShareButton(score) {
         if (!this.isTelegram) return;
         
-        this.tg.MainButton.setText(`Я набрал ${score} очков! 🎮`);
-        this.tg.MainButton.onClick(() => this.shareScore(score));
+        this.tg.MainButton.setText(`Я набрал ${score} очков в 2048! 🎮`);
+        this.tg.MainButton.onClick(this.shareScore.bind(this, score));
         this.tg.MainButton.show();
     }
     
@@ -59,6 +79,10 @@ class TelegramIntegration {
             score: score,
             game: '2048'
         }));
+    }
+    
+    onViewportChanged() {
+        console.log('Viewport changed');
     }
     
     getUserData() {

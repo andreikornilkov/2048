@@ -1,4 +1,4 @@
-// game.js - полный файл с исправленным отображением поля
+// game.js - ОБНОВЛЕННАЯ ВЕРСИЯ С НОВЫМИ ПЛИТКАМИ
 class Game2048 {
     constructor() {
         this.config = window.AppConfig;
@@ -16,7 +16,14 @@ class Game2048 {
             'total-wins', 'best-score-overall', 'cheat-input', 'apply-cheat-btn', 
             'cheat-modal', 'close-cheat', 'main-cheat-btn', 'game-cheat-btn',
             'main-menu-modal', 'in-game-menu-modal', 'themes-modal', 'stats-modal',
-            'confirm-modal', 'start-time-modal'
+            'confirm-modal', 'start-time-modal', 'yazhopka-modal', 'close-stats',
+            'reset-best-score-btn', 'reset-all-stats-btn', 'stats-total-games',
+            'stats-total-wins', 'stats-best-score', 'stats-best-speed-score',
+            'confirm-message', 'confirm-yes', 'confirm-no', 'confirm-close',
+            'close-game-menu', 'restart-game-btn', 'to-lobby-btn', 'game-stats-btn',
+            'game-cheat-modal', 'close-game-cheat', 'game-cheat-input', 'close-yazhopka',
+            'game-end-title', 'game-end-tile', 'game-end-score', 'game-end-main-menu-btn',
+            'start-time-btn'
         ];
         
         ids.forEach(id => {
@@ -108,7 +115,7 @@ class Game2048 {
     
     showGameScreen() {
         this.elements['main-menu'].style.display = 'none';
-        this.elements['game-screen'].style.display = 'block';
+        this.elements['game-screen'].style.display = 'flex';
         this.elements['game-end-modal'].style.display = 'none';
     }
     
@@ -116,7 +123,7 @@ class Game2048 {
         this.initializeGame(gameMode);
         
         if (gameMode === '4x4-time') {
-            setTimeout(() => this.showStartTimeModal(), 100);
+            setTimeout(() => this.showStartTimeModal(), 0);
         }
     }
     
@@ -171,7 +178,7 @@ class Game2048 {
     
     showStartTimeModal() {
         const modal = document.getElementById('start-time-modal');
-        if (modal) modal.style.display = 'block';
+        if (modal) modal.style.display = 'flex';
     }
     
     startTimer() {
@@ -208,20 +215,44 @@ class Game2048 {
     
     setupBoardDOM() {
         const { size } = this.state;
-        const tileSize = 70; // Красивый размер плиток
-        const gap = 5;
-        const boardSize = size * tileSize + (size - 1) * gap + 10; // Аккуратные отступы
-        
         const board = this.elements['board'];
         if (!board) return;
         
-        board.style.width = `${boardSize}px`;
-        board.style.height = `${boardSize}px`;
-        board.style.gridTemplateColumns = `repeat(${size}, ${tileSize}px)`;
-        board.style.gridTemplateRows = `repeat(${size}, ${tileSize}px)`;
-        board.style.gap = `${gap}px`;
-        
+        // Очищаем доску
         board.innerHTML = '';
+        
+        if (size === 4) {
+            // Для режима 4x4 - 282x282px с расстоянием 9px между клетками
+            board.style.display = 'grid';
+            board.style.gridTemplateColumns = `repeat(4, 63.5px)`;
+            board.style.gridTemplateRows = `repeat(4, 63.5px)`;
+            board.style.gap = '9px';
+            board.style.width = '282px';
+            board.style.height = '282px';
+            board.style.zIndex = '10';
+            board.style.position = 'absolute';
+            board.style.top = '50%';
+            board.style.left = '50%';
+            board.style.transform = 'translate(-50%, -50%)';
+        } else {
+            // Для режима 5x5 - клетки 50x50px с расстоянием 6px
+            const tileSize = 50;
+            const gap = 6;
+            const boardSize = size * tileSize + (size - 1) * gap;
+            
+            board.style.display = 'grid';
+            board.style.gridTemplateColumns = `repeat(${size}, ${tileSize}px)`;
+            board.style.gridTemplateRows = `repeat(${size}, ${tileSize}px)`;
+            board.style.gap = `${gap}px`;
+            board.style.width = `${boardSize}px`;
+            board.style.height = `${boardSize}px`;
+            board.style.zIndex = '10';
+            board.style.position = 'absolute';
+            board.style.top = '50%';
+            board.style.left = '50%';
+            board.style.transform = 'translate(-50%, -50%)';
+        }
+        
         const fragment = document.createDocumentFragment();
         
         for (let r = 0; r < size; r++) {
@@ -229,6 +260,14 @@ class Game2048 {
                 const cell = document.createElement('div');
                 cell.className = 'cell';
                 cell.id = `cell-${r}-${c}`;
+                
+                // Устанавливаем стили для клеток в зависимости от размера
+                if (size === 5) {
+                    cell.style.width = '50px';
+                    cell.style.height = '50px';
+                    cell.style.borderRadius = '16px';
+                }
+                
                 fragment.appendChild(cell);
             }
         }
@@ -336,56 +375,45 @@ class Game2048 {
         }
     }
     
+    // ОБНОВЛЕННЫЙ МЕТОД ДЛЯ НОВОГО ОКНА ЗАВЕРШЕНИЯ ИГРЫ
     showGameEndScreen(isWin) {
         this.state.isGameOver = true;
         this.stopTimer();
         
+        // Обновляем содержимое нового окна завершения игры
+        const titleElement = this.elements['game-end-title'];
+        const tileElement = this.elements['game-end-tile'];
+        const scoreElement = this.elements['game-end-score'];
+        
         if (isWin) {
             this.state.totalWins++;
-        } else if (this.state.gameMode === '4x4-time' && this.canMove(this.state.board)) {
-            this.state.totalWins++;
-            isWin = true;
+            if (titleElement) titleElement.textContent = 'Вы победили!';
+            if (tileElement) tileElement.textContent = this.state.targetTile || 2048;
+        } else if (this.state.gameMode === '4x4-time' && this.state.timeLeft <= 0) {
+            if (titleElement) titleElement.textContent = 'Время вышло!';
+            if (tileElement) tileElement.textContent = this.state.bestTile;
+        } else {
+            if (titleElement) titleElement.textContent = 'Игра окончена';
+            if (tileElement) tileElement.textContent = this.state.bestTile;
+        }
+        
+        if (scoreElement) {
+            scoreElement.textContent = this.formatGameScore(this.state.score);
         }
         
         this.saveStatistics();
         
-        let titleText, tileValue;
-        
-        if (isWin) {
-            titleText = 'Вы победили!';
-            tileValue = this.state.targetTile || this.getMaxTile();
-        } else {
-            titleText = 'Игра окончена';
-            tileValue = this.state.bestTile;
-        }
-        
         const modal = this.elements['game-end-modal'];
         if (!modal) return;
         
-        modal.innerHTML = `
-            <div class="modal-content game-end-modal">
-                <div class="game-end-icon">${isWin ? '🎉' : '😔'}</div>
-                <h3>${titleText}</h3>
-                <div class="tile-display">
-                    <div class="tile-value">${tileValue}</div>
-                </div>
-                <div class="game-end-stats">
-                    <div class="game-end-stat">
-                        <span>Ваш счет:</span>
-                        <strong>${this.formatGameScore(this.state.score)}</strong>
-                    </div>
-                </div>
-                <button class="tg-button large" id="to-main-menu-btn">Меню</button>
-            </div>
-        `;
+        modal.style.display = 'flex';
         
-        modal.style.display = 'block';
-        
-        const menuButton = modal.querySelector('#to-main-menu-btn');
-        if (menuButton) {
-            menuButton.addEventListener('click', () => {
+        // Обработчик для кнопки главного меню в новом окне
+        const mainMenuButton = this.elements['game-end-main-menu-btn'];
+        if (mainMenuButton) {
+            mainMenuButton.onclick = () => {
                 this.showMainMenu();
-            });
+            };
         }
         
         if (window.TelegramApp) {
@@ -423,21 +451,26 @@ class Game2048 {
             'LOVEMYCLEAN': () => this.cheatOrganizeTilesDiagonal(),
             'CHACHACHAOS': () => this.cheatShuffleTiles(),
             'DOUBLEBOUBLE': () => this.cheatDoubleTiles(),
-            'MILLIONADONA': () => this.cheatAddMillion()
+            'MILLIONADONA': () => this.cheatAddMillion(),
+            'YAZHOPKA': () => this.cheatYazhopka()
         };
         
         if (cheats[upperCode]) {
             const success = cheats[upperCode]();
             
             if (success) {
-                const cheatModal = document.getElementById('cheat-modal');
-                const cheatInput = document.getElementById('cheat-input');
-                if (cheatModal) cheatModal.style.display = 'none';
-                if (cheatInput) cheatInput.value = '';
-                
-                if (this.state.gameMode === '4x4-time' && this.state.gamePaused) {
-                    this.resumeTimer();
+                // Для обычных чит-кодов закрываем все модальные окна
+                if (upperCode !== 'YAZHOPKA') {
+                    this.closeAllModals();
+                    
+                    if (this.state.gameMode === '4x4-time' && this.state.gamePaused) {
+                        this.resumeTimer();
+                    }
+                } else {
+                    // Для YAZHOPKA закрываем только окно ввода чит-кода
+                    document.getElementById('game-cheat-modal').style.display = 'none';
                 }
+                
                 return true;
             }
         }
@@ -544,8 +577,18 @@ class Game2048 {
         this.state.board[randomCell.r][randomCell.c] = value;
         this.state.lastAddedTile = { r: randomCell.r, c: randomCell.c, value: value };
         
+        this.state.score += value;
+        this.updateAllScores();
+        
         this.updateBestTile();
         this.render();
+        
+        setTimeout(() => {
+            if (!this.state.isGameOver) {
+                this.showGameEndScreen(true);
+            }
+        }, 1500);
+        
         return true;
     }
     
@@ -555,41 +598,29 @@ class Game2048 {
         for (let r = 0; r < this.state.size; r++) {
             for (let c = 0; c < this.state.size; c++) {
                 if (this.state.board[r][c] > 0) {
-                    tiles.push(this.state.board[r][c]);
+                    tiles.push({
+                        value: this.state.board[r][c],
+                        r: r,
+                        c: c
+                    });
                 }
             }
         }
         
-        tiles.sort((a, b) => b - a);
+        tiles.sort((a, b) => b.value - a.value);
+        
+        const positions = [
+            {r: 0, c: 3}, {r: 0, c: 2}, {r: 0, c: 1}, {r: 0, c: 0},
+            {r: 1, c: 0}, {r: 1, c: 1}, {r: 1, c: 2}, {r: 1, c: 3},
+            {r: 2, c: 3}, {r: 2, c: 2}, {r: 2, c: 1}, {r: 2, c: 0},
+            {r: 3, c: 0}, {r: 3, c: 1}, {r: 3, c: 2}, {r: 3, c: 3}
+        ];
         
         const newBoard = this.createEmptyBoard(this.state.size);
         
-        let tileIndex = 0;
-        
-        for (let diag = this.state.size - 1; diag >= 0; diag--) {
-            let r = 0;
-            let c = diag;
-            while (c < this.state.size && r < this.state.size) {
-                if (tileIndex < tiles.length) {
-                    newBoard[r][c] = tiles[tileIndex];
-                    tileIndex++;
-                }
-                r++;
-                c++;
-            }
-        }
-        
-        for (let diag = 1; diag < this.state.size; diag++) {
-            let r = diag;
-            let c = 0;
-            while (r < this.state.size && c < this.state.size) {
-                if (tileIndex < tiles.length) {
-                    newBoard[r][c] = tiles[tileIndex];
-                    tileIndex++;
-                }
-                r++;
-                c++;
-            }
+        for (let i = 0; i < Math.min(tiles.length, positions.length); i++) {
+            const pos = positions[i];
+            newBoard[pos.r][pos.c] = tiles[i].value;
         }
         
         for (let r = 0; r < this.state.size; r++) {
@@ -632,17 +663,23 @@ class Game2048 {
     
     cheatDoubleTiles() {
         let doubled = false;
+        let totalAddedScore = 0;
         
         for (let r = 0; r < this.state.size; r++) {
             for (let c = 0; c < this.state.size; c++) {
                 if (this.state.board[r][c] > 0) {
+                    const originalValue = this.state.board[r][c];
                     this.state.board[r][c] *= 2;
+                    
+                    totalAddedScore += this.state.board[r][c];
                     doubled = true;
                 }
             }
         }
         
         if (doubled) {
+            this.state.score += totalAddedScore;
+            this.updateAllScores();
             this.updateBestTile();
             this.render();
         }
@@ -653,6 +690,22 @@ class Game2048 {
     cheatAddMillion() {
         this.state.score += 1000000;
         this.updateAllScores();
+        return true;
+    }
+    
+    cheatYazhopka() {
+        const modal = document.getElementById('yazhopka-modal');
+        if (!modal) return false;
+        
+        if (this.state.gameMode === '4x4-time') {
+            this.pauseTimer();
+        }
+        
+        // Открываем окно Yazhopka с задержкой для плавного перехода
+        setTimeout(() => {
+            modal.style.display = 'flex';
+        }, 0);
+        
         return true;
     }
     
@@ -692,7 +745,7 @@ class Game2048 {
         this.state.bestSpeedScore = 0;
         this.saveStatistics();
         this.updateMainMenuStats();
-        this.closeAllModals();
+        document.getElementById('stats-modal').style.display = 'none';
     }
     
     resetAllStatistics() {
@@ -701,19 +754,33 @@ class Game2048 {
         });
         this.saveStatistics();
         this.updateMainMenuStats();
-        this.closeAllModals();
+        document.getElementById('stats-modal').style.display = 'none';
     }
     
     closeAllModals() {
-        document.querySelectorAll('.modal').forEach(modal => {
-            modal.style.display = 'none';
+        const modalsToClose = [
+            'cheat-modal', 'game-cheat-modal', 'main-menu-modal', 'in-game-menu-modal', 
+            'themes-modal', 'stats-modal', 'confirm-modal', 
+            'start-time-modal', 'yazhopka-modal'
+        ];
+        
+        modalsToClose.forEach(modalId => {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'none';
+            }
         });
     }
     
     // СИСТЕМА ТЕМ
     applyTheme(themeName) {
+        console.log('Попытка применить тему:', themeName);
+        
         const theme = this.config.THEMES[themeName];
-        if (!theme) return;
+        if (!theme) {
+            console.warn('Тема не найдена:', themeName);
+            return;
+        }
         
         const docStyle = document.documentElement.style;
         docStyle.setProperty('--tg-bg-color', theme.bgColor);
@@ -721,8 +788,20 @@ class Game2048 {
         docStyle.setProperty('--tg-secondary-color', theme.secondaryColor);
         docStyle.setProperty('--tg-text-color', theme.textColor);
         
+        // Устанавливаем атрибут темы для body
+        document.body.setAttribute('data-theme', themeName);
+        
         this.state.currentTheme = themeName;
         this.saveSettings();
+        
+        console.log('Тема успешно применена:', themeName);
+        
+        // Применяем фон ко всем основным элементам
+        document.body.style.backgroundColor = theme.bgColor;
+        const mainMenu = document.querySelector('.main-menu');
+        if (mainMenu) mainMenu.style.backgroundColor = theme.bgColor;
+        const gameScreen = document.querySelector('.game-screen');
+        if (gameScreen) gameScreen.style.backgroundColor = theme.bgColor;
     }
     
     loadSettings() {
@@ -805,7 +884,7 @@ class Game2048 {
                 }
                 break;
         }
-        
+    
         return { moved, newBoard, scoreIncrease, merged };
     }
     
@@ -828,6 +907,7 @@ class Game2048 {
         return false;
     }
     
+    // ОБНОВЛЕННЫЙ МЕТОД RENDER ДЛЯ НОВЫХ ПЛИТОК
     render() {
         const { board, size } = this.state;
         
@@ -840,10 +920,46 @@ class Game2048 {
                     cell.innerHTML = '';
                     
                     if (value !== 0) {
+                        // Создаем контейнер для плитки
+                        const tileContainer = document.createElement('div');
+                        tileContainer.className = 'tile-container';
+                        
+                        // Создаем размытый фон
+                        const tileBackground = document.createElement('div');
+                        tileBackground.className = 'tile-background';
+                        
+                        // Создаем плитку
                         const tile = document.createElement('div');
                         tile.className = 'tile';
-                        tile.textContent = value;
                         tile.setAttribute('data-value', value);
+                        
+                        // Создаем градиентный бордер
+                        const tileBorder = document.createElement('div');
+                        tileBorder.className = 'tile-border';
+                        
+                        // Создаем заливку
+                        const tileFill = document.createElement('div');
+                        tileFill.className = 'tile-fill';
+                        
+                        // Создаем число
+                        const tileNumber = document.createElement('div');
+                        tileNumber.className = 'tile-number';
+                        tileNumber.textContent = value;
+                        
+                        // Собираем структуру
+                        tile.appendChild(tileBorder);
+                        tile.appendChild(tileFill);
+                        tile.appendChild(tileNumber);
+                        
+                        tileContainer.appendChild(tileBackground);
+                        tileContainer.appendChild(tile);
+                        
+                        // Устанавливаем стили для плиток в режиме 5x5
+                        if (size === 5) {
+                            tile.style.borderRadius = '16px';
+                            tileBorder.style.borderRadius = '16px';
+                            tileBackground.style.borderRadius = '16px';
+                        }
                         
                         if (this.state.lastAddedTile && 
                             this.state.lastAddedTile.r === r && 
@@ -851,7 +967,7 @@ class Game2048 {
                             tile.classList.add('new');
                         }
                         
-                        cell.appendChild(tile);
+                        cell.appendChild(tileContainer);
                     }
                 }
             }
@@ -872,6 +988,96 @@ class Game2048 {
         });
     }
     
+    // ИСПРАВЛЕННЫЙ МЕТОД ДЛЯ ОКНА СТАТИСТИКИ
+    showStatsModal() {
+        const modal = document.getElementById('stats-modal');
+        if (!modal) return;
+        
+        // Обновляем статистические данные
+        document.getElementById('stats-total-games').textContent = this.state.totalGames;
+        document.getElementById('stats-total-wins').textContent = this.state.totalWins;
+        document.getElementById('stats-best-score').textContent = this.formatNumber(this.state.bestScore);
+        document.getElementById('stats-best-speed-score').textContent = this.formatNumber(this.state.bestSpeedScore);
+        
+        modal.style.display = 'flex';
+        
+        // Обработчик закрытия
+        const closeStats = document.getElementById('close-stats');
+        if (closeStats) {
+            closeStats.onclick = () => {
+                modal.style.display = 'none';
+                if (this.elements['game-screen'].style.display === 'flex') {
+                    document.getElementById('in-game-menu-modal').style.display = 'flex';
+                } else {
+                    document.getElementById('main-menu-modal').style.display = 'flex';
+                }
+            };
+        }
+        
+        // Обработчики кнопок сброса статистики
+        const resetBestScoreBtn = document.getElementById('reset-best-score-btn');
+        if (resetBestScoreBtn) {
+            resetBestScoreBtn.onclick = () => {
+                this.showConfirmModal('Вы точно хотите стереть лучший счет?', 
+                    () => this.resetBestScore()
+                );
+            };
+        }
+        
+        const resetAllStatsBtn = document.getElementById('reset-all-stats-btn');
+        if (resetAllStatsBtn) {
+            resetAllStatsBtn.onclick = () => {
+                this.showConfirmModal('Вы точно хотите стереть всю статистику?', 
+                    () => this.resetAllStatistics()
+                );
+            };
+        }
+    }
+    
+    // ИСПРАВЛЕННЫЙ МЕТОД ДЛЯ МОДАЛЬНОГО ОКНА ПОДТВЕРЖДЕНИЯ
+    showConfirmModal(message, callback) {
+        const confirmMessage = document.getElementById('confirm-message');
+        const confirmModal = document.getElementById('confirm-modal');
+        
+        if (confirmMessage) confirmMessage.textContent = message;
+        
+        if (confirmModal) {
+            confirmModal.style.display = 'flex';
+            
+            // Временно сохраняем callback
+            this._tempConfirmCallback = callback;
+            
+            // Используем onclick вместо addEventListener для простоты
+            const confirmYes = document.getElementById('confirm-yes');
+            const confirmNo = document.getElementById('confirm-no');
+            const confirmClose = document.getElementById('confirm-close');
+            
+            if (confirmYes) {
+                confirmYes.onclick = () => {
+                    if (this._tempConfirmCallback) {
+                        this._tempConfirmCallback();
+                    }
+                    confirmModal.style.display = 'none';
+                    this._tempConfirmCallback = null;
+                };
+            }
+            
+            if (confirmNo) {
+                confirmNo.onclick = () => {
+                    confirmModal.style.display = 'none';
+                    this._tempConfirmCallback = null;
+                };
+            }
+            
+            if (confirmClose) {
+                confirmClose.onclick = () => {
+                    confirmModal.style.display = 'none';
+                    this._tempConfirmCallback = null;
+                };
+            }
+        }
+    }
+    
     setupEventListeners() {
         // Кнопки режимов игры
         document.querySelectorAll('.mode-btn').forEach(btn => {
@@ -885,14 +1091,14 @@ class Game2048 {
         const mainMenuBtn = document.getElementById('main-menu-btn');
         if (mainMenuBtn) {
             mainMenuBtn.addEventListener('click', () => {
-                document.getElementById('main-menu-modal').style.display = 'block';
+                document.getElementById('main-menu-modal').style.display = 'flex';
             });
         }
         
         const mainThemesBtn = document.getElementById('main-themes-btn');
         if (mainThemesBtn) {
             mainThemesBtn.addEventListener('click', () => {
-                document.getElementById('themes-modal').style.display = 'block';
+                document.getElementById('themes-modal').style.display = 'flex';
             });
         }
         
@@ -900,60 +1106,6 @@ class Game2048 {
         if (closeMainMenu) {
             closeMainMenu.addEventListener('click', () => {
                 document.getElementById('main-menu-modal').style.display = 'none';
-            });
-        }
-        
-        // Чит-коды
-        const mainCheatBtn = document.getElementById('main-cheat-btn');
-        if (mainCheatBtn) {
-            mainCheatBtn.addEventListener('click', () => {
-                if (this.state.gameMode === '4x4-time') {
-                    this.pauseTimer();
-                }
-                document.getElementById('cheat-modal').style.display = 'block';
-                document.getElementById('main-menu-modal').style.display = 'none';
-            });
-        }
-        
-        const gameCheatBtn = document.getElementById('game-cheat-btn');
-        if (gameCheatBtn) {
-            gameCheatBtn.addEventListener('click', () => {
-                if (this.state.gameMode === '4x4-time') {
-                    this.pauseTimer();
-                }
-                document.getElementById('cheat-modal').style.display = 'block';
-                document.getElementById('in-game-menu-modal').style.display = 'none';
-            });
-        }
-        
-        const closeCheat = document.getElementById('close-cheat');
-        if (closeCheat) {
-            closeCheat.addEventListener('click', () => {
-                document.getElementById('cheat-modal').style.display = 'none';
-                if (this.state.gameMode === '4x4-time' && this.state.gamePaused) {
-                    this.resumeTimer();
-                }
-                if (this.state.gamePaused) {
-                    document.getElementById('in-game-menu-modal').style.display = 'block';
-                } else {
-                    document.getElementById('main-menu-modal').style.display = 'block';
-                }
-            });
-        }
-        
-        const applyCheatBtn = document.getElementById('apply-cheat-btn');
-        if (applyCheatBtn) {
-            applyCheatBtn.addEventListener('click', () => {
-                const cheatInput = document.getElementById('cheat-input');
-                const code = cheatInput ? cheatInput.value : '';
-                
-                if (!this.applyCheatCode(code)) {
-                    alert('Неверный чит код!');
-                    if (cheatInput) {
-                        cheatInput.value = '';
-                        cheatInput.focus();
-                    }
-                }
             });
         }
         
@@ -966,22 +1118,119 @@ class Game2048 {
             });
         }
         
+        // Чит-коды - главное меню (только информация)
+        const mainCheatBtn = document.getElementById('main-cheat-btn');
+        if (mainCheatBtn) {
+            mainCheatBtn.addEventListener('click', () => {
+                document.getElementById('cheat-modal').style.display = 'flex';
+            });
+        }
+
+        // Чит-коды - игровое меню (с возможностью ввода)
+        const gameCheatBtn = document.getElementById('game-cheat-btn');
+        if (gameCheatBtn) {
+            gameCheatBtn.addEventListener('click', () => {
+                if (this.state.gameMode === '4x4-time') {
+                    this.pauseTimer();
+                }
+                document.getElementById('in-game-menu-modal').style.display = 'none';
+                document.getElementById('game-cheat-modal').style.display = 'flex';
+                
+                // Фокус на поле ввода при открытии
+                setTimeout(() => {
+                    const cheatInput = document.getElementById('game-cheat-input');
+                    if (cheatInput) {
+                        cheatInput.focus();
+                    }
+                }, 100);
+            });
+        }
+        
+        // ОБРАБОТЧИК ДЛЯ ПОЛЯ ВВОДА ЧИТ-КОДА В ИГРЕ
+        const gameCheatInput = document.getElementById('game-cheat-input');
+        if (gameCheatInput) {
+            gameCheatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const code = gameCheatInput.value.trim();
+                    if (code) {
+                        const success = this.applyCheatCode(code);
+                        if (success) {
+                            // Для YAZHOPKA окно ввода уже закрыто в applyCheatCode
+                            if (code.toUpperCase() !== 'YAZHOPKA') {
+                                document.getElementById('game-cheat-modal').style.display = 'none';
+                                gameCheatInput.value = '';
+                                
+                                // Возвращаемся в игру
+                                if (this.state.gameMode === '4x4-time' && this.state.gamePaused) {
+                                    this.resumeTimer();
+                                }
+                            } else {
+                                // Для YAZHOPKA просто очищаем поле ввода
+                                gameCheatInput.value = '';
+                            }
+                        } else {
+                            // Неверный код - очищаем поле и показываем сообщение
+                            gameCheatInput.value = '';
+                            gameCheatInput.placeholder = 'Неверный код! Попробуйте снова';
+                            setTimeout(() => {
+                                gameCheatInput.placeholder = 'Введите чит-код здесь';
+                            }, 2000);
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Закрытие окна чит-кода для игры
+        const closeGameCheat = document.getElementById('close-game-cheat');
+        if (closeGameCheat) {
+            closeGameCheat.addEventListener('click', () => {
+                document.getElementById('game-cheat-modal').style.display = 'none';
+                
+                // Очищаем поле ввода при закрытии
+                const gameCheatInput = document.getElementById('game-cheat-input');
+                if (gameCheatInput) {
+                    gameCheatInput.value = '';
+                    gameCheatInput.placeholder = 'Введите чит-код здесь';
+                }
+                
+                // Возвращаемся в игровое меню
+                if (this.state.gameMode === '4x4-time' && this.state.gamePaused) {
+                    document.getElementById('in-game-menu-modal').style.display = 'flex';
+                }
+            });
+        }
+        
+        // Закрытие окна чит-кода для главного меню
+        const closeCheat = document.getElementById('close-cheat');
+        if (closeCheat) {
+            closeCheat.addEventListener('click', () => {
+                document.getElementById('cheat-modal').style.display = 'none';
+                document.getElementById('main-menu-modal').style.display = 'flex';
+            });
+        }
+        
+        // Закрытие окна Yazhopka
+        const closeYazhopka = document.getElementById('close-yazhopka');
+        if (closeYazhopka) {
+            closeYazhopka.addEventListener('click', () => {
+                document.getElementById('yazhopka-modal').style.display = 'none';
+                if (this.state.gameMode === '4x4-time' && this.state.gamePaused) {
+                    this.resumeTimer();
+                }
+            });
+        }
+        
         // Кнопки управления в игре
         const gameMenuBtn = document.getElementById('game-menu-btn');
         if (gameMenuBtn) {
             gameMenuBtn.addEventListener('click', () => {
                 this.pauseTimer();
-                document.getElementById('in-game-menu-modal').style.display = 'block';
+                document.getElementById('in-game-menu-modal').style.display = 'flex';
             });
         }
         
-        const toMainMenuBtn = document.getElementById('to-main-menu-btn');
-        if (toMainMenuBtn) {
-            toMainMenuBtn.addEventListener('click', () => {
-                this.showMainMenu();
-            });
-        }
-        
+        // НОВЫЙ ОБРАБОТЧИК ДЛЯ КНОПКИ "НАЧАТЬ" В ОКНЕ НАЧАЛА ИГРЫ НА ВРЕМЯ
         const startTimeBtn = document.getElementById('start-time-btn');
         if (startTimeBtn) {
             startTimeBtn.addEventListener('click', () => {
@@ -999,7 +1248,7 @@ class Game2048 {
                 document.getElementById('in-game-menu-modal').style.display = 'none';
                 
                 if (this.state.gameMode === '4x4-time') {
-                    setTimeout(() => this.showStartTimeModal(), 100);
+                    setTimeout(() => this.showStartTimeModal(), 0);
                 }
             });
         }
@@ -1029,7 +1278,7 @@ class Game2048 {
             });
         }
         
-        // Темы
+        // ТЕМЫ
         const closeThemes = document.getElementById('close-themes');
         if (closeThemes) {
             closeThemes.addEventListener('click', () => {
@@ -1037,110 +1286,20 @@ class Game2048 {
             });
         }
         
-        document.querySelectorAll('.theme-option').forEach(theme => {
-            theme.addEventListener('click', (e) => {
-                const themeName = e.currentTarget.dataset.theme;
-                this.applyTheme(themeName);
+        // Правильные обработчики для кнопок тем
+        document.querySelectorAll('.theme-btn').forEach(themeBtn => {
+            themeBtn.addEventListener('click', (e) => {
+                const themeName = e.currentTarget.getAttribute('data-theme');
+                console.log('Выбрана тема:', themeName);
+                if (themeName) {
+                    this.applyTheme(themeName);
+                }
             });
         });
-        
-        // Подтверждения
-        const confirmYes = document.getElementById('confirm-yes');
-        if (confirmYes) {
-            confirmYes.addEventListener('click', () => {
-                if (this.confirmCallback) this.confirmCallback();
-            });
-        }
-        
-        const confirmNo = document.getElementById('confirm-no');
-        if (confirmNo) {
-            confirmNo.addEventListener('click', () => {
-                document.getElementById('confirm-modal').style.display = 'none';
-            });
-        }
         
         // Управление стрелками
         document.addEventListener('keydown', this.handleKeyPress.bind(this));
         this.setupSwipeControls();
-    }
-    
-    showStatsModal() {
-        const modal = document.getElementById('stats-modal');
-        if (!modal) return;
-        
-        modal.innerHTML = `
-            <div class="modal-content">
-                <button class="close-btn" id="close-stats">×</button>
-                <h3>Моя статистика</h3>
-                <div class="stats-content">
-                    <div class="stats-section">
-                        <div class="stat-row">
-                            <span>Всего игр:</span>
-                            <strong>${this.state.totalGames}</strong>
-                        </div>
-                        <div class="stat-row">
-                            <span>Побед:</span>
-                            <strong>${this.state.totalWins}</strong>
-                        </div>
-                        <div class="stat-row">
-                            <span>Лучший счёт:</span>
-                            <strong>${this.formatNumber(this.state.bestScore)}</strong>
-                        </div>
-                        <div class="stat-row">
-                            <span>Лучший счет на скорость:</span>
-                            <strong>${this.formatNumber(this.state.bestSpeedScore)}</strong>
-                        </div>
-                    </div>
-                    <div class="stats-actions">
-                        <button class="tg-button secondary" id="reset-best-score-btn">Стереть лучший счет</button>
-                        <button class="tg-button secondary" id="reset-all-stats-btn">Стереть всю статистику</button>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        modal.style.display = 'block';
-        
-        const closeStats = modal.querySelector('#close-stats');
-        if (closeStats) {
-            closeStats.addEventListener('click', () => {
-                modal.style.display = 'none';
-                if (this.state.gamePaused) {
-                    document.getElementById('in-game-menu-modal').style.display = 'block';
-                } else {
-                    document.getElementById('main-menu-modal').style.display = 'block';
-                }
-            });
-        }
-        
-        const resetBestScoreBtn = modal.querySelector('#reset-best-score-btn');
-        if (resetBestScoreBtn) {
-            resetBestScoreBtn.addEventListener('click', () => {
-                this.showConfirmModal('Стереть лучший счет?', 'Вы точно хотите стереть лучший счет?', 
-                    () => this.resetBestScore()
-                );
-            });
-        }
-        
-        const resetAllStatsBtn = modal.querySelector('#reset-all-stats-btn');
-        if (resetAllStatsBtn) {
-            resetAllStatsBtn.addEventListener('click', () => {
-                this.showConfirmModal('Стереть всю статистику?', 'Вы точно хотите стереть всю статистику?', 
-                    () => this.resetAllStatistics()
-                );
-            });
-        }
-    }
-    
-    showConfirmModal(title, message, callback) {
-        const confirmTitle = document.getElementById('confirm-title');
-        const confirmMessage = document.getElementById('confirm-message');
-        const confirmModal = document.getElementById('confirm-modal');
-        
-        if (confirmTitle) confirmTitle.textContent = title;
-        if (confirmMessage) confirmMessage.textContent = message;
-        this.confirmCallback = callback;
-        if (confirmModal) confirmModal.style.display = 'block';
     }
     
     handleKeyPress(e) {

@@ -1,71 +1,81 @@
-// config.js - полная конфигурация приложения без вибрации
+// CONFIG.js - ОБНОВЛЕННЫЕ НАСТРОЙКИ ТЕМ
 window.AppConfig = {
+    // Настройки игры
     GAME: {
         INITIAL_TILES: 2,
         PROBABILITY_4: 0.1,
-        TIME_ATTACK_DURATION: 90
+        DEFAULT_SIZE: 4,
+        ANIMATION_DURATION: 150,
+        TIME_ATTACK_DURATION: 90,
+        EXPLODE_PERCENTAGE: 0.35
     },
     
+    // Настройки Telegram
+    TELEGRAM: {
+        BUTTON_HEIGHT: 40,
+        USE_THEME: true,
+        SHOW_CONFIRMATION: true
+    },
+    
+    // Настройки способностей
+    ABILITIES: {
+        UNDO: { uses: 2, maxUses: 2 },
+        REMOVE_TWOS: { uses: 2, maxUses: 2 },
+        EXPLODE: { uses: 2, maxUses: 2 },
+        ADD_TIME: { uses: 2, maxUses: 2 }
+    },
+    
+    // ОБНОВЛЕННЫЕ НАСТРОЙКИ ТЕМ (соответствуют HTML)
     THEMES: {
-        default: {
-            bgColor: '#faf8ef',
-            primaryColor: '#bbada0', 
-            secondaryColor: '#cdc1b4',
-            textColor: '#776e65'
+        'default': {
+            bgColor: '#63697B',
+            primaryColor: '#635BFF',
+            secondaryColor: '#8B85FF',
+            textColor: '#FFFFFF'
         },
-        dark: {
-            bgColor: '#2d2d2d',
-            primaryColor: '#4a4a4a',
-            secondaryColor: '#3a3a3a', 
-            textColor: '#ffffff'
+        'moon-dust': {
+            bgColor: '#63697B',
+            primaryColor: '#635BFF',
+            secondaryColor: '#8B85FF',
+            textColor: '#FFFFFF'
         },
-        blue: {
-            bgColor: '#e8f4f8',
-            primaryColor: '#3498db',
-            secondaryColor: '#aed6f1',
-            textColor: '#2c3e50'
+        'whisper-leaves': {
+            bgColor: '#7F8B7D',
+            primaryColor: '#5D7257',
+            secondaryColor: '#8B9C85',
+            textColor: '#FFFFFF'
         },
-        green: {
-            bgColor: '#e8f5e8',
-            primaryColor: '#27ae60',
-            secondaryColor: '#a3e4a3',
-            textColor: '#1e5631'
+        'wet-stone': {
+            bgColor: '#8B847D',
+            primaryColor: '#726B65',
+            secondaryColor: '#9C958D',
+            textColor: '#FFFFFF'
         },
-        purple: {
-            bgColor: '#f3e8fd',
-            primaryColor: '#9C27B0',
-            secondaryColor: '#ce93d8',
-            textColor: '#4a148c'
+        'deep-space': {
+            bgColor: '#3B3D46',
+            primaryColor: '#2B2D36',
+            secondaryColor: '#4B4D56',
+            textColor: '#FFFFFF'
         },
-        orange: {
-            bgColor: '#fff3e0',
-            primaryColor: '#FF9800',
-            secondaryColor: '#ffcc80',
-            textColor: '#e65100'
+        'unicorn-dream': {
+            bgColor: '#D9A5B3',
+            primaryColor: '#C98394',
+            secondaryColor: '#E9C7D1',
+            textColor: '#FFFFFF'
         }
     },
     
-    UI: {
-        ANIMATION_DURATION: 100,
-        TILE_TRANSITION: 0.1
-    },
-    
-    MODES: {
-        '4x4': {
-            name: 'Классика 4x4',
-            description: 'Собери плитку 2048'
-        },
-        '5x5': {
-            name: 'Эксперт 5x5', 
-            description: 'Собери плитку 4096'
-        },
-        '4x4-time': {
-            name: 'На скорость',
-            description: '90 секунд на игру'
-        },
-        '5x5-zen': {
-            name: 'Релакс 5x5',
-            description: 'Без ограничений'
-        }
+    // Локализация
+    TEXT: {
+        GAME_OVER: 'Игра окончена!',
+        NEW_GAME: 'Новая игра',
+        SCORE: 'Счет',
+        BEST_SCORE: 'Рекорд',
+        YOU_WIN: 'Поздравляем! Вы выиграли!',
+        YOU_LOSE: 'Это поражение',
+        BEST_TILE: 'Лучшая плитка',
+        TIME_LEFT: 'Время'
     }
 };
+
+console.log('AppConfig загружен');
