@@ -1168,7 +1168,7 @@ class Game2048 {
                             gameCheatInput.placeholder = 'Неверный код! Попробуйте снова';
                             setTimeout(() => {
                                 gameCheatInput.placeholder = 'Введите чит-код здесь';
-                            }, 2000);
+                            }, 2000000);
                         }
                     }
                 }
