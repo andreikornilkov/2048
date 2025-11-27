@@ -41,7 +41,8 @@ body {
     flex-direction: column;
     max-width: 100%;
     margin: 0 auto;
-    position: relative;
+    position: fixed; /* Меняем relative на fixed */
+    overflow: hidden; /* Добавляем */
 }
 
 /* Главное меню */
@@ -1114,7 +1115,6 @@ body {
 /* Остальные стили остаются без изменений */
 /* Модальные окна */
 .modal {
-    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -1123,6 +1123,7 @@ body {
     z-index: 1000;
     align-items: center;
     justify-content: center;
+    overflow: hidden; /* Добавляем */
 }
 
 /* ФОНЫ ДЛЯ МОДАЛЬНЫХ ОКОН В ЗАВИСИМОСТИ ОТ ТЕМЫ */
