@@ -1,4 +1,4 @@
-// game.js - ОБНОВЛЕННАЯ ВЕРСИЯ С НОВЫМИ ПЛИТКАМИ
+// game.js - ОБНОВЛЕННАЯ ВЕРСИЯ С ИСПРАВЛЕННОЙ СТАТИСТИКОЙ ДЛЯ ВСЕХ РЕЖИМОВ И ОТДЕЛЬНЫМ ОФОРМЛЕНИЕМ ДЛЯ ТЕМЫ "СОН ЕДИНОРОГА"
 class Game2048 {
     constructor() {
         this.config = window.AppConfig;
@@ -23,7 +23,7 @@ class Game2048 {
             'close-game-menu', 'restart-game-btn', 'to-lobby-btn', 'game-stats-btn',
             'game-cheat-modal', 'close-game-cheat', 'game-cheat-input', 'close-yazhopka',
             'game-end-title', 'game-end-tile', 'game-end-score', 'game-end-main-menu-btn',
-            'start-time-btn'
+            'start-time-btn', 'close-start-time', 'game-themes-btn', 'stats-best-time-tile'
         ];
         
         ids.forEach(id => {
@@ -53,7 +53,10 @@ class Game2048 {
             totalGames: 0,
             totalWins: 0,
             currentTheme: 'default',
-            gamePaused: false
+            gamePaused: false,
+            bestTimeTile: 0,
+            lastBestTile: 0,
+            gameStarted: false
         };
     }
     
@@ -124,6 +127,12 @@ class Game2048 {
         
         if (gameMode === '4x4-time') {
             setTimeout(() => this.showStartTimeModal(), 0);
+        } else {
+            // ДЛЯ ВСЕХ ОСТАЛЬНЫХ РЕЖИМОВ: увеличиваем счетчик игр сразу при старте
+            this.state.totalGames++;
+            this.state.gameStarted = true;
+            this.saveStatistics();
+            this.updateMainMenuStats();
         }
     }
     
@@ -151,7 +160,9 @@ class Game2048 {
             bestTile: 0,
             history: [],
             timeLeft: this.config.GAME.TIME_ATTACK_DURATION,
-            gamePaused: false
+            gamePaused: false,
+            lastBestTile: 0,
+            gameStarted: false
         });
         
         this.elements['time-container'].style.display = settings.showTime ? 'block' : 'none';
@@ -169,16 +180,24 @@ class Game2048 {
         this.render();
         this.showGameScreen();
         
-        this.state.totalGames++;
-        this.saveStatistics();
-        this.updateMainMenuStats();
-        
         window.TelegramApp?.tg?.MainButton.hide();
     }
     
     showStartTimeModal() {
         const modal = document.getElementById('start-time-modal');
         if (modal) modal.style.display = 'flex';
+    }
+    
+    // НОВЫЙ МЕТОД: Начало игры с учетом счетчика (только для режима на время)
+    startGameWithTimer() {
+        // Увеличиваем счетчик игр только когда игра действительно начинается (для режима на время)
+        this.state.totalGames++;
+        this.state.gameStarted = true;
+        this.saveStatistics();
+        this.updateMainMenuStats();
+        
+        document.getElementById('start-time-modal').style.display = 'none';
+        this.startTimer();
     }
     
     startTimer() {
@@ -350,6 +369,23 @@ class Game2048 {
             }
         }
         
+        // ОБНОВЛЕНО: Сохранение статистики для режима на время в реальном времени
+        if (this.state.gameMode === '4x4-time') {
+            if (this.state.score > this.state.bestSpeedScore) {
+                this.state.bestSpeedScore = this.state.score;
+            }
+            
+            if (this.state.bestTile > this.state.bestTimeTile) {
+                this.state.bestTimeTile = this.state.bestTile;
+            }
+            
+            // Сохраняем статистику при значительных изменениях
+            if (this.state.score % 100 === 0 || this.state.bestTile !== this.state.lastBestTile) {
+                this.saveStatistics();
+                this.state.lastBestTile = this.state.bestTile;
+            }
+        }
+        
         if (this.elements['score']) {
             this.elements['score'].textContent = this.formatGameScore(this.state.score);
         }
@@ -368,6 +404,22 @@ class Game2048 {
         for (let r = 0; r < this.state.size; r++) {
             for (let c = 0; c < this.state.size; c++) {
                 if (this.state.board[r][c] === this.state.targetTile) {
+                    // ОБНОВЛЕНО: Сохраняем статистику для режима на время при победе
+                    if (this.state.gameMode === '4x4-time') {
+                        // Обновляем лучший счет на время
+                        if (this.state.score > this.state.bestSpeedScore) {
+                            this.state.bestSpeedScore = this.state.score;
+                        }
+                        
+                        // Обновляем лучшую плитку на время
+                        if (this.state.bestTile > this.state.bestTimeTile) {
+                            this.state.bestTimeTile = this.state.bestTile;
+                        }
+                        
+                        // Сохраняем статистику
+                        this.saveStatistics();
+                    }
+                    
                     this.showGameEndScreen(true);
                     return;
                 }
@@ -433,7 +485,24 @@ class Game2048 {
         return maxTile;
     }
     
+    // ОБНОВЛЕННЫЙ МЕТОД: Сохранение статистики при завершении игры
     gameOver() {
+        // Сохраняем статистику для режима на время
+        if (this.state.gameMode === '4x4-time') {
+            // Обновляем лучший счет на время
+            if (this.state.score > this.state.bestSpeedScore) {
+                this.state.bestSpeedScore = this.state.score;
+            }
+            
+            // Обновляем лучшую плитку на время
+            if (this.state.bestTile > this.state.bestTimeTile) {
+                this.state.bestTimeTile = this.state.bestTile;
+            }
+            
+            // Сохраняем статистику
+            this.saveStatistics();
+        }
+        
         this.showGameEndScreen(false);
     }
     
@@ -712,7 +781,12 @@ class Game2048 {
     // СИСТЕМА СТАТИСТИКИ
     loadStatistics() {
         const stats = JSON.parse(localStorage.getItem('tg_2048_stats')) || {
-            totalGames: 0, totalWins: 0, bestScore: 0, bestSpeedScore: 0, bestTile: 0
+            totalGames: 0, 
+            totalWins: 0, 
+            bestScore: 0, 
+            bestSpeedScore: 0, 
+            bestTile: 0, 
+            bestTimeTile: 0
         };
         
         Object.assign(this.state, stats);
@@ -724,7 +798,8 @@ class Game2048 {
             totalWins: this.state.totalWins,
             bestScore: Math.max(this.state.bestScore, this.state.score),
             bestSpeedScore: Math.max(this.state.bestSpeedScore, this.state.score),
-            bestTile: Math.max(this.state.bestTile, this.state.bestTile)
+            bestTile: Math.max(this.state.bestTile, this.state.bestTile),
+            bestTimeTile: Math.max(this.state.bestTimeTile, this.state.bestTile)
         };
         
         localStorage.setItem('tg_2048_stats', JSON.stringify(stats));
@@ -743,6 +818,7 @@ class Game2048 {
     resetBestScore() {
         this.state.bestScore = 0;
         this.state.bestSpeedScore = 0;
+        this.state.bestTimeTile = 0;
         this.saveStatistics();
         this.updateMainMenuStats();
         document.getElementById('stats-modal').style.display = 'none';
@@ -750,7 +826,12 @@ class Game2048 {
     
     resetAllStatistics() {
         Object.assign(this.state, {
-            totalGames: 0, totalWins: 0, bestScore: 0, bestSpeedScore: 0, bestTile: 0
+            totalGames: 0, 
+            totalWins: 0, 
+            bestScore: 0, 
+            bestSpeedScore: 0, 
+            bestTile: 0, 
+            bestTimeTile: 0
         });
         this.saveStatistics();
         this.updateMainMenuStats();
@@ -802,6 +883,11 @@ class Game2048 {
         if (mainMenu) mainMenu.style.backgroundColor = theme.bgColor;
         const gameScreen = document.querySelector('.game-screen');
         if (gameScreen) gameScreen.style.backgroundColor = theme.bgColor;
+        
+        // Перерисовываем доску, чтобы применить стили плиток для темы
+        if (this.state.board && this.state.board.length > 0) {
+            this.render();
+        }
     }
     
     loadSettings() {
@@ -907,9 +993,9 @@ class Game2048 {
         return false;
     }
     
-    // ОБНОВЛЕННЫЙ МЕТОД RENDER ДЛЯ НОВЫХ ПЛИТОК
+    // ОБНОВЛЕННЫЙ МЕТОД RENDER ДЛЯ НОВЫХ ПЛИТОК С УЧЕТОМ ТЕМЫ "СОН ЕДИНОРОГА"
     render() {
-        const { board, size } = this.state;
+        const { board, size, currentTheme } = this.state;
         
         for (let r = 0; r < size; r++) {
             for (let c = 0; c < size; c++) {
@@ -932,6 +1018,11 @@ class Game2048 {
                         const tile = document.createElement('div');
                         tile.className = 'tile';
                         tile.setAttribute('data-value', value);
+                        
+                        // ДЛЯ ТЕМЫ "СОН ЕДИНОРОГА": добавляем специальный класс
+                        if (currentTheme === 'unicorn-dream') {
+                            tile.classList.add('unicorn-dream-tile');
+                        }
                         
                         // Создаем градиентный бордер
                         const tileBorder = document.createElement('div');
@@ -998,6 +1089,7 @@ class Game2048 {
         document.getElementById('stats-total-wins').textContent = this.state.totalWins;
         document.getElementById('stats-best-score').textContent = this.formatNumber(this.state.bestScore);
         document.getElementById('stats-best-speed-score').textContent = this.formatNumber(this.state.bestSpeedScore);
+        document.getElementById('stats-best-time-tile').textContent = this.state.bestTimeTile;
         
         modal.style.display = 'flex';
         
@@ -1078,6 +1170,25 @@ class Game2048 {
         }
     }
     
+    // НОВЫЙ МЕТОД ДЛЯ ЗАКРЫТИЯ ОКНА ТЕМ
+    closeThemesModal() {
+        const themesModal = document.getElementById('themes-modal');
+        if (!themesModal) return;
+        
+        themesModal.style.display = 'none';
+        
+        // Определяем контекст открытия
+        const isGameActive = this.elements['game-screen'].style.display === 'flex';
+        const isInGameMenuOpen = document.getElementById('in-game-menu-modal').style.display === 'flex';
+        
+        if (isGameActive || isInGameMenuOpen) {
+            // Если открыто из игры или игрового меню - возвращаемся в игровое меню
+            document.getElementById('in-game-menu-modal').style.display = 'flex';
+        }
+        // Если открыто с главной страницы (кнопка "Темы" в правом верхнем углу) - просто закрываем
+        // Главное меню остается открытым автоматически
+    }
+    
     setupEventListeners() {
         // Кнопки режимов игры
         document.querySelectorAll('.mode-btn').forEach(btn => {
@@ -1135,8 +1246,32 @@ class Game2048 {
                 }
                 document.getElementById('in-game-menu-modal').style.display = 'none';
                 document.getElementById('game-cheat-modal').style.display = 'flex';
-                
-              
+            });
+        }
+        
+        // ДОБАВЛЕН ОБРАБОТЧИК ДЛЯ КНОПКИ "ТЕМЫ" В ИГРОВОМ МЕНЮ
+        const gameThemesBtn = document.getElementById('game-themes-btn');
+        if (gameThemesBtn) {
+            gameThemesBtn.addEventListener('click', () => {
+                document.getElementById('in-game-menu-modal').style.display = 'none';
+                document.getElementById('themes-modal').style.display = 'flex';
+            });
+        }
+        
+        // ИСПРАВЛЕННЫЙ ОБРАБОТЧИК ДЛЯ КНОПКИ ЗАКРЫТИЯ В ОКНЕ НАЧАЛА ИГРЫ НА ВРЕМЯ
+        const closeStartTime = document.getElementById('close-start-time');
+        if (closeStartTime) {
+            closeStartTime.addEventListener('click', () => {
+                document.getElementById('start-time-modal').style.display = 'none';
+                this.showMainMenu(); // Возвращаемся в главное меню
+            });
+        }
+        
+        // ИСПРАВЛЕННЫЙ ОБРАБОТЧИК ДЛЯ КНОПКИ "НАЧАТЬ" В ОКНЕ НАЧАЛА ИГРЫ НА ВРЕМЯ
+        const startTimeBtn = document.getElementById('start-time-btn');
+        if (startTimeBtn) {
+            startTimeBtn.addEventListener('click', () => {
+                this.startGameWithTimer(); // Используем новый метод
             });
         }
         
@@ -1175,7 +1310,7 @@ class Game2048 {
             });
         }
         
-        // Закрытие окна чит-кода для игры
+        // ИСПРАВЛЕННЫЙ ОБРАБОТЧИК: Закрытие окна чит-кода для игры
         const closeGameCheat = document.getElementById('close-game-cheat');
         if (closeGameCheat) {
             closeGameCheat.addEventListener('click', () => {
@@ -1188,9 +1323,12 @@ class Game2048 {
                     gameCheatInput.placeholder = 'Введите чит-код здесь';
                 }
                 
-                // Возвращаемся в игровое меню
+                // ВОЗВРАЩАЕМСЯ В ИГРОВОЕ МЕНЮ (исправлено)
+                document.getElementById('in-game-menu-modal').style.display = 'flex';
+                
+                // Возобновляем таймер только если игра не на паузе
                 if (this.state.gameMode === '4x4-time' && this.state.gamePaused) {
-                    document.getElementById('in-game-menu-modal').style.display = 'flex';
+                    this.resumeTimer();
                 }
             });
         }
@@ -1221,15 +1359,6 @@ class Game2048 {
             gameMenuBtn.addEventListener('click', () => {
                 this.pauseTimer();
                 document.getElementById('in-game-menu-modal').style.display = 'flex';
-            });
-        }
-        
-        // НОВЫЙ ОБРАБОТЧИК ДЛЯ КНОПКИ "НАЧАТЬ" В ОКНЕ НАЧАЛА ИГРЫ НА ВРЕМЯ
-        const startTimeBtn = document.getElementById('start-time-btn');
-        if (startTimeBtn) {
-            startTimeBtn.addEventListener('click', () => {
-                document.getElementById('start-time-modal').style.display = 'none';
-                this.startTimer();
             });
         }
         
@@ -1272,11 +1401,11 @@ class Game2048 {
             });
         }
         
-        // ТЕМЫ
+        // ТЕМЫ - ОБНОВЛЕННЫЙ ОБРАБОТЧИК ЗАКРЫТИЯ
         const closeThemes = document.getElementById('close-themes');
         if (closeThemes) {
             closeThemes.addEventListener('click', () => {
-                document.getElementById('themes-modal').style.display = 'none';
+                this.closeThemesModal();
             });
         }
         

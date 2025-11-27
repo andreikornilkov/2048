@@ -22,11 +22,11 @@
 
                     <!-- Статистика -->
                     <div class="stats-container">
-                        <div class="stat-item" style="left: 55px;">
+                        <div class="stat-item" style="left: 62px;">
                             <div class="stat-value" id="total-games">0</div>
                             <div class="stat-label">Всего игр</div>
                         </div>
-                        <div class="stat-item" style="left: 137px;">
+                        <div class="stat-item" style="left: 140px;">
                             <div class="stat-value" id="total-wins">0</div>
                             <div class="stat-label">Побед</div>
                         </div>
@@ -82,21 +82,21 @@
         <!-- Игровой экран -->
         <div class="game-screen" id="game-screen" style="display: none;">
             <div class="canvas">
-                <!-- Верхняя панель со статистикой - 303x107px -->
+                <!-- Верхняя панель со статистикой -->
                 <div class="game-panel-top">
                     <div class="panel-fill"></div>
                     
                     <!-- Статистика -->
                     <div class="stats-container">
-                        <div class="stat-item" id="best-tile-container" style="left: 72px;">
+                        <div class="stat-item" id="best-tile-container" style="left: 86px;">
                             <div class="stat-value" id="best-tile">0</div>
                             <div class="stat-label">Лучшая плитка</div>
                         </div>
-                        <div class="stat-item" id="time-container" style="display: none; left: 72px;">
+                        <div class="stat-item" id="time-container" style="display: none; left: 86px;">
                             <div class="stat-value" id="time-left">90</div>
                             <div class="stat-label">Время</div>
                         </div>
-                        <div class="stat-item" style="left: 230px;">
+                        <div class="stat-item" style="left: 216px;">
                             <div class="stat-value" id="score">0</div>
                             <div class="stat-label">Счёт игры</div>
                         </div>
@@ -175,6 +175,12 @@
                         <div class="menu-button-text">Начать</div>
                     </button>
                 </div>
+
+                <!-- КНОПКА ЗАКРЫТИЯ ДОБАВЛЕНА -->
+                <button class="menu-button-right-close" id="close-start-time">
+                    <div class="close-icon"></div>
+                    <div class="button-fill-small"></div>
+                </button>
             </div>
         </div>
 
@@ -209,6 +215,11 @@
                     <div class="stats-item">
                         <span class="stats-label">Лучший счёт на время</span>
                         <span class="stats-value" id="stats-best-speed-score">0</span>
+                    </div>
+                    <!-- ДОБАВЛЕН ПУНКТ "ЛУЧШАЯ ПЛИТКА НА ВРЕМЯ" -->
+                    <div class="stats-item">
+                        <span class="stats-label">Лучшая плитка на время</span>
+                        <span class="stats-value" id="stats-best-time-tile">0</span>
                     </div>
                 </div>
 
@@ -294,7 +305,7 @@
             </div>
         </div>
 
-        <!-- Модальное окно меню в игре (4 КНОПКИ) -->
+        <!-- Модальное окно меню в игре (5 КНОПОК) -->
         <div class="modal" id="in-game-menu-modal">
             <div class="canvas">
                 <!-- Панель меню -->
@@ -308,7 +319,7 @@
                     <div class="button-fill-small"></div>
                 </button>
 
-                <!-- Кнопки меню - ВСЕ 4 КНОПКИ -->
+                <!-- Кнопки меню - ВСЕ 5 КНОПОК -->
                 <button class="menu-button-item restart-button" id="restart-game-btn">
                     <div class="button-fill"></div>
                     <div class="menu-button-text">Начать заново</div>
@@ -327,6 +338,12 @@
                 <button class="menu-button-item cheat-button" id="game-cheat-btn">
                     <div class="button-fill"></div>
                     <div class="menu-button-text">Чит-код</div>
+                </button>
+
+                <!-- ДОБАВЛЕНА КНОПКА "ТЕМЫ" -->
+                <button class="menu-button-item themes-button" id="game-themes-btn">
+                    <div class="button-fill"></div>
+                    <div class="menu-button-text">Темы</div>
                 </button>
             </div>
         </div>

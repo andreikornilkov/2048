@@ -1,4 +1,4 @@
-/* style.css - ОБНОВЛЕННЫЙ С НОВЫМИ ПЛИТКАМИ */
+/* style.css - v1.03 с исправленной статистикой, модальными окнами и отдельным оформлением для темы "Сон единорога" */
 :root {
     --tg-bg-color: #63697B;
     --tg-primary-color: #635BFF;
@@ -32,6 +32,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    touch-action: manipulation;
 }
 
 .telegram-app {
@@ -41,8 +42,10 @@ body {
     flex-direction: column;
     max-width: 100%;
     margin: 0 auto;
-    position: fixed; /* Меняем relative на fixed */
-    overflow: hidden; /* Добавляем */
+    position: relative;
+    overflow: hidden;
+    min-width: 280px;
+    min-height: 500px;
 }
 
 /* Главное меню */
@@ -54,15 +57,15 @@ body {
     position: relative;
     z-index: 1;
     width: 100%;
+    justify-content: center;
+    align-items: center;
 }
 
 .canvas {
     width: 375px;
-    height: 581px;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    height: 709px;
+    position: relative;
+    margin: 0 auto;
     flex-shrink: 0;
 }
 
@@ -71,8 +74,9 @@ body {
     width: 303px;
     height: 518px;
     position: absolute;
-    top: 22px;
-    left: 36px;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
     border-radius: 22px;
     background: rgba(255, 255, 255, 0.04);
     backdrop-filter: blur(5px);
@@ -80,13 +84,14 @@ body {
     box-shadow: 0px 8px 30px 0px rgba(0, 1, 50, 0.15);
 }
 
-/* ИГРОВОЙ ЭКРАН - НОВЫЕ ПАНЕЛИ */
+/* ИГРОВОЙ ЭКРАН */
 .game-panel-top {
     width: 303px;
-    height: 107px;
+    height: 130px;
     position: absolute;
-    top: 22px;
-    left: 36px;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
     border-radius: 22px;
     background: rgba(255, 255, 255, 0.04);
     backdrop-filter: blur(5px);
@@ -98,8 +103,9 @@ body {
     width: 303px;
     height: 303px;
     position: absolute;
-    top: 152px; /* 22px + 107px + 23px */
-    left: 36px;
+    top: 192px; 
+    left: 50%;
+    transform: translateX(-50%);
     border-radius: 22px;
     background: rgba(255, 255, 255, 0.01);
     backdrop-filter: blur(5px);
@@ -107,7 +113,7 @@ body {
     box-shadow: 0px 8px 30px 0px rgba(0, 1, 50, 0.15);
 }
 
-/* Контейнер для игрового поля 282x282px */
+/* Контейнер для игрового поля */
 .game-board-container {
     position: absolute;
     top: 50%;
@@ -120,7 +126,7 @@ body {
     justify-content: center;
 }
 
-/* Первый градиент для панели */
+/* Градиенты для панелей */
 .panel::before,
 .game-panel-top::before,
 .game-panel-bottom::before {
@@ -147,7 +153,6 @@ body {
     z-index: 1;
 }
 
-/* Второй градиент для панели */
 .panel::after,
 .game-panel-top::after,
 .game-panel-bottom::after {
@@ -174,7 +179,6 @@ body {
     z-index: 1;
 }
 
-/* Градиентная заливка для панели */
 .panel > .panel-fill,
 .game-panel-top > .panel-fill,
 .game-panel-bottom > .panel-fill {
@@ -195,13 +199,13 @@ body {
     z-index: 0;
 }
 
-/* Маленькие кнопки */
+/* МАЛЕНЬКИЕ КНОПКИ - фиксированные позиции */
 .menu-button,
 .menu-button-right {
-    width: 66px;
-    height: 22px;
+    width: 78px;
+    height: 24px;
     position: absolute;
-    top: 35px;
+    top: 54px;
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.04);
     backdrop-filter: blur(5px);
@@ -216,18 +220,20 @@ body {
 }
 
 .menu-button-right {
-    left: 251px;
+    left: 238px;
 }
 
-/* Стиль для плашки "Новый рекорд" */
 .new-record-badge {
-    width: 108px;
-    left: 211px;
+    width: 129px;
+    height: 24px;
+    position: absolute;
+    top: 54px;
+    left: 187px;
     box-shadow: inset 0 0 8px rgba(234, 118, 55, 0.5);
     pointer-events: none;
 }
 
-/* Первый градиент для маленьких кнопок */
+/* Градиенты для маленьких кнопок */
 .menu-button::before,
 .menu-button-right::before {
     content: '';
@@ -253,7 +259,6 @@ body {
     z-index: 1;
 }
 
-/* Второй градиент для маленьких кнопок */
 .menu-button::after,
 .menu-button-right::after {
     content: '';
@@ -279,7 +284,6 @@ body {
     z-index: 1;
 }
 
-/* Один цвет для плашки "Новый рекорд" */
 .new-record-badge::before {
     content: '';
     position: absolute;
@@ -300,7 +304,6 @@ body {
     opacity: 0.78;
 }
 
-/* Градиентная заливка для маленьких кнопок */
 .menu-button > .button-fill-small,
 .menu-button-right > .button-fill-small,
 .new-record-badge > .button-fill-small {
@@ -321,7 +324,7 @@ body {
     z-index: 0;
 }
 
-/* БУРГЕР-ИКОНКА ДЛЯ ЛЕВОЙ КНОПКИ */
+/* БУРГЕР-ИКОНКА */
 .menu-button .burger-icon {
     position: absolute;
     left: 8px;
@@ -336,15 +339,6 @@ body {
     z-index: 11;
 }
 
-.menu-button .burger-icon::before,
-.menu-button .burger-icon::after {
-    content: '';
-    width: 100%;
-    height: 1px;
-    background-color: #F2F2F2;
-}
-
-/* Создаем три линии бургера */
 .menu-button .burger-icon {
     background: 
         linear-gradient(#F2F2F2, #F2F2F2) 0 0/10px 1px no-repeat,
@@ -352,22 +346,21 @@ body {
         linear-gradient(#F2F2F2, #F2F2F2) 0 100%/10px 1px no-repeat;
 }
 
-/* ТЕКСТ ДЛЯ ЛЕВОЙ КНОПКИ */
+/* ТЕКСТ ДЛЯ КНОПОК */
 .menu-button .button-text {
     position: absolute;
-    left: 24px;
+    left: 28px;
     top: 50%;
     transform: translateY(-50%);
     color: #F2F2F2;
     font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 300;
     white-space: nowrap;
     pointer-events: none;
     z-index: 11;
 }
 
-/* ТЕКСТ ДЛЯ ПРАВОЙ КНОПКИ */
 .menu-button-right .button-text {
     position: absolute;
     left: 50%;
@@ -375,20 +368,19 @@ body {
     transform: translate(-50%, -50%);
     color: #F2F2F2;
     font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 300;
     white-space: nowrap;
     pointer-events: none;
     z-index: 11;
 }
 
-/* Стили для нажатого состояния маленьких кнопок */
 .menu-button:active,
 .menu-button-right:active {
     box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.25);
 }
 
-/* Большие кнопки - общие стили */
+/* БОЛЬШИЕ КНОПКИ - центрированные */
 .big-button,
 .big-button-right,
 .big-button-bottom,
@@ -406,28 +398,31 @@ body {
     cursor: pointer;
 }
 
-/* Позиции больших кнопок */
 .big-button {
-    top: 170px;
-    left: 58px;
+    top: 188px;
+    left: 50%;
+    transform: translateX(calc(-50% - 70px));
 }
 
 .big-button-right {
-    top: 170px;
-    left: 197px;
+    top: 188px;
+    left: 50%;
+    transform: translateX(calc(-50% + 70px));
 }
 
 .big-button-bottom {
-    top: 306px;
-    left: 58px;
+    top: 324px;
+    left: 50%;
+    transform: translateX(calc(-50% - 70px));
 }
 
 .big-button-bottom-right {
-    top: 306px;
-    left: 197px;
+    top: 324px;
+    left: 50%;
+    transform: translateX(calc(-50% + 70px));
 }
 
-/* РАЗНЫЕ ЦВЕТНЫЕ ТЕНИ ДЛЯ КАЖДОЙ КНОПКИ В ОБЫЧНОМ СОСТОЯНИИ */
+/* ЦВЕТНЫЕ ТЕНИ */
 .big-button {
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
@@ -448,7 +443,7 @@ body {
     --normal-shadow-blur: 8px;
 }
 
-/* Первый градиент для больших кнопок */
+/* Градиенты для больших кнопок */
 .big-button::before,
 .big-button-right::before,
 .big-button-bottom::before,
@@ -476,7 +471,6 @@ body {
     z-index: 2;
 }
 
-/* Второй градиент для больших кнопок */
 .big-button::after,
 .big-button-right::after,
 .big-button-bottom::after,
@@ -504,7 +498,6 @@ body {
     z-index: 2;
 }
 
-/* Градиентная заливка для больших кнопок */
 .big-button > .button-fill,
 .big-button-right > .button-fill,
 .big-button-bottom > .button-fill,
@@ -523,7 +516,7 @@ body {
     z-index: 1;
 }
 
-/* ОБЩИЕ СТИЛИ ТЕКСТА ДЛЯ БОЛЬШИХ КНОПОК */
+/* ТЕКСТ ДЛЯ БОЛЬШИХ КНОПОК */
 .big-button-title {
     position: absolute;
     left: 50%;
@@ -545,7 +538,7 @@ body {
     left: 50%;
     transform: translateX(-50%);
     font-family: 'DM Sans', sans-serif;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 100;
     color: #F2F2F2;
     text-align: center;
@@ -555,14 +548,13 @@ body {
 }
 
 .big-button-subtitle.line1 {
-    bottom: 30px;
+    bottom: 32px;
 }
 
 .big-button-subtitle.line2 {
     bottom: 17px;
 }
 
-/* Стили для нажатого состояния ВСЕХ больших кнопок */
 .big-button:active,
 .big-button-right:active,
 .big-button-bottom:active,
@@ -572,7 +564,6 @@ body {
         inset 0 0 var(--shadow-blur) var(--shadow-color);
 }
 
-/* РАЗНЫЕ НАСТРОЙКИ ВТОРОЙ ТЕНИ ДЛЯ КАЖДОЙ КНОПКИ В НАЖАТОМ СОСТОЯНИИ */
 .big-button:active {
     --shadow-color: rgba(204, 219, 251, 1);
     --shadow-blur: 6px;
@@ -596,8 +587,8 @@ body {
 /* Начать игру */
 .start-text {
     position: absolute;
-    top: 118px;
-    left: 151px;
+    top: 122px;
+    left: 50%;
     transform: translateX(-50%);
     font-family: 'DM Sans', sans-serif; 
     font-size: 14px;
@@ -608,29 +599,46 @@ body {
     text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Статистика */
+/* ИСПРАВЛЕННАЯ СТАТИСТИКА - центрируем внутри панелей */
 .stats-container {
     position: absolute;
-    top: 56px;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
     width: 100%;
     pointer-events: none;
     z-index: 15;
 }
 
 .game-panel-top .stats-container {
-    top: 46px;  /* Поднимаем только в игре */
-}
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+} 
 
 .stat-item {
     position: absolute;
-    transform: translateX(-50%);
     text-align: center;
     white-space: nowrap;
+    transform: translateX(-50%);
+}
+
+/* Центрируем статистику относительно панели */
+.stat-item:nth-child(1) { 
+    left: 25%; 
+}
+
+.stat-item:nth-child(2) { 
+    left: 50%; 
+}
+
+.stat-item:nth-child(3) { 
+    left: 75%; 
 }
 
 .stat-value {
     font-family: 'DM Sans', sans-serif;
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 300;
     color: #FFFFFF;
     text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.10);
@@ -639,7 +647,7 @@ body {
 
 .stat-label {
     font-family: 'DM Sans', sans-serif;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 300;
     color: #F2F2F2;
     text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.0);
@@ -654,9 +662,11 @@ body {
     position: relative;
     z-index: 1;
     width: 100%;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Игровое поле - центрированное */
+/* Игровое поле */
 #board {
     display: grid;
     z-index: 10;
@@ -749,7 +759,7 @@ body {
 }
 
 /* Специальные стили для плиток в режиме 5x5 */
-.tile[style*="16px"] {
+.tile[style*="10px"] {
     border-radius: 16px !important;
 }
 
@@ -769,7 +779,7 @@ body {
     height: 100%;
     border-radius: inherit;
     background: rgba(255, 255, 255, 0.00);
-    -webkit-backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(0px);
     z-index: 1;
 }
 
@@ -832,183 +842,183 @@ body {
 /* Уникальные градиенты для каждой плитки с плавным переходом */
 .tile[data-value="2"] .tile-border {
     background: linear-gradient(135deg, 
-        rgba(255, 247, 239, 1) 0%,
-        rgba(255, 185, 163, 1) 50%,
-        rgba(255, 248, 240, 1) 75%,
-        rgba(255, 221, 187, 1) 100%);
+        rgba(255, 245, 235, 1) 0%,
+        rgba(255, 225, 180, 1) 50%,
+        rgba(255, 240, 220, 1) 75%,
+        rgba(255, 230, 200, 1) 100%);
 }
 .tile[data-value="2"] { 
-    box-shadow: inset 0 0 6px rgba(248, 185, 130, 1); 
+    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
     z-index: 3; 
 }
-.tile[data-value="2"] .tile-number { font-size: 38px; }
+.tile[data-value="2"] .tile-number { font-size: 34px; }
 
 .tile[data-value="4"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(255, 226, 201, 1) 0%,
-        rgba(255, 174, 163, 1) 33%,
-        rgba(255, 174, 145, 1) 66%,
-        rgba(255, 210, 166, 1) 100%);
+        rgba(255, 235, 210, 1) 0%,
+        rgba(255, 200, 150, 1) 33%,
+        rgba(255, 215, 170, 1) 66%,
+        rgba(255, 225, 185, 1) 100%);
 }
 .tile[data-value="4"] { 
-    box-shadow: inset 0 0 6px rgba(248, 155, 135, 1);
+    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
     z-index: 4; 
 }
-.tile[data-value="4"] .tile-number { font-size: 38px; }
+.tile[data-value="4"] .tile-number { font-size: 34px; }
 
 .tile[data-value="8"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(255, 214, 201, 1) 0%,
-        rgba(250, 145, 88, 1) 33%,
-        rgba(255, 221, 173, 1) 66%,
-        rgba(255, 164, 141, 1) 100%);
+        rgba(255, 225, 190, 1) 0%,
+        rgba(255, 180, 120, 1) 33%,
+        rgba(255, 200, 140, 1) 66%,
+        rgba(255, 215, 165, 1) 100%);
 }
 .tile[data-value="8"] { 
-    box-shadow: inset 0 0 6px rgba(248, 155, 120, 1); 
+    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
     z-index: 5; 
 }
-.tile[data-value="8"] .tile-number { font-size: 38px; }
+.tile[data-value="8"] .tile-number { font-size: 34px; }
 
 .tile[data-value="16"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(255, 200, 180, 1) 0%,
-        rgba(248, 130, 80, 1) 33%,
-        rgba(255, 200, 150, 1) 66%,
-        rgba(255, 150, 120, 1) 100%);
+        rgba(255, 235, 210, 1) 0%,
+        rgba(255, 200, 150, 1) 33%,
+        rgba(255, 215, 170, 1) 66%,
+        rgba(255, 225, 185, 1) 100%);
 }
 .tile[data-value="16"] { 
-    box-shadow: inset 0 0 6px rgba(248, 140, 90, 1); 
+    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
     z-index: 6; 
 }
-.tile[data-value="16"] .tile-number { font-size: 32px; }
+.tile[data-value="16"] .tile-number { font-size: 29px; }
 
 .tile[data-value="32"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(255, 180, 160, 1) 0%,
-        rgba(248, 110, 70, 1) 33%,
-        rgba(255, 170, 130, 1) 66%,
-        rgba(255, 130, 100, 1) 100%);
+        rgba(255, 205, 150, 1) 0%,
+        rgba(255, 140, 80, 1) 33%,
+        rgba(255, 170, 110, 1) 66%,
+        rgba(255, 190, 135, 1) 100%);
 }
 .tile[data-value="32"] { 
-    box-shadow: inset 0 0 6px rgba(248, 120, 80, 1); 
+    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
     z-index: 7; 
 }
-.tile[data-value="32"] .tile-number { font-size: 32px; }
+.tile[data-value="32"] .tile-number { font-size: 29px; }
 
 .tile[data-value="64"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(255, 160, 140, 1) 0%,
-        rgba(248, 90, 60, 1) 33%,
-        rgba(255, 150, 110, 1) 66%,
-        rgba(255, 110, 80, 1) 100%);
+        rgba(255, 195, 140, 1) 0%,
+        rgba(255, 120, 60, 1) 33%,
+        rgba(255, 155, 95, 1) 66%,
+        rgba(255, 175, 120, 1) 100%);
 }
 .tile[data-value="64"] { 
-    box-shadow: inset 0 0 6px rgba(248, 100, 70, 1); 
+    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
     z-index: 8; 
 }
-.tile[data-value="64"] .tile-number { font-size: 32px; }
+.tile[data-value="64"] .tile-number { font-size: 29px; }
 
 .tile[data-value="128"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(255, 140, 120, 1) 0%,
-        rgba(230, 80, 70, 1) 33%,
-        rgba(255, 130, 100, 1) 66%,
-        rgba(255, 90, 70, 1) 100%);
+        rgba(255, 185, 130, 1) 0%,
+        rgba(255, 110, 50, 1) 33%,
+        rgba(255, 145, 85, 1) 66%,
+        rgba(255, 165, 110, 1) 100%);
 }
 .tile[data-value="128"] { 
-    box-shadow: inset 0 0 6px rgba(230, 90, 80, 1); 
+    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
     z-index: 9; 
 }
 .tile[data-value="128"] .tile-number { font-size: 24px; }
 
 .tile[data-value="256"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(255, 180, 200, 1) 0%,
-        rgba(255, 120, 160, 1) 33%,
-        rgba(255, 160, 180, 1) 66%,
-        rgba(255, 100, 140, 1) 100%);
+        rgba(255, 175, 150, 1) 0%,
+        rgba(255, 100, 80, 1) 33%,
+        rgba(255, 135, 115, 1) 66%,
+        rgba(255, 155, 135, 1) 100%);
 }
 .tile[data-value="256"] { 
-    box-shadow: inset 0 0 6px rgba(255, 130, 170, 1); 
+    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
     z-index: 10; 
 }
-.tile[data-value="256"] .tile-number { font-size: 22px; }
+.tile[data-value="256"] .tile-number { font-size: 24px; }
 
 .tile[data-value="512"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(255, 160, 200, 1) 0%,
-        rgba(240, 100, 180, 1) 33%,
-        rgba(255, 140, 190, 1) 66%,
-        rgba(255, 80, 150, 1) 100%);
+        rgba(255, 165, 170, 1) 0%,
+        rgba(255, 90, 110, 1) 33%,
+        rgba(255, 125, 145, 1) 66%,
+        rgba(255, 145, 160, 1) 100%);
 }
 .tile[data-value="512"] { 
-    box-shadow: inset 0 0 8px rgba(240, 110, 190, 1); 
+    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
     z-index: 11; 
 }
-.tile[data-value="512"] .tile-number { font-size: 22px; }
+.tile[data-value="512"] .tile-number { font-size: 24px; }
 
 .tile[data-value="1024"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(255, 140, 200, 1) 0%,
-        rgba(220, 90, 190, 1) 33%,
-        rgba(255, 120, 200, 1) 66%,
-        rgba(255, 60, 160, 1) 100%);
+        rgba(255, 155, 190, 1) 0%,
+        rgba(240, 80, 140, 1) 33%,
+        rgba(247, 115, 165, 1) 66%,
+        rgba(255, 135, 185, 1) 100%);
 }
 .tile[data-value="1024"] { 
-    box-shadow: inset 0 0 6px rgba(220, 100, 200, 1); 
+    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
     z-index: 12; 
 }
-.tile[data-value="1024"] .tile-number { font-size: 15px; }
+.tile[data-value="1024"] .tile-number { font-size: 18px; }
 
 .tile[data-value="2048"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(255, 120, 200, 1) 0%,
-        rgba(200, 80, 200, 1) 33%,
-        rgba(255, 100, 210, 1) 66%,
-        rgba(255, 40, 170, 1) 100%);
+        rgba(230, 160, 220, 1) 0%,
+        rgba(200, 80, 180, 1) 33%,
+        rgba(215, 120, 200, 1) 66%,
+        rgba(225, 140, 210, 1) 100%);
 }
 .tile[data-value="2048"] { 
-    box-shadow: inset 0 0 6px rgba(200, 90, 210, 1); 
+    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
     z-index: 13; 
 }
-.tile[data-value="2048"] .tile-number { font-size: 15px; }
+.tile[data-value="2048"] .tile-number { font-size: 18px; }
 
 /* Плитки после 2048 в едином стиле */
 .tile[data-value="4096"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(200, 220, 255, 1) 0%,
-        rgba(120, 160, 255, 1) 33%,
-        rgba(180, 200, 255, 1) 66%,
-        rgba(100, 140, 255, 1) 100%);
+        rgba(200, 180, 240, 1) 0%,
+        rgba(150, 100, 220, 1) 33%,
+        rgba(175, 140, 230, 1) 66%,
+        rgba(190, 160, 240, 1) 100%);
 }
 .tile[data-value="4096"] { 
-    box-shadow: inset 0 0 6px rgba(140, 170, 255, 1); 
+    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
     z-index: 14; 
 }
-.tile[data-value="4096"] .tile-number { font-size: 15px; }
+.tile[data-value="4096"] .tile-number { font-size: 18px; }
 
 .tile[data-value="8192"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(180, 220, 255, 1) 0%,
-        rgba(100, 180, 255, 1) 33%,
-        rgba(160, 200, 255, 1) 66%,
-        rgba(80, 160, 255, 1) 100%);
+        rgba(180, 200, 250, 1) 0%,
+        rgba(120, 140, 230, 1) 33%,
+        rgba(150, 170, 240, 1) 66%,
+        rgba(170, 190, 250, 1) 100%);
 }
 .tile[data-value="8192"] { 
-    box-shadow: inset 0 0 8px rgba(120, 190, 255, 1); 
+    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
     z-index: 15; 
 }
-.tile[data-value="8192"] .tile-number { font-size: 15px; }
+.tile[data-value="8192"] .tile-number { font-size: 18px; }
 
 .tile[data-value="16384"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(160, 230, 255, 1) 0%,
-        rgba(80, 200, 255, 1) 33%,
-        rgba(140, 220, 255, 1) 66%,
-        rgba(60, 180, 255, 1) 100%);
+        rgba(160, 220, 255, 1) 0%,
+        rgba(80, 160, 230, 1) 33%,
+        rgba(120, 190, 245, 1) 66%,
+        rgba(140, 210, 255, 1) 100%);
 }
 .tile[data-value="16384"] { 
-    box-shadow: inset 0 0 6px rgba(100, 210, 255, 1); 
+    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
     z-index: 16; 
 }
 .tile[data-value="16384"] .tile-number { font-size: 15px; }
@@ -1021,20 +1031,20 @@ body {
         rgba(60, 200, 255, 1) 100%);
 }
 .tile[data-value="32768"] { 
-    box-shadow: inset 0 0 6px rgba(100, 230, 255, 1); 
+    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
     z-index: 17; 
 }
 .tile[data-value="32768"] .tile-number { font-size: 15px; }
 
 .tile[data-value="65536"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(180, 255, 240, 1) 0%,
-        rgba(100, 240, 220, 1) 33%,
-        rgba(160, 255, 230, 1) 66%,
-        rgba(80, 220, 200, 1) 100%);
+        rgba(140, 230, 255, 1) 0%,
+        rgba(60, 180, 230, 1) 33%,
+        rgba(100, 205, 245, 1) 66%,
+        rgba(120, 220, 255, 1) 100%);
 }
 .tile[data-value="65536"] { 
-    box-shadow: inset 0 0 6px rgba(120, 250, 230, 1); 
+    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
     z-index: 18; 
 }
 .tile[data-value="65536"] .tile-number { font-size: 15px; }
@@ -1047,10 +1057,10 @@ body {
         rgba(100, 220, 160, 1) 100%);
 }
 .tile[data-value="131072"] { 
-    box-shadow: inset 0 0 6px rgba(140, 250, 190, 1); 
+    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
     z-index: 19; 
 }
-.tile[data-value="131072"] .tile-number { font-size: 15px; }
+.tile[data-value="131072"] .tile-number { font-size: 14px; }
 
 .tile[data-value="262144"] .tile-border { 
     background: linear-gradient(135deg, 
@@ -1060,10 +1070,10 @@ body {
         rgba(120, 220, 140, 1) 100%);
 }
 .tile[data-value="262144"] { 
-    box-shadow: inset 0 0 6px rgba(160, 250, 170, 1); 
+    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
     z-index: 20; 
 }
-.tile[data-value="262144"] .tile-number { font-size: 15px; }
+.tile[data-value="262144"] .tile-number { font-size: 14px; }
 
 .tile[data-value="524288"] .tile-border { 
     background: linear-gradient(135deg, 
@@ -1073,10 +1083,10 @@ body {
         rgba(140, 220, 120, 1) 100%);
 }
 .tile[data-value="524288"] { 
-    box-shadow: inset 0 0 6px rgba(180, 250, 150, 1); 
+    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
     z-index: 21; 
 }
-.tile[data-value="524288"] .tile-number { font-size: 15px; }
+.tile[data-value="524288"] .tile-number { font-size: 14px; }
 
 .tile[data-value="1048576"] .tile-border { 
     background: linear-gradient(135deg, 
@@ -1086,10 +1096,110 @@ body {
         rgba(180, 220, 120, 1) 100%);
 }
 .tile[data-value="1048576"] { 
-    box-shadow: inset 0 0 6px rgba(210, 250, 150, 1); 
+    box-shadow: inset 0 0 6px rgba(248, 185, 130, 1); 
     z-index: 22; 
 }
-.tile[data-value="1048576"] .tile-number { font-size: 15px; }
+.tile[data-value="1048576"] .tile-number { font-size: 12px; }
+
+/* НОВЫЕ СТИЛИ ДЛЯ ТЕМЫ "СОН ЕДИНОРОГА" - ВСЕ ПЛИТКИ КАК ПЛИТКА "2" */
+body[data-theme="unicorn-dream"] .unicorn-dream-tile .tile-border {
+    background: linear-gradient(135deg, 
+        rgba(255, 247, 239, 1) 0%,
+        rgba(255, 185, 163, 1) 50%,
+        rgba(255, 248, 240, 1) 75%,
+        rgba(255, 221, 187, 1) 100%) !important;
+}
+
+body[data-theme="unicorn-dream"] .unicorn-dream-tile { 
+    box-shadow: inset 0 0 6px rgba(248, 185, 130, 1) !important; 
+}
+
+/* Сохраняем размеры шрифтов для разных значений плиток в теме "Сон единорога" */
+body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="2"] .tile-number,
+body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="4"] .tile-number,
+body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="8"] .tile-number { 
+    font-size: 34px; 
+}
+
+body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="16"] .tile-number,
+body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="32"] .tile-number,
+body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="64"] .tile-number { 
+    font-size: 29px; 
+}
+
+body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="128"] .tile-number,
+body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="256"] .tile-number,
+body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="512"] .tile-number { 
+    font-size: 24px; 
+}
+
+body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="1024"] .tile-number,
+body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="2048"] .tile-number { 
+    font-size: 18px; 
+}
+
+body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="4096"] .tile-number,
+body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="8192"] .tile-number { 
+    font-size: 18px; 
+}
+
+body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="16384"] .tile-number,
+body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="32768"] .tile-number,
+body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="65536"] .tile-number { 
+    font-size: 15px; 
+}
+
+body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="131072"] .tile-number,
+body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="262144"] .tile-number,
+body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="524288"] .tile-number { 
+    font-size: 14px; 
+}
+
+body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="1048576"] .tile-number { 
+    font-size: 12px; 
+}
+
+/* Адаптивные размеры шрифтов для режима 5x5 в теме "Сон единорога" */
+body[data-theme="unicorn-dream"] .game-board-container .cell[style*="50px"] .unicorn-dream-tile[data-value="2"] .tile-number,
+body[data-theme="unicorn-dream"] .game-board-container .cell[style*="50px"] .unicorn-dream-tile[data-value="4"] .tile-number,
+body[data-theme="unicorn-dream"] .game-board-container .cell[style*="50px"] .unicorn-dream-tile[data-value="8"] .tile-number {
+    font-size: 28px !important;
+}
+
+body[data-theme="unicorn-dream"] .game-board-container .cell[style*="50px"] .unicorn-dream-tile[data-value="16"] .tile-number,
+body[data-theme="unicorn-dream"] .game-board-container .cell[style*="50px"] .unicorn-dream-tile[data-value="32"] .tile-number, 
+body[data-theme="unicorn-dream"] .game-board-container .cell[style*="50px"] .unicorn-dream-tile[data-value="64"] .tile-number {
+    font-size: 25px !important;
+}
+
+body[data-theme="unicorn-dream"] .game-board-container .cell[style*="50px"] .unicorn-dream-tile[data-value="128"] .tile-number,
+body[data-theme="unicorn-dream"] .game-board-container .cell[style*="50px"] .unicorn-dream-tile[data-value="256"] .tile-number,
+body[data-theme="unicorn-dream"] .game-board-container .cell[style*="50px"] .unicorn-dream-tile[data-value="512"] .tile-number {
+    font-size: 21px !important;
+}
+
+body[data-theme="unicorn-dream"] .game-board-container .cell[style*="50px"] .unicorn-dream-tile[data-value="1024"] .tile-number,
+body[data-theme="unicorn-dream"] .game-board-container .cell[style*="50px"] .unicorn-dream-tile[data-value="2048"] .tile-number,
+body[data-theme="unicorn-dream"] .game-board-container .cell[style*="50px"] .unicorn-dream-tile[data-value="4096"] .tile-number,
+body[data-theme="unicorn-dream"] .game-board-container .cell[style*="50px"] .unicorn-dream-tile[data-value="8192"] .tile-number {
+    font-size: 18px !important;
+}
+
+body[data-theme="unicorn-dream"] .game-board-container .cell[style*="50px"] .unicorn-dream-tile[data-value="16384"] .tile-number,
+body[data-theme="unicorn-dream"] .game-board-container .cell[style*="50px"] .unicorn-dream-tile[data-value="32768"] .tile-number,
+body[data-theme="unicorn-dream"] .game-board-container .cell[style*="50px"] .unicorn-dream-tile[data-value="65536"] .tile-number {
+    font-size: 14px !important;
+}
+
+body[data-theme="unicorn-dream"] .game-board-container .cell[style*="50px"] .unicorn-dream-tile[data-value="131072"] .tile-number,
+body[data-theme="unicorn-dream"] .game-board-container .cell[style*="50px"] .unicorn-dream-tile[data-value="262144"] .tile-number,
+body[data-theme="unicorn-dream"] .game-board-container .cell[style*="50px"] .unicorn-dream-tile[data-value="524288"] .tile-number {
+    font-size: 12px !important;
+}
+
+body[data-theme="unicorn-dream"] .game-board-container .cell[style*="50px"] .unicorn-dream-tile[data-value="1048576"] .tile-number {
+    font-size: 10px !important;
+}
 
 /* Анимации */
 @keyframes tileAppear {
@@ -1112,8 +1222,7 @@ body {
     animation: tileMerge 0.2s ease;
 }
 
-/* Остальные стили остаются без изменений */
-/* Модальные окна */
+/* МОДАЛЬНЫЕ ОКНА - оставляем оригинальные позиции, добавляем адаптивность */
 .modal {
     position: fixed;
     top: 0;
@@ -1123,7 +1232,7 @@ body {
     z-index: 1000;
     align-items: center;
     justify-content: center;
-    overflow: hidden; /* Добавляем */
+    overflow: hidden;
 }
 
 /* ФОНЫ ДЛЯ МОДАЛЬНЫХ ОКОН В ЗАВИСИМОСТИ ОТ ТЕМЫ */
@@ -1168,7 +1277,7 @@ body[data-theme="unicorn-dream"] .modal {
     position: relative;
     margin: 0 auto;
     transform: none;
-    top: auto;
+    top: 60px;
     left: auto;
 }
 
@@ -1269,13 +1378,13 @@ body[data-theme="unicorn-dream"] .modal {
 }
 
 .stats-button {
-    top: 80px;
+    top: 83px;
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
 }
 
 .cheat-button {
-    top: 136px;
+    top: 139px;
     --normal-shadow-color: rgba(248, 199, 131, 0.0);
     --normal-shadow-blur: 8px;
 }
@@ -1498,35 +1607,35 @@ body[data-theme="unicorn-dream"] .modal {
 }
 
 .moon-dust-button {
-    top: 80px;
+    top: 83px;
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
     background-color: #63697B;
 }
 
 .whisper-leaves-button {
-    top: 136px;
+    top: 139px;
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
     background-color: #7F8B7D;
 }
 
 .wet-stone-button {
-    top: 192px;
+    top: 195px;
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
     background-color: #8B847D;
 }
 
 .deep-space-button {
-    top: 248px;
+    top: 251px;
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
     background-color: #3B3D46;
 }
 
 .unicorn-dream-button {
-    top: 304px;
+    top: 307px;
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
     background-color: #D9A5B3;
@@ -1544,7 +1653,7 @@ body[data-theme="unicorn-dream"] .modal {
 /* Модальное окно статистики */
 #stats-modal .menu-panel {
     width: 303px;
-    height: 368px;
+    height: 388px;
 }
 
 .stats-container-modal {
@@ -1580,13 +1689,13 @@ body[data-theme="unicorn-dream"] .modal {
 }
 
 .clear-best-score-button {
-    top: 240px;
+    top: 274px;
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
 }
 
 .clear-all-stats-button {
-    top: 296px;
+    top: 330px;
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
 }
@@ -1779,7 +1888,6 @@ body[data-theme="unicorn-dream"] .modal {
     background-color: #63697B;
 }
 
-/* ИСПРАВЛЕННЫЕ СТИЛИ ДЛЯ НАЖАТОГО СОСТОЯНИЯ КНОПОК ПОДТВЕРЖДЕНИЯ */
 .no-button:active {
     box-shadow: 
         inset 0 0 36px rgba(0, 0, 0, 0.20),
@@ -1795,30 +1903,36 @@ body[data-theme="unicorn-dream"] .modal {
 /* Игровое меню */
 #in-game-menu-modal .menu-panel {
     width: 303px;
-    height: 328px;
+    height: 388px;
 }
 
 #in-game-menu-modal .restart-button {
-    top: 80px;
+    top: 83px;
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
 }
 
 #in-game-menu-modal .main-menu-button {
-    top: 136px;
+    top: 139px;
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
 }
 
 #in-game-menu-modal .stats-button {
-    top: 192px;
+    top: 195px;
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
 }
 
 #in-game-menu-modal .cheat-button {
-    top: 248px;
+    top: 251px;
     --normal-shadow-color: rgba(248, 199, 131, 0.0);
+    --normal-shadow-blur: 8px;
+}
+
+#in-game-menu-modal .themes-button {
+    top: 307px;
+    --normal-shadow-color: rgba(165, 201, 149, 0.0);
     --normal-shadow-blur: 8px;
 }
 
@@ -1834,13 +1948,17 @@ body[data-theme="unicorn-dream"] .modal {
     --shadow-blur: 6px;
 }
 
+#in-game-menu-modal .themes-button:active {
+    --shadow-color: rgba(165, 201, 149, 1);
+    --shadow-blur: 6px;
+}
+
 /* НОВОЕ ОКНО ЗАВЕРШЕНИЯ ИГРЫ */
 #game-end-modal .menu-panel {
     width: 303px;
     height: 256px;
 }
 
-/* Заголовок победы */
 .victory-title {
     position: absolute;
     top: 50px;
@@ -1856,7 +1974,6 @@ body[data-theme="unicorn-dream"] .modal {
     z-index: 10;
 }
 
-/* Число 2048 или лучшая плитка */
 .score-number {
     position: absolute;
     top: 92px;
@@ -1872,7 +1989,6 @@ body[data-theme="unicorn-dream"] .modal {
     z-index: 10;
 }
 
-/* Контейнер счета игры */
 .game-score-container {
     position: absolute;
     top: 160px;
@@ -1900,7 +2016,6 @@ body[data-theme="unicorn-dream"] .modal {
     text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.12);
 }
 
-/* Кнопка главного меню в окне завершения */
 #game-end-modal .main-menu-button {
     top: 200px;
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
@@ -1912,15 +2027,15 @@ body[data-theme="unicorn-dream"] .modal {
     --shadow-blur: 6px;
 }
 
-/* НОВОЕ ОКНО НАЧАЛА ИГРЫ НА ВРЕМЯ - ИСПРАВЛЕННАЯ ВЕРСИЯ */
+/* ОКНО НАЧАЛА ИГРЫ НА ВРЕМЯ */
 #start-time-modal .menu-panel {
     width: 303px;
-    height: 122px;
+    height: 166px;
 }
 
 #start-time-modal .description-text {
     position: absolute;
-    top: 24px;
+    top: 52px;
     left: 50%;
     transform: translateX(-50%);
     width: 240px;
@@ -1935,14 +2050,13 @@ body[data-theme="unicorn-dream"] .modal {
     pointer-events: none;
 }
 
-/* ИСПРАВЛЕННАЯ КНОПКА ДЛЯ ОКНА НАЧАЛА ИГРЫ НА ВРЕМЯ */
 #start-time-modal .menu-button-item {
     width: 259px;
     height: 40px;
     position: absolute;
-    left: 50% !important; /* Центрируем по горизонтали */
-    transform: translateX(-50%) !important; /* Точное центрирование */
-    top: 56px;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    top: 86px;
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.00);
     box-shadow: 
@@ -1955,7 +2069,6 @@ body[data-theme="unicorn-dream"] .modal {
     --normal-shadow-blur: 8px;
 }
 
-/* Градиенты для кнопки */
 #start-time-modal .menu-button-item::before {
     content: '';
     position: absolute;
@@ -2004,7 +2117,6 @@ body[data-theme="unicorn-dream"] .modal {
     z-index: 2;
 }
 
-/* Градиентная заливка для кнопки */
 #start-time-modal .menu-button-item > .button-fill {
     position: absolute;
     inset: 0;
@@ -2020,7 +2132,6 @@ body[data-theme="unicorn-dream"] .modal {
     z-index: 1;
 }
 
-/* Текст кнопки */
 #start-time-modal .menu-button-text {
     position: absolute;
     left: 50%;
@@ -2037,7 +2148,6 @@ body[data-theme="unicorn-dream"] .modal {
     z-index: 3;
 }
 
-/* Эффект нажатия для кнопки */
 #start-time-modal .menu-button-item:active {
     box-shadow: 
         inset 0 0 36px rgba(0, 0, 0, 0.20),
@@ -2049,89 +2159,313 @@ body[data-theme="unicorn-dream"] .modal {
     --shadow-blur: 6px;
 }
 
-/* Адаптивность */
-@media (max-width: 480px) {
-    .tile[data-value="2"],
-    .tile[data-value="4"],
-    .tile[data-value="8"] {
-        font-size: 30px;
+/* Специальные стили для плиток в режиме 5x5 */
+.game-board-container .cell[style*="50px"] .tile[data-value="2"] .tile-number,
+.game-board-container .cell[style*="50px"] .tile[data-value="4"] .tile-number,
+.game-board-container .cell[style*="50px"] .tile[data-value="8"] .tile-number {
+    font-size: 28px !important;
+}
+
+.game-board-container .cell[style*="50px"] .tile[data-value="16"] .tile-number,
+.game-board-container .cell[style*="50px"] .tile[data-value="32"] .tile-number, 
+.game-board-container .cell[style*="50px"] .tile[data-value="64"] .tile-number {
+    font-size: 25px !important;
+}
+
+.game-board-container .cell[style*="50px"] .tile[data-value="128"] .tile-number,
+.game-board-container .cell[style*="50px"] .tile[data-value="256"] .tile-number,
+.game-board-container .cell[style*="50px"] .tile[data-value="512"] .tile-number {
+    font-size: 21px !important;
+}
+
+.game-board-container .cell[style*="50px"] .tile[data-value="1024"] .tile-number,
+.game-board-container .cell[style*="50px"] .tile[data-value="2048"] .tile-number,
+.game-board-container .cell[style*="50px"] .tile[data-value="4096"] .tile-number,
+.game-board-container .cell[style*="50px"] .tile[data-value="8192"] .tile-number {
+    font-size: 18px !important;
+}
+
+.game-board-container .cell[style*="50px"] .tile[data-value="16384"] .tile-number,
+.game-board-container .cell[style*="50px"] .tile[data-value="32768"] .tile-number,
+.game-board-container .cell[style*="50px"] .tile[data-value="65536"] .tile-number {
+    font-size: 14px !important;
+}
+
+.game-board-container .cell[style*="50px"] .tile[data-value="131072"] .tile-number,
+.game-board-container .cell[style*="50px"] .tile[data-value="262144"] .tile-number,
+.game-board-container .cell[style*="50px"] .tile[data-value="524288"] .tile-number {
+    font-size: 12px !important;
+}
+
+.game-board-container .cell[style*="50px"] .tile[data-value="1048576"] .tile-number {
+    font-size: 10px !important;
+}
+
+/* МЕДИА-ЗАПРОСЫ ДЛЯ АДАПТИВНОСТИ */
+@media (max-width: 400px) {
+    .canvas {
+        scale: 0.9;
     }
     
-    .tile[data-value="16"],
-    .tile[data-value="32"], 
-    .tile[data-value="64"] {
-        font-size: 26px;
+    .stat-value {
+        font-size: 20px;
     }
     
-    .tile[data-value="128"],
-    .tile[data-value="256"],
-    .tile[data-value="512"] {
-        font-size: 22px;
+    .big-button-title {
+        font-size: 32px;
     }
     
-    .tile[data-value="1024"],
-    .tile[data-value="2048"] {
-        font-size: 18px;
+    /* Адаптируем позиции маленьких кнопок */
+    .menu-button {
+        left: 30px;
     }
     
-    .tile[data-value="4096"] {
-        font-size: 15px;
+    .menu-button-right {
+        left: 210px;
+    }
+    
+    .new-record-badge {
+        left: 160px;
+    }
+    
+    .menu-panel {
+        scale: 0.9;
     }
 }
 
-@media (max-width: 380px) {
-    .tile[data-value="2"],
-    .tile[data-value="4"],
-    .tile[data-value="8"] {
-        font-size: 26px;
+@media (max-width: 360px) {
+    .canvas {
+        scale: 0.85;
     }
     
-    .tile[data-value="16"],
-    .tile[data-value="32"], 
-    .tile[data-value="64"] {
-        font-size: 22px;
+    .menu-button .button-text,
+    .menu-button-right .button-text {
+        font-size: 12px;
     }
     
-    .tile[data-value="128"],
-    .tile[data-value="256"],
-    .tile[data-value="512"] {
+    .stat-value {
         font-size: 18px;
     }
     
-    .tile[data-value="1024"],
-    .tile[data-value="2048"] {
-        font-size: 15px;
+    .big-button-title {
+        font-size: 28px;
     }
     
-    .tile[data-value="4096"] {
+    .big-button-subtitle {
+        font-size: 10px;
+    }
+    
+    /* Дальнейшая адаптация позиций */
+    .menu-button {
+        left: 20px;
+    }
+    
+    .menu-button-right {
+        left: 190px;
+    }
+    
+    .new-record-badge {
+        left: 140px;
+        width: 110px;
+    }
+    
+    .menu-panel {
+        scale: 0.85;
+    }
+    
+    .menu-button-text {
         font-size: 12px;
     }
 }
 
-/* Специальные стили для плиток в режиме 5x5 */
-.cell[style*="50px"] .tile[data-value="2"],
-.cell[style*="50px"] .tile[data-value="4"],
-.cell[style*="50px"] .tile[data-value="8"] {
-    font-size: 20px !important;
+@media (max-width: 320px) {
+    .canvas {
+        scale: 0.8;
+    }
+    
+    /* Максимальная адаптация для очень маленьких экранов */
+    .menu-button {
+        left: 15px;
+        width: 70px;
+    }
+    
+    .menu-button-right {
+        left: 170px;
+        width: 70px;
+    }
+    
+    .new-record-badge {
+        left: 120px;
+        width: 100px;
+    }
+    
+    .stat-value {
+        font-size: 16px;
+    }
+    
+    .stat-label {
+        font-size: 10px;
+    }
+    
+    .menu-panel {
+        scale: 0.8;
+    }
 }
 
-.cell[style*="50px"] .tile[data-value="16"],
-.cell[style*="50px"] .tile[data-value="32"], 
-.cell[style*="50px"] .tile[data-value="64"] {
-    font-size: 18px !important;
+@media (max-height: 700px) {
+    .canvas {
+        scale: 0.9;
+    }
 }
 
-.cell[style*="50px"] .tile[data-value="128"],
-.cell[style*="50px"] .tile[data-value="256"],
-.cell[style*="50px"] .tile[data-value="512"] {
-    font-size: 16px !important;
+@media (max-height: 600px) {
+    .canvas {
+        scale: 0.8;
+    }
 }
 
-.cell[style*="50px"] .tile[data-value="1024"],
-.cell[style*="50px"] .tile[data-value="2048"] {
-    font-size: 14px !important;
+/* Ландшафтная ориентация */
+@media (orientation: landscape) and (max-height: 500px) {
+    .canvas {
+        scale: 0.7;
+    }
+    
+    .main-menu,
+    .game-screen {
+        overflow-y: auto;
+    }
 }
 
-.cell[style*="50px"] .tile[data-value="4096"] {
-    font-size: 12px !important;
+/* Адаптивные шрифты для плиток на маленьких экранах */
+@media (max-width: 360px) {
+    .tile[data-value="2"] .tile-number,
+    .tile[data-value="4"] .tile-number,
+    .tile[data-value="8"] .tile-number { 
+        font-size: 28px; 
+    }
+    
+    .tile[data-value="16"] .tile-number,
+    .tile[data-value="32"] .tile-number,
+    .tile[data-value="64"] .tile-number { 
+        font-size: 24px; 
+    }
+    
+    .tile[data-value="128"] .tile-number,
+    .tile[data-value="256"] .tile-number,
+    .tile[data-value="512"] .tile-number { 
+        font-size: 20px; 
+    }
+    
+    .tile[data-value="1024"] .tile-number,
+    .tile[data-value="2048"] .tile-number { 
+        font-size: 16px; 
+    }
+    
+    .game-board-container .cell[style*="50px"] .tile[data-value="2"] .tile-number,
+    .game-board-container .cell[style*="50px"] .tile[data-value="4"] .tile-number,
+    .game-board-container .cell[style*="50px"] .tile[data-value="8"] .tile-number {
+        font-size: 24px !important;
+    }
+    
+    .game-board-container .cell[style*="50px"] .tile[data-value="16"] .tile-number,
+    .game-board-container .cell[style*="50px"] .tile[data-value="32"] .tile-number, 
+    .game-board-container .cell[style*="50px"] .tile[data-value="64"] .tile-number {
+        font-size: 21px !important;
+    }
+}
+
+/* Улучшаем скролл для ландшафтного режима */
+@media (orientation: landscape) and (max-height: 400px) {
+    .telegram-app {
+        overflow-y: auto;
+    }
+    
+    .main-menu,
+    .game-screen {
+        min-height: 500px;
+    }
+}
+
+/* Гарантируем, что всё будет видно на очень маленьких экранах */
+@media (max-width: 280px) {
+    .canvas {
+        scale: 0.75;
+    }
+    
+    .menu-button {
+        left: 10px;
+        width: 65px;
+    }
+    
+    .menu-button-right {
+        left: 150px;
+        width: 65px;
+    }
+    
+    .new-record-badge {
+        left: 100px;
+        width: 90px;
+    }
+    
+    .menu-panel {
+        scale: 0.75;
+    }
+    
+    .telegram-app {
+        min-width: 260px;
+    }
+}
+
+/* АДАПТИВНОСТЬ ДЛЯ МОДАЛЬНЫХ ОКОН */
+@media (max-width: 400px) {
+    .modal .canvas {
+        scale: 0.9;
+    }
+    
+    .menu-panel {
+        scale: 0.9;
+    }
+}
+
+@media (max-width: 360px) {
+    .modal .canvas {
+        scale: 0.85;
+    }
+    
+    .menu-panel {
+        scale: 0.85;
+    }
+    
+    .menu-button-text {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 320px) {
+    .modal .canvas {
+        scale: 0.8;
+    }
+    
+    .menu-panel {
+        scale: 0.8;
+    }
+}
+
+@media (max-height: 700px) {
+    .modal .canvas {
+        scale: 0.9;
+    }
+}
+
+@media (max-height: 600px) {
+    .modal .canvas {
+        scale: 0.8;
+    }
+}
+
+/* Ландшафтная ориентация для модальных окон */
+@media (orientation: landscape) and (max-height: 500px) {
+    .modal .canvas {
+        scale: 0.7;
+    }
 }
