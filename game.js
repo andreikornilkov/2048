@@ -1,4 +1,4 @@
-// game.js - ОБНОВЛЕННАЯ ВЕРСИЯ С НОВЫМИ ПЛИТКАМИ
+// game.js - ОБНОВЛЕННАЯ ВЕРСИЯ С НОВЫМИ ПЛИТКАМИ И ФИКСАЦИЕЙ КЛАВИАТУРЫ
 class Game2048 {
     constructor() {
         this.config = window.AppConfig;
@@ -13,7 +13,7 @@ class Game2048 {
             'main-menu', 'game-screen', 'board', 'score', 'best-score',
             'game-end-modal', 'best-tile', 'time-left', 'time-container', 
             'best-tile-container', 'new-record-badge', 'total-games', 
-            'total-wins', 'best-score-overall', 'cheat-input', 'apply-cheat-btn', 
+            'total-wins', 'best-score-overall', 'cheat-input', 'apply-cheat-btn',
             'cheat-modal', 'close-cheat', 'main-cheat-btn', 'game-cheat-btn',
             'main-menu-modal', 'in-game-menu-modal', 'themes-modal', 'stats-modal',
             'confirm-modal', 'start-time-modal', 'yazhopka-modal', 'close-stats',
@@ -1078,6 +1078,52 @@ class Game2048 {
         }
     }
     
+    // НОВЫЕ МЕТОДЫ ДЛЯ ФИКСАЦИИ КЛАВИАТУРЫ
+    setupKeyboardHandling() {
+        // Обработчики для появления и скрытия клавиатуры
+        window.addEventListener('resize', () => {
+            this.handleViewportChange();
+        });
+        
+        // Для мобильных устройств
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                this.handleViewportChange();
+            }, 300);
+        });
+    }
+
+    handleViewportChange() {
+        const cheatModal = document.getElementById('game-cheat-modal');
+        if (cheatModal && cheatModal.style.display === 'flex') {
+            // Принудительно фиксируем позицию модального окна
+            this.fixModalPosition(cheatModal);
+        }
+    }
+
+    fixModalPosition(modal) {
+        // Принудительно устанавливаем фиксированную позицию и центрирование
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        modal.style.display = 'flex';
+        modal.style.alignItems = 'center';
+        modal.style.justifyContent = 'center';
+        modal.style.zIndex = '1000';
+        
+        // Центрируем содержимое модального окна
+        const canvas = modal.querySelector('.canvas');
+        if (canvas) {
+            canvas.style.position = 'relative';
+            canvas.style.margin = '0 auto';
+            canvas.style.transform = 'none';
+            canvas.style.top = 'auto';
+            canvas.style.left = 'auto';
+        }
+    }
+    
     setupEventListeners() {
         // Кнопки режимов игры
         document.querySelectorAll('.mode-btn').forEach(btn => {
@@ -1146,30 +1192,34 @@ class Game2048 {
             });
         }
         
-        // ОБРАБОТЧИК ДЛЯ ПОЛЯ ВВОДА ЧИТ-КОДА В ИГРЕ
+        // ОБРАБОТЧИК ДЛЯ ПОЛЯ ВВОДА ЧИТ-КОДА В ИГРЕ - ОБНОВЛЕННАЯ ВЕРСИЯ
         const gameCheatInput = document.getElementById('game-cheat-input');
         if (gameCheatInput) {
+            gameCheatInput.addEventListener('focus', () => {
+                // При фокусе на поле ввода фиксируем позицию модального окна
+                const cheatModal = document.getElementById('game-cheat-modal');
+                if (cheatModal) {
+                    this.fixModalPosition(cheatModal);
+                }
+            });
+            
             gameCheatInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     const code = gameCheatInput.value.trim();
                     if (code) {
                         const success = this.applyCheatCode(code);
                         if (success) {
-                            // Для YAZHOPKA окно ввода уже закрыто в applyCheatCode
                             if (code.toUpperCase() !== 'YAZHOPKA') {
                                 document.getElementById('game-cheat-modal').style.display = 'none';
                                 gameCheatInput.value = '';
                                 
-                                // Возвращаемся в игру
                                 if (this.state.gameMode === '4x4-time' && this.state.gamePaused) {
                                     this.resumeTimer();
                                 }
                             } else {
-                                // Для YAZHOPKA просто очищаем поле ввода
                                 gameCheatInput.value = '';
                             }
                         } else {
-                            // Неверный код - очищаем поле и показываем сообщение
                             gameCheatInput.value = '';
                             gameCheatInput.placeholder = 'Неверный код! Попробуйте снова';
                             setTimeout(() => {
@@ -1300,6 +1350,9 @@ class Game2048 {
         // Управление стрелками
         document.addEventListener('keydown', this.handleKeyPress.bind(this));
         this.setupSwipeControls();
+        
+        // Добавляем обработку клавиатуры
+        this.setupKeyboardHandling();
     }
     
     handleKeyPress(e) {
