@@ -2048,38 +2048,6 @@ body[data-theme="unicorn-dream"] .modal {
     --shadow-blur: 6px;
 }
 
-/* ФИКСАЦИЯ МОДАЛЬНЫХ ОКОН ПРИ ПОЯВЛЕНИИ КЛАВИАТУРЫ */
-#game-cheat-modal {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    transform: none !important;
-    overflow: hidden;
-}
-
-/* Предотвращаем смещение контента при фокусе на input */
-.cheat-input:focus {
-    transform: translateZ(0);
-}
-
-/* Убеждаемся, что модальное окно всегда по центру */
-.modal .canvas {
-    position: relative !important;
-    margin: 0 auto !important;
-    transform: none !important;
-    top: auto !important;
-    left: auto !important;
-}
-
-/* Фиксируем позицию для всех модальных окон с полями ввода */
-#game-cheat-modal .menu-panel,
-#cheat-modal .menu-panel {
-    position: relative;
-    margin: 0 auto;
-}
-
 /* Адаптивность */
 @media (max-width: 480px) {
     .tile[data-value="2"],
