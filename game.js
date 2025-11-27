@@ -1136,13 +1136,7 @@ class Game2048 {
                 document.getElementById('in-game-menu-modal').style.display = 'none';
                 document.getElementById('game-cheat-modal').style.display = 'flex';
                 
-                // Фокус на поле ввода при открытии
-                setTimeout(() => {
-                    const cheatInput = document.getElementById('game-cheat-input');
-                    if (cheatInput) {
-                        cheatInput.focus();
-                    }
-                }, 100);
+              
             });
         }
         
