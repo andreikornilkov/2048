@@ -1,4 +1,4 @@
-// game.js - ОБНОВЛЕННАЯ ВЕРСИЯ С ИСПРАВЛЕННОЙ СТАТИСТИКОЙ ДЛЯ ВСЕХ РЕЖИМОВ И ОТДЕЛЬНЫМ ОФОРМЛЕНИЕМ ДЛЯ ТЕМЫ "СОН ЕДИНОРОГА"
+// game.js - ОБНОВЛЕННАЯ ВЕРСИЯ С ИСПРАВЛЕННОЙ СТАТИСТИКОЙ
 class Game2048 {
     constructor() {
         this.config = window.AppConfig;
@@ -56,6 +56,7 @@ class Game2048 {
             gamePaused: false,
             bestTimeTile: 0,
             lastBestTile: 0,
+            // ДОБАВЛЕНО: флаг для отслеживания начала игры
             gameStarted: false
         };
     }
@@ -114,9 +115,6 @@ class Game2048 {
         this.elements['game-end-modal'].style.display = 'none';
         this.closeAllModals();
         this.updateMainMenuStats();
-        
-        // Сбрасываем флаг gameStarted при возврате в главное меню
-        this.state.gameStarted = false;
     }
     
     showGameScreen() {
@@ -126,19 +124,13 @@ class Game2048 {
     }
     
     start(gameMode) {
+        // Сбрасываем флаг начала игры
+        this.state.gameStarted = false;
+        
         this.initializeGame(gameMode);
         
         if (gameMode === '4x4-time') {
             setTimeout(() => this.showStartTimeModal(), 0);
-        } else {
-            // ДЛЯ ВСЕХ ОСТАЛЬНЫХ РЕЖИМОВ: увеличиваем счетчик игр сразу при старте
-            // ТОЛЬКО если игра еще не была начата (не перезапуск)
-            if (!this.state.gameStarted) {
-                this.state.totalGames++;
-                this.state.gameStarted = true;
-                this.saveStatistics();
-                this.updateMainMenuStats();
-            }
         }
     }
     
@@ -168,8 +160,7 @@ class Game2048 {
             timeLeft: this.config.GAME.TIME_ATTACK_DURATION,
             gamePaused: false,
             lastBestTile: 0,
-            // Устанавливаем gameStarted в false только если это не перезапуск
-            gameStarted: isRestart ? this.state.gameStarted : false
+            gameStarted: false // Сбрасываем флаг при инициализации
         });
         
         this.elements['time-container'].style.display = settings.showTime ? 'block' : 'none';
@@ -187,27 +178,31 @@ class Game2048 {
         this.render();
         this.showGameScreen();
         
+        // ИСПРАВЛЕНИЕ: Не добавляем игру в счетчик при перезапуске
+        if (!isRestart) {
+            // Для режима на время игра добавляется только после нажатия "Начать"
+            if (gameMode !== '4x4-time') {
+                this.state.totalGames++;
+                this.saveStatistics();
+                this.updateMainMenuStats();
+            }
+        }
+        
         window.TelegramApp?.tg?.MainButton.hide();
+    }
+    
+    // НОВЫЙ МЕТОД: Начать игру на время (добавляет в статистику)
+    startTimeGame() {
+        this.state.gameStarted = true;
+        this.state.totalGames++;
+        this.saveStatistics();
+        this.updateMainMenuStats();
+        this.startTimer();
     }
     
     showStartTimeModal() {
         const modal = document.getElementById('start-time-modal');
         if (modal) modal.style.display = 'flex';
-    }
-    
-    // НОВЫЙ МЕТОД: Начало игры с учетом счетчика (только для режима на время)
-    startGameWithTimer() {
-        // Увеличиваем счетчик игр только когда игра действительно начинается (для режима на время)
-        // ТОЛЬКО если игра еще не была начата (не перезапуск)
-        if (!this.state.gameStarted) {
-            this.state.totalGames++;
-            this.state.gameStarted = true;
-            this.saveStatistics();
-            this.updateMainMenuStats();
-        }
-        
-        document.getElementById('start-time-modal').style.display = 'none';
-        this.startTimer();
     }
     
     startTimer() {
@@ -893,11 +888,6 @@ class Game2048 {
         if (mainMenu) mainMenu.style.backgroundColor = theme.bgColor;
         const gameScreen = document.querySelector('.game-screen');
         if (gameScreen) gameScreen.style.backgroundColor = theme.bgColor;
-        
-        // Перерисовываем доску, чтобы применить стили плиток для темы
-        if (this.state.board && this.state.board.length > 0) {
-            this.render();
-        }
     }
     
     loadSettings() {
@@ -1003,9 +993,9 @@ class Game2048 {
         return false;
     }
     
-    // ОБНОВЛЕННЫЙ МЕТОД RENDER ДЛЯ НОВЫХ ПЛИТОК С УЧЕТОМ ТЕМЫ "СОН ЕДИНОРОГА"
+    // ОБНОВЛЕННЫЙ МЕТОД RENDER ДЛЯ НОВЫХ ПЛИТОК
     render() {
-        const { board, size, currentTheme } = this.state;
+        const { board, size } = this.state;
         
         for (let r = 0; r < size; r++) {
             for (let c = 0; c < size; c++) {
@@ -1028,11 +1018,6 @@ class Game2048 {
                         const tile = document.createElement('div');
                         tile.className = 'tile';
                         tile.setAttribute('data-value', value);
-                        
-                        // ДЛЯ ТЕМЫ "СОН ЕДИНОРОГА": добавляем специальный класс
-                        if (currentTheme === 'unicorn-dream') {
-                            tile.classList.add('unicorn-dream-tile');
-                        }
                         
                         // Создаем градиентный бордер
                         const tileBorder = document.createElement('div');
@@ -1259,7 +1244,7 @@ class Game2048 {
             });
         }
         
-        // Кнопка "Темы" в игровом меню
+        // ДОБАВЛЕН ОБРАБОТЧИК ДЛЯ КНОПКИ "ТЕМЫ" В ИГРОВОМ МЕНЮ
         const gameThemesBtn = document.getElementById('game-themes-btn');
         if (gameThemesBtn) {
             gameThemesBtn.addEventListener('click', () => {
@@ -1268,24 +1253,17 @@ class Game2048 {
             });
         }
         
-        // Обработчик для кнопки закрытия окна начала игры на время
+        // ДОБАВЛЕН ОБРАБОТЧИК ДЛЯ КНОПКИ ЗАКРЫТИЯ В ОКНЕ НАЧАЛА ИГРЫ НА ВРЕМЯ
         const closeStartTime = document.getElementById('close-start-time');
         if (closeStartTime) {
             closeStartTime.addEventListener('click', () => {
                 document.getElementById('start-time-modal').style.display = 'none';
-                this.showMainMenu(); // Возвращаемся в главное меню
+                // ИСПРАВЛЕНИЕ: При закрытии окна начала игры возвращаемся в главное меню
+                this.showMainMenu();
             });
         }
         
-        // Обработчик для кнопки "Начать" в окне начала игры на время
-        const startTimeBtn = document.getElementById('start-time-btn');
-        if (startTimeBtn) {
-            startTimeBtn.addEventListener('click', () => {
-                this.startGameWithTimer(); // Используем новый метод
-            });
-        }
-        
-        // Обработчик для поля ввода чит-кода в игре
+        // ОБРАБОТЧИК ДЛЯ ПОЛЯ ВВОДА ЧИТ-КОДА В ИГРЕ
         const gameCheatInput = document.getElementById('game-cheat-input');
         if (gameCheatInput) {
             gameCheatInput.addEventListener('keypress', (e) => {
@@ -1333,12 +1311,12 @@ class Game2048 {
                     gameCheatInput.placeholder = 'Введите чит-код здесь';
                 }
                 
-                // Возвращаемся в игровое меню
+                // ИСПРАВЛЕНИЕ: Возвращаемся в игровое меню, а не в игру
                 document.getElementById('in-game-menu-modal').style.display = 'flex';
                 
-                // Возобновляем таймер только если игра не на паузе
+                // Если игра на время была на паузе, остаемся на паузе
                 if (this.state.gameMode === '4x4-time' && this.state.gamePaused) {
-                    this.resumeTimer();
+                    // Не возобновляем таймер, остаемся в меню
                 }
             });
         }
@@ -1372,13 +1350,21 @@ class Game2048 {
             });
         }
         
+        // НОВЫЙ ОБРАБОТЧИК ДЛЯ КНОПКИ "НАЧАТЬ" В ОКНЕ НАЧАЛА ИГРЫ НА ВРЕМЯ
+        const startTimeBtn = document.getElementById('start-time-btn');
+        if (startTimeBtn) {
+            startTimeBtn.addEventListener('click', () => {
+                document.getElementById('start-time-modal').style.display = 'none';
+                this.startTimeGame(); // Используем новый метод для начала игры
+            });
+        }
+        
         const restartGameBtn = document.getElementById('restart-game-btn');
         if (restartGameBtn) {
             restartGameBtn.addEventListener('click', () => {
                 this.stopTimer();
                 this.state.gamePaused = false;
-                // Передаем true как второй параметр, указывая что это перезапуск
-                this.initializeGame(this.state.gameMode, true);
+                this.initializeGame(this.state.gameMode, true); // Передаем true для isRestart
                 document.getElementById('in-game-menu-modal').style.display = 'none';
                 
                 if (this.state.gameMode === '4x4-time') {

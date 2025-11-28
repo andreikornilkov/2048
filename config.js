@@ -58,7 +58,7 @@ window.AppConfig = {
             textColor: '#FFFFFF'
         },
         'unicorn-dream': {
-            bgColor: '#D9A5B3',
+            bgColor: '#966088',
             primaryColor: '#C98394',
             secondaryColor: '#E9C7D1',
             textColor: '#FFFFFF'

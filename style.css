@@ -1,4 +1,4 @@
-/* style.css - v1.06 с полной адаптивностью и исправленными модальными окнами */
+/* style.css - v1.02 */
 :root {
     --tg-bg-color: #63697B;
     --tg-primary-color: #635BFF;
@@ -32,35 +32,17 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    touch-action: manipulation;
 }
 
-/* Основной контейнер для всего приложения */
 .telegram-app {
     width: 100%;
     height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    overflow: auto;
-    position: relative;
-}
-
-/* Контейнер для всего контента игры */
-.game-content {
-    position: relative;
-    width: 375px;
-    height: 709px;
-    flex-shrink: 0;
-}
-
-.canvas {
-    width: 375px;
-    height: 709px;
-    position: relative;
+    max-width: 100%;
     margin: 0 auto;
-    flex-shrink: 0;
+    position: fixed;
+    overflow: hidden;
 }
 
 /* Главное меню */
@@ -72,8 +54,16 @@ body {
     position: relative;
     z-index: 1;
     width: 100%;
-    justify-content: center;
-    align-items: center;
+}
+
+.canvas {
+    width: 375px;
+    height: 709px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-shrink: 0;
 }
 
 /* Панель главного меню */
@@ -108,7 +98,7 @@ body {
     width: 303px;
     height: 303px;
     position: absolute;
-    top: 192px; 
+    top: 202px; 
     left: 36px;
     border-radius: 22px;
     background: rgba(255, 255, 255, 0.01);
@@ -117,7 +107,7 @@ body {
     box-shadow: 0px 8px 30px 0px rgba(0, 1, 50, 0.15);
 }
 
-/* Контейнер для игрового поля */
+/* Контейнер для игрового поля 282x282px */
 .game-board-container {
     position: absolute;
     top: 50%;
@@ -130,7 +120,7 @@ body {
     justify-content: center;
 }
 
-/* Градиенты для панелей */
+/* Первый градиент для панели */
 .panel::before,
 .game-panel-top::before,
 .game-panel-bottom::before {
@@ -157,6 +147,7 @@ body {
     z-index: 1;
 }
 
+/* Второй градиент для панели */
 .panel::after,
 .game-panel-top::after,
 .game-panel-bottom::after {
@@ -183,6 +174,7 @@ body {
     z-index: 1;
 }
 
+/* Градиентная заливка для панели */
 .panel > .panel-fill,
 .game-panel-top > .panel-fill,
 .game-panel-bottom > .panel-fill {
@@ -203,7 +195,7 @@ body {
     z-index: 0;
 }
 
-/* МАЛЕНЬКИЕ КНОПКИ - фиксированные позиции */
+/* Маленькие кнопки */
 .menu-button,
 .menu-button-right {
     width: 78px;
@@ -227,17 +219,16 @@ body {
     left: 238px;
 }
 
+/* Стиль для плашки "Новый рекорд" */
 .new-record-badge {
     width: 129px;
     height: 24px;
-    position: absolute;
-    top: 54px;
-    left: 123px;
+    left: 187px;
     box-shadow: inset 0 0 8px rgba(234, 118, 55, 0.5);
     pointer-events: none;
 }
 
-/* Градиенты для маленьких кнопок */
+/* Первый градиент для маленьких кнопок */
 .menu-button::before,
 .menu-button-right::before {
     content: '';
@@ -263,6 +254,7 @@ body {
     z-index: 1;
 }
 
+/* Второй градиент для маленьких кнопок */
 .menu-button::after,
 .menu-button-right::after {
     content: '';
@@ -288,6 +280,7 @@ body {
     z-index: 1;
 }
 
+/* Один цвет для плашки "Новый рекорд" */
 .new-record-badge::before {
     content: '';
     position: absolute;
@@ -308,6 +301,7 @@ body {
     opacity: 0.78;
 }
 
+/* Градиентная заливка для маленьких кнопок */
 .menu-button > .button-fill-small,
 .menu-button-right > .button-fill-small,
 .new-record-badge > .button-fill-small {
@@ -328,7 +322,7 @@ body {
     z-index: 0;
 }
 
-/* БУРГЕР-ИКОНКА */
+/* БУРГЕР-ИКОНКА ДЛЯ ЛЕВОЙ КНОПКИ */
 .menu-button .burger-icon {
     position: absolute;
     left: 8px;
@@ -343,6 +337,15 @@ body {
     z-index: 11;
 }
 
+.menu-button .burger-icon::before,
+.menu-button .burger-icon::after {
+    content: '';
+    width: 100%;
+    height: 1px;
+    background-color: #F2F2F2;
+}
+
+/* Создаем три линии бургера */
 .menu-button .burger-icon {
     background: 
         linear-gradient(#F2F2F2, #F2F2F2) 0 0/10px 1px no-repeat,
@@ -350,7 +353,7 @@ body {
         linear-gradient(#F2F2F2, #F2F2F2) 0 100%/10px 1px no-repeat;
 }
 
-/* ТЕКСТ ДЛЯ КНОПОК */
+/* ТЕКСТ ДЛЯ ЛЕВОЙ КНОПКИ */
 .menu-button .button-text {
     position: absolute;
     left: 28px;
@@ -365,6 +368,7 @@ body {
     z-index: 11;
 }
 
+/* ТЕКСТ ДЛЯ ПРАВОЙ КНОПКИ */
 .menu-button-right .button-text {
     position: absolute;
     left: 50%;
@@ -379,12 +383,13 @@ body {
     z-index: 11;
 }
 
+/* Стили для нажатого состояния маленьких кнопок */
 .menu-button:active,
 .menu-button-right:active {
     box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.25);
 }
 
-/* БОЛЬШИЕ КНОПКИ - фиксированные позиции */
+/* Большие кнопки - общие стили */
 .big-button,
 .big-button-right,
 .big-button-bottom,
@@ -402,6 +407,7 @@ body {
     cursor: pointer;
 }
 
+/* Позиции больших кнопок */
 .big-button {
     top: 188px;
     left: 58px;
@@ -422,7 +428,7 @@ body {
     right: 58px;
 }
 
-/* ЦВЕТНЫЕ ТЕНИ */
+/* ЦВЕТНЫЕ ТЕНИ ДЛЯ КАЖДОЙ КНОПКИ В ОБЫЧНОМ СОСТОЯНИИ */
 .big-button {
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
@@ -443,7 +449,7 @@ body {
     --normal-shadow-blur: 8px;
 }
 
-/* Градиенты для больших кнопок */
+/* Первый градиент для больших кнопок */
 .big-button::before,
 .big-button-right::before,
 .big-button-bottom::before,
@@ -471,6 +477,7 @@ body {
     z-index: 2;
 }
 
+/* Второй градиент для больших кнопок */
 .big-button::after,
 .big-button-right::after,
 .big-button-bottom::after,
@@ -498,6 +505,7 @@ body {
     z-index: 2;
 }
 
+/* Градиентная заливка для больших кнопок */
 .big-button > .button-fill,
 .big-button-right > .button-fill,
 .big-button-bottom > .button-fill,
@@ -516,7 +524,7 @@ body {
     z-index: 1;
 }
 
-/* ТЕКСТ ДЛЯ БОЛЬШИХ КНОПОК */
+/* ОБЩИЕ СТИЛИ ТЕКСТА ДЛЯ БОЛЬШИХ КНОПОК */
 .big-button-title {
     position: absolute;
     left: 50%;
@@ -555,6 +563,7 @@ body {
     bottom: 17px;
 }
 
+/* Стили для нажатого состояния ВСЕХ больших кнопок */
 .big-button:active,
 .big-button-right:active,
 .big-button-bottom:active,
@@ -564,6 +573,7 @@ body {
         inset 0 0 var(--shadow-blur) var(--shadow-color);
 }
 
+/* НАСТРОЙКИ ВТОРОЙ ТЕНИ ДЛЯ КАЖДОЙ КНОПКИ В НАЖАТОМ СОСТОЯНИИ */
 .big-button:active {
     --shadow-color: rgba(204, 219, 251, 1);
     --shadow-blur: 6px;
@@ -599,7 +609,7 @@ body {
     text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* СТАТИСТИКА - фиксированные позиции */
+/* Статистика */
 .stats-container {
     position: absolute;
     top: 60px;
@@ -609,28 +619,14 @@ body {
 }
 
 .game-panel-top .stats-container {
-    top: 62px;
+    top: 60px;  /* Поднимаем только в игре */
 } 
 
 .stat-item {
     position: absolute;
+    transform: translateX(-50%);
     text-align: center;
     white-space: nowrap;
-}
-
-.stat-item:nth-child(1) { 
-    left: 25%; 
-    transform: translateX(-50%);
-}
-
-.stat-item:nth-child(2) { 
-    left: 50%; 
-    transform: translateX(-50%);
-}
-
-.stat-item:nth-child(3) { 
-    left: 75%; 
-    transform: translateX(-50%);
 }
 
 .stat-value {
@@ -659,11 +655,9 @@ body {
     position: relative;
     z-index: 1;
     width: 100%;
-    justify-content: center;
-    align-items: center;
 }
 
-/* Игровое поле */
+/* Игровое поле - центрированное */
 #board {
     display: grid;
     z-index: 10;
@@ -776,7 +770,7 @@ body {
     height: 100%;
     border-radius: inherit;
     background: rgba(255, 255, 255, 0.00);
-    -webkit-backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(5px);
     z-index: 1;
 }
 
@@ -1098,64 +1092,6 @@ body {
 }
 .tile[data-value="1048576"] .tile-number { font-size: 12px; }
 
-/* НОВЫЕ СТИЛИ ДЛЯ ТЕМЫ "СОН ЕДИНОРОГА" - ВСЕ ПЛИТКИ КАК ПЛИТКА "2" */
-body[data-theme="unicorn-dream"] .unicorn-dream-tile .tile-border {
-    background: linear-gradient(135deg, 
-        rgba(255, 247, 239, 1) 0%,
-        rgba(255, 185, 163, 1) 50%,
-        rgba(255, 248, 240, 1) 75%,
-        rgba(255, 221, 187, 1) 100%) !important;
-}
-
-body[data-theme="unicorn-dream"] .unicorn-dream-tile { 
-    box-shadow: inset 0 0 6px rgba(248, 185, 130, 1) !important; 
-}
-
-/* Сохраняем размеры шрифтов для разных значений плиток в теме "Сон единорога" */
-body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="2"] .tile-number,
-body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="4"] .tile-number,
-body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="8"] .tile-number { 
-    font-size: 34px; 
-}
-
-body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="16"] .tile-number,
-body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="32"] .tile-number,
-body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="64"] .tile-number { 
-    font-size: 29px; 
-}
-
-body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="128"] .tile-number,
-body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="256"] .tile-number,
-body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="512"] .tile-number { 
-    font-size: 24px; 
-}
-
-body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="1024"] .tile-number,
-body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="2048"] .tile-number { 
-    font-size: 18px; 
-}
-
-body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="4096"] .tile-number,
-body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="8192"] .tile-number { 
-    font-size: 18px; 
-}
-
-body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="16384"] .tile-number,
-body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="32768"] .tile-number,
-body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="65536"] .tile-number { 
-    font-size: 15px; 
-}
-
-body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="131072"] .tile-number,
-body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="262144"] .tile-number,
-body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="524288"] .tile-number { 
-    font-size: 14px; 
-}
-
-body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="1048576"] .tile-number { 
-    font-size: 12px; 
-}
-
 /* Анимации */
 @keyframes tileAppear {
     0% { transform: scale(0); }
@@ -1177,7 +1113,7 @@ body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="1048576"] .tile
     animation: tileMerge 0.2s ease;
 }
 
-/* МОДАЛЬНЫЕ ОКНА */
+/* МОДАЛЬНЫЕ ОКНА - ФИКСИРОВАННАЯ ПОЗИЦИЯ КАК У ПАНЕЛЕЙ */
 .modal {
     position: fixed;
     top: 0;
@@ -1185,27 +1121,18 @@ body[data-theme="unicorn-dream"] .unicorn-dream-tile[data-value="1048576"] .tile
     width: 100%;
     height: 100%;
     z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: auto;
-    padding: 20px;
-    box-sizing: border-box;
+    display: none;
+    overflow: hidden;
 }
 
 .modal .canvas {
-    position: relative;
-    margin: 0;
-    transform: none;
-    top: auto;
-    left: auto;
-}
-
-/* Гарантируем, что модальные окна всегда будут центрированы */
-.modal::before {
-    content: '';
-    display: block;
-    height: 0;
+    width: 375px;
+    height: 709px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-shrink: 0;
 }
 
 /* ФОНЫ ДЛЯ МОДАЛЬНЫХ ОКОН В ЗАВИСИМОСТИ ОТ ТЕМЫ */
@@ -1234,7 +1161,7 @@ body[data-theme="deep-space"] .modal {
 }
 
 body[data-theme="unicorn-dream"] .modal {
-    background: rgba(217, 165, 179, 0.35);
+    background: rgba(141, 90, 128, 0.35);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(5px);
 }
@@ -1603,7 +1530,7 @@ body[data-theme="unicorn-dream"] .modal {
     top: 307px;
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
-    background-color: #D9A5B3;
+    background-color: #8D5A80;
 }
 
 .moon-dust-button:active,
@@ -1853,21 +1780,17 @@ body[data-theme="unicorn-dream"] .modal {
     background-color: #63697B;
 }
 
-.no-button:active,
+/* ИСПРАВЛЕННЫЕ СТИЛИ ДЛЯ НАЖАТОГО СОСТОЯНИЯ КНОПОК ПОДТВЕРЖДЕНИЯ */
+.no-button:active {
+    box-shadow: 
+        inset 0 0 36px rgba(0, 0, 0, 0.20),
+        inset 0 0 6px rgba(248, 199, 131, 1) !important;
+}
+
 .yes-button:active {
     box-shadow: 
         inset 0 0 36px rgba(0, 0, 0, 0.20),
-        inset 0 0 var(--shadow-blur) var(--shadow-color);
-}
-
-.no-button:active {
-    --shadow-color: rgba(248, 199, 131, 1);
-    --shadow-blur: 6px;
-}
-
-.yes-button:active {
-    --shadow-color: rgba(165, 201, 149, 1);
-    --shadow-blur: 6px;
+        inset 0 0 6px rgba(165, 201, 149, 1) !important;
 }
 
 /* Игровое меню */
@@ -1900,6 +1823,7 @@ body[data-theme="unicorn-dream"] .modal {
     --normal-shadow-blur: 8px;
 }
 
+/* ДОБАВЛЕНА КНОПКА "ТЕМЫ" В ИГРОВОМ МЕНЮ */
 #in-game-menu-modal .themes-button {
     top: 307px;
     --normal-shadow-color: rgba(165, 201, 149, 0.0);
@@ -1929,6 +1853,7 @@ body[data-theme="unicorn-dream"] .modal {
     height: 256px;
 }
 
+/* Заголовок победы */
 .victory-title {
     position: absolute;
     top: 50px;
@@ -1944,6 +1869,7 @@ body[data-theme="unicorn-dream"] .modal {
     z-index: 10;
 }
 
+/* Число 2048 или лучшая плитка */
 .score-number {
     position: absolute;
     top: 92px;
@@ -1959,6 +1885,7 @@ body[data-theme="unicorn-dream"] .modal {
     z-index: 10;
 }
 
+/* Контейнер счета игры */
 .game-score-container {
     position: absolute;
     top: 160px;
@@ -1986,6 +1913,7 @@ body[data-theme="unicorn-dream"] .modal {
     text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.12);
 }
 
+/* Кнопка главного меню в окне завершения */
 #game-end-modal .main-menu-button {
     top: 200px;
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
@@ -2020,12 +1948,13 @@ body[data-theme="unicorn-dream"] .modal {
     pointer-events: none;
 }
 
-/* ИСПРАВЛЕННАЯ КНОПКА "НАЧАТЬ" В ОКНЕ НАЧАЛА ИГРЫ НА ВРЕМЯ */
+/* КНОПКА ДЛЯ ОКНА НАЧАЛА ИГРЫ НА ВРЕМЯ */
 #start-time-modal .menu-button-item {
     width: 259px;
     height: 40px;
     position: absolute;
-    left: 22px; /* Исправлено с 58px на 22px */
+    left: 50% !important;
+    transform: translateX(-50%) !important;
     top: 86px;
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.00);
@@ -2039,6 +1968,7 @@ body[data-theme="unicorn-dream"] .modal {
     --normal-shadow-blur: 8px;
 }
 
+/* Градиенты для кнопки */
 #start-time-modal .menu-button-item::before {
     content: '';
     position: absolute;
@@ -2087,6 +2017,7 @@ body[data-theme="unicorn-dream"] .modal {
     z-index: 2;
 }
 
+/* Градиентная заливка для кнопки */
 #start-time-modal .menu-button-item > .button-fill {
     position: absolute;
     inset: 0;
@@ -2102,6 +2033,7 @@ body[data-theme="unicorn-dream"] .modal {
     z-index: 1;
 }
 
+/* Текст кнопки */
 #start-time-modal .menu-button-text {
     position: absolute;
     left: 50%;
@@ -2118,6 +2050,7 @@ body[data-theme="unicorn-dream"] .modal {
     z-index: 3;
 }
 
+/* Эффект нажатия для кнопки */
 #start-time-modal .menu-button-item:active {
     box-shadow: 
         inset 0 0 36px rgba(0, 0, 0, 0.20),
@@ -2149,130 +2082,27 @@ body[data-theme="unicorn-dream"] .modal {
 }
 
 .game-board-container .cell[style*="50px"] .tile[data-value="1024"] .tile-number,
-.game-board-container .cell[style*="50px"] .tile[data-value="2048"] .tile-number,
+.game-board-container .cell[style*="50px"] .tile[data-value="2048"] .tile-number 
 .game-board-container .cell[style*="50px"] .tile[data-value="4096"] .tile-number,
-.game-board-container .cell[style*="50px"] .tile[data-value="8192"] .tile-number {
+.game-board-container .cell[style*="50px"] .tile[data-value="8192"] .tile-number,{
     font-size: 18px !important;
 }
 
+
 .game-board-container .cell[style*="50px"] .tile[data-value="16384"] .tile-number,
 .game-board-container .cell[style*="50px"] .tile[data-value="32768"] .tile-number,
-.game-board-container .cell[style*="50px"] .tile[data-value="65536"] .tile-number {
+.game-board-container .cell[style*="50px"] .tile[data-value="65536"] .tile-number, {
     font-size: 14px !important;
 }
 
+
 .game-board-container .cell[style*="50px"] .tile[data-value="131072"] .tile-number,
 .game-board-container .cell[style*="50px"] .tile[data-value="262144"] .tile-number,
-.game-board-container .cell[style*="50px"] .tile[data-value="524288"] .tile-number {
+.game-board-container .cell[style*="50px"] .tile[data-value="524288"] .tile-number, {
     font-size: 12px !important;
 }
 
+
 .game-board-container .cell[style*="50px"] .tile[data-value="1048576"] .tile-number {
     font-size: 10px !important;
-}
-
-/* АДАПТИВНОСТЬ ДЛЯ РАЗНЫХ ЭКРАНОВ */
-@media (max-width: 400px), (max-height: 750px) {
-    .telegram-app {
-        justify-content: flex-start;
-        padding-top: 20px;
-        padding-bottom: 20px;
-    }
-    
-    .game-content {
-        transform: scale(0.9);
-        transform-origin: top center;
-    }
-    
-    .modal {
-        align-items: flex-start;
-        padding-top: 20px;
-        padding-bottom: 20px;
-    }
-    
-    .modal .canvas {
-        transform: scale(0.9);
-        transform-origin: top center;
-    }
-}
-
-@media (max-width: 350px), (max-height: 700px) {
-    .game-content {
-        transform: scale(0.8);
-        transform-origin: top center;
-    }
-    
-    .modal .canvas {
-        transform: scale(0.8);
-        transform-origin: top center;
-    }
-}
-
-@media (max-width: 300px), (max-height: 650px) {
-    .game-content {
-        transform: scale(0.7);
-        transform-origin: top center;
-    }
-    
-    .modal .canvas {
-        transform: scale(0.7);
-        transform-origin: top center;
-    }
-}
-
-@media (max-width: 250px), (max-height: 600px) {
-    .game-content {
-        transform: scale(0.6);
-        transform-origin: top center;
-    }
-    
-    .modal .canvas {
-        transform: scale(0.6);
-        transform-origin: top center;
-    }
-}
-
-/* Для очень маленьких экранов - добавляем скролл */
-@media (max-height: 550px) {
-    .telegram-app {
-        justify-content: flex-start;
-        height: auto;
-        min-height: 100vh;
-    }
-}
-
-/* Убираем трансформации для модальных окон на очень маленьких экранах */
-@media (max-height: 500px) {
-    .modal {
-        align-items: flex-start;
-    }
-    
-    .modal .canvas {
-        transform: none;
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
-}
-
-/* Гарантируем, что панели и модальные окна имеют одинаковую ширину */
-.panel,
-.game-panel-top,
-.game-panel-bottom,
-.menu-panel {
-    width: 303px;
-    left: 36px;
-}
-
-/* Все модальные окна используют ту же самую базовую структуру */
-#themes-modal .menu-panel,
-#stats-modal .menu-panel,
-#cheat-modal .menu-panel,
-#game-cheat-modal .menu-panel,
-#yazhopka-modal .menu-panel,
-#confirm-modal .menu-panel,
-#in-game-menu-modal .menu-panel,
-#game-end-modal .menu-panel,
-#start-time-modal .menu-panel {
-    width: 303px;
-    left: 36px;
 }
