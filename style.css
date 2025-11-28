@@ -842,143 +842,143 @@ body {
 /* Уникальные градиенты для каждой плитки с плавным переходом */
 .tile[data-value="2"] .tile-border {
     background: linear-gradient(135deg, 
-        rgba(255, 245, 235, 1) 0%,
-        rgba(255, 225, 180, 1) 50%,
-        rgba(255, 240, 220, 1) 75%,
-        rgba(255, 230, 200, 1) 100%);
+        rgba(255, 247, 239, 1) 0%,
+        rgba(255, 185, 163, 1) 50%,
+        rgba(255, 248, 240, 1) 75%,
+        rgba(255, 221, 187, 1) 100%);
 }
 .tile[data-value="2"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 6px rgba(248, 185, 130, 1); 
     z-index: 3; 
 }
 .tile[data-value="2"] .tile-number { font-size: 34px; }
 
 .tile[data-value="4"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(255, 235, 210, 1) 0%,
-        rgba(255, 200, 150, 1) 33%,
-        rgba(255, 215, 170, 1) 66%,
-        rgba(255, 225, 185, 1) 100%);
+        rgba(255, 226, 201, 1) 0%,
+        rgba(255, 174, 163, 1) 33%,
+        rgba(255, 174, 145, 1) 66%,
+        rgba(255, 210, 166, 1) 100%);
 }
 .tile[data-value="4"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 6px rgba(248, 155, 135, 1);
     z-index: 4; 
 }
 .tile[data-value="4"] .tile-number { font-size: 34px; }
 
 .tile[data-value="8"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(255, 225, 190, 1) 0%,
-        rgba(255, 180, 120, 1) 33%,
-        rgba(255, 200, 140, 1) 66%,
-        rgba(255, 215, 165, 1) 100%);
+        rgba(255, 214, 201, 1) 0%,
+        rgba(250, 145, 88, 1) 33%,
+        rgba(255, 221, 173, 1) 66%,
+        rgba(255, 164, 141, 1) 100%);
 }
 .tile[data-value="8"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 6px rgba(248, 155, 120, 1); 
     z-index: 5; 
 }
 .tile[data-value="8"] .tile-number { font-size: 34px; }
 
 .tile[data-value="16"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(255, 235, 210, 1) 0%,
-        rgba(255, 200, 150, 1) 33%,
-        rgba(255, 215, 170, 1) 66%,
-        rgba(255, 225, 185, 1) 100%);
+        rgba(255, 200, 180, 1) 0%,
+        rgba(248, 130, 80, 1) 33%,
+        rgba(255, 200, 150, 1) 66%,
+        rgba(255, 150, 120, 1) 100%);
 }
 .tile[data-value="16"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 6px rgba(248, 140, 90, 1); 
     z-index: 6; 
 }
 .tile[data-value="16"] .tile-number { font-size: 29px; }
 
 .tile[data-value="32"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(255, 205, 150, 1) 0%,
-        rgba(255, 140, 80, 1) 33%,
-        rgba(255, 170, 110, 1) 66%,
-        rgba(255, 190, 135, 1) 100%);
+        rgba(255, 180, 160, 1) 0%,
+        rgba(248, 110, 70, 1) 33%,
+        rgba(255, 170, 130, 1) 66%,
+        rgba(255, 130, 100, 1) 100%);
 }
 .tile[data-value="32"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 6px rgba(248, 120, 80, 1); 
     z-index: 7; 
 }
 .tile[data-value="32"] .tile-number { font-size: 29px; }
 
 .tile[data-value="64"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(255, 195, 140, 1) 0%,
-        rgba(255, 120, 60, 1) 33%,
-        rgba(255, 155, 95, 1) 66%,
-        rgba(255, 175, 120, 1) 100%);
+        rgba(255, 160, 140, 1) 0%,
+        rgba(248, 90, 60, 1) 33%,
+        rgba(255, 150, 110, 1) 66%,
+        rgba(255, 110, 80, 1) 100%);
 }
 .tile[data-value="64"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 6px rgba(248, 100, 70, 1); 
     z-index: 8; 
 }
 .tile[data-value="64"] .tile-number { font-size: 29px; }
 
 .tile[data-value="128"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(255, 185, 130, 1) 0%,
-        rgba(255, 110, 50, 1) 33%,
-        rgba(255, 145, 85, 1) 66%,
-        rgba(255, 165, 110, 1) 100%);
+        rgba(255, 140, 120, 1) 0%,
+        rgba(230, 80, 70, 1) 33%,
+        rgba(255, 130, 100, 1) 66%,
+        rgba(255, 90, 70, 1) 100%);
 }
 .tile[data-value="128"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 6px rgba(230, 90, 80, 1); 
     z-index: 9; 
 }
 .tile[data-value="128"] .tile-number { font-size: 24px; }
 
 .tile[data-value="256"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(255, 175, 150, 1) 0%,
-        rgba(255, 100, 80, 1) 33%,
-        rgba(255, 135, 115, 1) 66%,
-        rgba(255, 155, 135, 1) 100%);
+        rgba(255, 180, 200, 1) 0%,
+        rgba(255, 120, 160, 1) 33%,
+        rgba(255, 160, 180, 1) 66%,
+        rgba(255, 100, 140, 1) 100%);
 }
 .tile[data-value="256"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 6px rgba(255, 130, 170, 1); 
     z-index: 10; 
 }
 .tile[data-value="256"] .tile-number { font-size: 24px; }
 
 .tile[data-value="512"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(255, 165, 170, 1) 0%,
-        rgba(255, 90, 110, 1) 33%,
-        rgba(255, 125, 145, 1) 66%,
-        rgba(255, 145, 160, 1) 100%);
+        rgba(255, 160, 200, 1) 0%,
+        rgba(240, 100, 180, 1) 33%,
+        rgba(255, 140, 190, 1) 66%,
+        rgba(255, 80, 150, 1) 100%);
 }
 .tile[data-value="512"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 8px rgba(240, 110, 190, 1); 
     z-index: 11; 
 }
 .tile[data-value="512"] .tile-number { font-size: 24px; }
 
 .tile[data-value="1024"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(255, 155, 190, 1) 0%,
-        rgba(240, 80, 140, 1) 33%,
-        rgba(247, 115, 165, 1) 66%,
-        rgba(255, 135, 185, 1) 100%);
+        rgba(255, 140, 200, 1) 0%,
+        rgba(220, 90, 190, 1) 33%,
+        rgba(255, 120, 200, 1) 66%,
+        rgba(255, 60, 160, 1) 100%);
 }
 .tile[data-value="1024"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 6px rgba(220, 100, 200, 1); 
     z-index: 12; 
 }
 .tile[data-value="1024"] .tile-number { font-size: 18px; }
 
 .tile[data-value="2048"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(230, 160, 220, 1) 0%,
-        rgba(200, 80, 180, 1) 33%,
-        rgba(215, 120, 200, 1) 66%,
-        rgba(225, 140, 210, 1) 100%);
+        rgba(255, 120, 200, 1) 0%,
+        rgba(200, 80, 200, 1) 33%,
+        rgba(255, 100, 210, 1) 66%,
+        rgba(255, 40, 170, 1) 100%);
 }
 .tile[data-value="2048"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 6px rgba(200, 90, 210, 1); 
     z-index: 13; 
 }
 .tile[data-value="2048"] .tile-number { font-size: 18px; }
@@ -986,39 +986,39 @@ body {
 /* Плитки после 2048 в едином стиле */
 .tile[data-value="4096"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(200, 180, 240, 1) 0%,
-        rgba(150, 100, 220, 1) 33%,
-        rgba(175, 140, 230, 1) 66%,
-        rgba(190, 160, 240, 1) 100%);
+        rgba(200, 220, 255, 1) 0%,
+        rgba(120, 160, 255, 1) 33%,
+        rgba(180, 200, 255, 1) 66%,
+        rgba(100, 140, 255, 1) 100%);
 }
 .tile[data-value="4096"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 6px rgba(140, 170, 255, 1); 
     z-index: 14; 
 }
 .tile[data-value="4096"] .tile-number { font-size: 18px; }
 
 .tile[data-value="8192"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(180, 200, 250, 1) 0%,
-        rgba(120, 140, 230, 1) 33%,
-        rgba(150, 170, 240, 1) 66%,
-        rgba(170, 190, 250, 1) 100%);
+        rgba(180, 220, 255, 1) 0%,
+        rgba(100, 180, 255, 1) 33%,
+        rgba(160, 200, 255, 1) 66%,
+        rgba(80, 160, 255, 1) 100%);
 }
 .tile[data-value="8192"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 8px rgba(120, 190, 255, 1); 
     z-index: 15; 
 }
 .tile[data-value="8192"] .tile-number { font-size: 18px; }
 
 .tile[data-value="16384"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(160, 220, 255, 1) 0%,
-        rgba(80, 160, 230, 1) 33%,
-        rgba(120, 190, 245, 1) 66%,
-        rgba(140, 210, 255, 1) 100%);
+        rgba(160, 230, 255, 1) 0%,
+        rgba(80, 200, 255, 1) 33%,
+        rgba(140, 220, 255, 1) 66%,
+        rgba(60, 180, 255, 1) 100%);
 }
 .tile[data-value="16384"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 6px rgba(100, 210, 255, 1); 
     z-index: 16; 
 }
 .tile[data-value="16384"] .tile-number { font-size: 15px; }
@@ -1031,20 +1031,20 @@ body {
         rgba(60, 200, 255, 1) 100%);
 }
 .tile[data-value="32768"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 6px rgba(100, 230, 255, 1); 
     z-index: 17; 
 }
 .tile[data-value="32768"] .tile-number { font-size: 15px; }
 
 .tile[data-value="65536"] .tile-border { 
     background: linear-gradient(135deg, 
-        rgba(140, 230, 255, 1) 0%,
-        rgba(60, 180, 230, 1) 33%,
-        rgba(100, 205, 245, 1) 66%,
-        rgba(120, 220, 255, 1) 100%);
+        rgba(180, 255, 240, 1) 0%,
+        rgba(100, 240, 220, 1) 33%,
+        rgba(160, 255, 230, 1) 66%,
+        rgba(80, 220, 200, 1) 100%);
 }
 .tile[data-value="65536"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 6px rgba(120, 250, 230, 1); 
     z-index: 18; 
 }
 .tile[data-value="65536"] .tile-number { font-size: 15px; }
@@ -1057,7 +1057,7 @@ body {
         rgba(100, 220, 160, 1) 100%);
 }
 .tile[data-value="131072"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 6px rgba(140, 250, 190, 1); 
     z-index: 19; 
 }
 .tile[data-value="131072"] .tile-number { font-size: 14px; }
@@ -1070,7 +1070,7 @@ body {
         rgba(120, 220, 140, 1) 100%);
 }
 .tile[data-value="262144"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 6px rgba(160, 250, 170, 1); 
     z-index: 20; 
 }
 .tile[data-value="262144"] .tile-number { font-size: 14px; }
@@ -1083,7 +1083,7 @@ body {
         rgba(140, 220, 120, 1) 100%);
 }
 .tile[data-value="524288"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 6px rgba(180, 250, 150, 1); 
     z-index: 21; 
 }
 .tile[data-value="524288"] .tile-number { font-size: 14px; }
@@ -1096,7 +1096,7 @@ body {
         rgba(180, 220, 120, 1) 100%);
 }
 .tile[data-value="1048576"] { 
-    box-shadow: inset 0 0 6px rgba(248, 185, 130, 1); 
+    box-shadow: inset 0 0 6px rgba(210, 250, 150, 1); 
     z-index: 22; 
 }
 .tile[data-value="1048576"] .tile-number { font-size: 12px; }
