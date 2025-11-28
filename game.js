@@ -114,6 +114,9 @@ class Game2048 {
         this.elements['game-end-modal'].style.display = 'none';
         this.closeAllModals();
         this.updateMainMenuStats();
+        
+        // Сбрасываем флаг gameStarted при возврате в главное меню
+        this.state.gameStarted = false;
     }
     
     showGameScreen() {
@@ -129,14 +132,17 @@ class Game2048 {
             setTimeout(() => this.showStartTimeModal(), 0);
         } else {
             // ДЛЯ ВСЕХ ОСТАЛЬНЫХ РЕЖИМОВ: увеличиваем счетчик игр сразу при старте
-            this.state.totalGames++;
-            this.state.gameStarted = true;
-            this.saveStatistics();
-            this.updateMainMenuStats();
+            // ТОЛЬКО если игра еще не была начата (не перезапуск)
+            if (!this.state.gameStarted) {
+                this.state.totalGames++;
+                this.state.gameStarted = true;
+                this.saveStatistics();
+                this.updateMainMenuStats();
+            }
         }
     }
     
-    initializeGame(gameMode) {
+    initializeGame(gameMode, isRestart = false) {
         const modeSettings = {
             '4x4': { size: 4, target: 2048, showTime: false, showBestTile: true },
             '5x5': { size: 5, target: 4096, showTime: false, showBestTile: true },
@@ -162,7 +168,8 @@ class Game2048 {
             timeLeft: this.config.GAME.TIME_ATTACK_DURATION,
             gamePaused: false,
             lastBestTile: 0,
-            gameStarted: false
+            // Устанавливаем gameStarted в false только если это не перезапуск
+            gameStarted: isRestart ? this.state.gameStarted : false
         });
         
         this.elements['time-container'].style.display = settings.showTime ? 'block' : 'none';
@@ -191,10 +198,13 @@ class Game2048 {
     // НОВЫЙ МЕТОД: Начало игры с учетом счетчика (только для режима на время)
     startGameWithTimer() {
         // Увеличиваем счетчик игр только когда игра действительно начинается (для режима на время)
-        this.state.totalGames++;
-        this.state.gameStarted = true;
-        this.saveStatistics();
-        this.updateMainMenuStats();
+        // ТОЛЬКО если игра еще не была начата (не перезапуск)
+        if (!this.state.gameStarted) {
+            this.state.totalGames++;
+            this.state.gameStarted = true;
+            this.saveStatistics();
+            this.updateMainMenuStats();
+        }
         
         document.getElementById('start-time-modal').style.display = 'none';
         this.startTimer();
@@ -1249,7 +1259,7 @@ class Game2048 {
             });
         }
         
-        // ДОБАВЛЕН ОБРАБОТЧИК ДЛЯ КНОПКИ "ТЕМЫ" В ИГРОВОМ МЕНЮ
+        // Кнопка "Темы" в игровом меню
         const gameThemesBtn = document.getElementById('game-themes-btn');
         if (gameThemesBtn) {
             gameThemesBtn.addEventListener('click', () => {
@@ -1258,7 +1268,7 @@ class Game2048 {
             });
         }
         
-        // ИСПРАВЛЕННЫЙ ОБРАБОТЧИК ДЛЯ КНОПКИ ЗАКРЫТИЯ В ОКНЕ НАЧАЛА ИГРЫ НА ВРЕМЯ
+        // Обработчик для кнопки закрытия окна начала игры на время
         const closeStartTime = document.getElementById('close-start-time');
         if (closeStartTime) {
             closeStartTime.addEventListener('click', () => {
@@ -1267,7 +1277,7 @@ class Game2048 {
             });
         }
         
-        // ИСПРАВЛЕННЫЙ ОБРАБОТЧИК ДЛЯ КНОПКИ "НАЧАТЬ" В ОКНЕ НАЧАЛА ИГРЫ НА ВРЕМЯ
+        // Обработчик для кнопки "Начать" в окне начала игры на время
         const startTimeBtn = document.getElementById('start-time-btn');
         if (startTimeBtn) {
             startTimeBtn.addEventListener('click', () => {
@@ -1275,7 +1285,7 @@ class Game2048 {
             });
         }
         
-        // ОБРАБОТЧИК ДЛЯ ПОЛЯ ВВОДА ЧИТ-КОДА В ИГРЕ
+        // Обработчик для поля ввода чит-кода в игре
         const gameCheatInput = document.getElementById('game-cheat-input');
         if (gameCheatInput) {
             gameCheatInput.addEventListener('keypress', (e) => {
@@ -1310,7 +1320,7 @@ class Game2048 {
             });
         }
         
-        // ИСПРАВЛЕННЫЙ ОБРАБОТЧИК: Закрытие окна чит-кода для игры
+        // Закрытие окна чит-кода для игры
         const closeGameCheat = document.getElementById('close-game-cheat');
         if (closeGameCheat) {
             closeGameCheat.addEventListener('click', () => {
@@ -1323,7 +1333,7 @@ class Game2048 {
                     gameCheatInput.placeholder = 'Введите чит-код здесь';
                 }
                 
-                // ВОЗВРАЩАЕМСЯ В ИГРОВОЕ МЕНЮ (исправлено)
+                // Возвращаемся в игровое меню
                 document.getElementById('in-game-menu-modal').style.display = 'flex';
                 
                 // Возобновляем таймер только если игра не на паузе
@@ -1367,7 +1377,8 @@ class Game2048 {
             restartGameBtn.addEventListener('click', () => {
                 this.stopTimer();
                 this.state.gamePaused = false;
-                this.initializeGame(this.state.gameMode);
+                // Передаем true как второй параметр, указывая что это перезапуск
+                this.initializeGame(this.state.gameMode, true);
                 document.getElementById('in-game-menu-modal').style.display = 'none';
                 
                 if (this.state.gameMode === '4x4-time') {
