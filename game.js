@@ -1,4 +1,4 @@
-// game.js - ОБНОВЛЕННАЯ ВЕРСИЯ С ИСПРАВЛЕННОЙ СТАТИСТИКОЙ
+// game.js - ОБНОВЛЕННАЯ ВЕРСИЯ С РАЗДЕЛЕННЫМ ЛУЧШИМ СЧЕТОМ И МГНОВЕННЫМ СОХРАНЕНИЕМ
 class Game2048 {
     constructor() {
         this.config = window.AppConfig;
@@ -23,7 +23,8 @@ class Game2048 {
             'close-game-menu', 'restart-game-btn', 'to-lobby-btn', 'game-stats-btn',
             'game-cheat-modal', 'close-game-cheat', 'game-cheat-input', 'close-yazhopka',
             'game-end-title', 'game-end-tile', 'game-end-score', 'game-end-main-menu-btn',
-            'start-time-btn', 'close-start-time', 'game-themes-btn', 'stats-best-time-tile'
+            'start-time-btn', 'close-start-time', 'game-themes-btn', 'stats-best-time-tile',
+            'stats-best-classic-tile'
         ];
         
         ids.forEach(id => {
@@ -56,17 +57,31 @@ class Game2048 {
             gamePaused: false,
             bestTimeTile: 0,
             lastBestTile: 0,
-            // ДОБАВЛЕНО: флаг для отслеживания начала игры
-            gameStarted: false
+            bestClassicTile: 0,
+            gameStarted: false,
+            // НОВЫЕ ПОЛЯ ДЛЯ РАЗДЕЛЕННОЙ СТАТИСТИКИ
+            totalClassicGames: 0,
+            totalTimeGames: 0,
+            totalClassicWins: 0,
+            totalTimeWins: 0
         };
     }
     
     init() {
         this.loadStatistics();
         this.loadSettings();
-        this.setupEventListeners();
         this.applyTheme(this.state.currentTheme);
-        this.showMainMenu();
+        
+        // ИСПРАВЛЕНИЕ: Ждем полной загрузки DOM перед настройкой обработчиков
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                this.setupEventListeners();
+                this.showMainMenu();
+            });
+        } else {
+            this.setupEventListeners();
+            this.showMainMenu();
+        }
     }
     
     // ФОРМАТИРОВАНИЕ ЧИСЕЛ
@@ -160,7 +175,7 @@ class Game2048 {
             timeLeft: this.config.GAME.TIME_ATTACK_DURATION,
             gamePaused: false,
             lastBestTile: 0,
-            gameStarted: false // Сбрасываем флаг при инициализации
+            gameStarted: false
         });
         
         this.elements['time-container'].style.display = settings.showTime ? 'block' : 'none';
@@ -183,6 +198,7 @@ class Game2048 {
             // Для режима на время игра добавляется только после нажатия "Начать"
             if (gameMode !== '4x4-time') {
                 this.state.totalGames++;
+                this.state.totalClassicGames++;
                 this.saveStatistics();
                 this.updateMainMenuStats();
             }
@@ -195,6 +211,7 @@ class Game2048 {
     startTimeGame() {
         this.state.gameStarted = true;
         this.state.totalGames++;
+        this.state.totalTimeGames++;
         this.saveStatistics();
         this.updateMainMenuStats();
         this.startTimer();
@@ -356,6 +373,9 @@ class Game2048 {
             this.updateAllScores();
             this.updateBestTile();
             
+            // ИСПРАВЛЕНИЕ: Сохраняем статистику сразу после хода
+            this.saveStatistics();
+            
             this.checkWinCondition();
             
             if (!this.canMove(this.state.board)) {
@@ -365,40 +385,51 @@ class Game2048 {
     }
     
     updateAllScores() {
-        const shouldUpdateBest = this.state.score > this.state.bestScore;
-        
-        if (shouldUpdateBest) {
-            this.state.bestScore = this.state.score;
-            if (this.elements['new-record-badge']) {
-                this.elements['new-record-badge'].style.display = 'block';
+        // ИСПРАВЛЕНИЕ: Полностью разделяем статистику для разных режимов
+        if (this.state.gameMode !== '4x4-time') {
+            // Классические режимы (4x4, 5x5, 5x5-zen) - обновляем только классическую статистику
+            const shouldUpdateBest = this.state.score > this.state.bestScore;
+            
+            if (shouldUpdateBest) {
+                this.state.bestScore = this.state.score;
+                if (this.elements['new-record-badge']) {
+                    this.elements['new-record-badge'].style.display = 'block';
+                }
             }
-        }
-        
-        // ОБНОВЛЕНО: Сохранение статистики для режима на время в реальном времени
-        if (this.state.gameMode === '4x4-time') {
-            if (this.state.score > this.state.bestSpeedScore) {
+            
+            if (this.state.bestTile > this.state.bestClassicTile) {
+                this.state.bestClassicTile = this.state.bestTile;
+            }
+        } else {
+            // Режим на время (4x4-time) - обновляем только статистику на время
+            const shouldUpdateBest = this.state.score > this.state.bestSpeedScore;
+            
+            if (shouldUpdateBest) {
                 this.state.bestSpeedScore = this.state.score;
+                if (this.elements['new-record-badge']) {
+                    this.elements['new-record-badge'].style.display = 'block';
+                }
             }
             
             if (this.state.bestTile > this.state.bestTimeTile) {
                 this.state.bestTimeTile = this.state.bestTile;
-            }
-            
-            // Сохраняем статистику при значительных изменениях
-            if (this.state.score % 100 === 0 || this.state.bestTile !== this.state.lastBestTile) {
-                this.saveStatistics();
-                this.state.lastBestTile = this.state.bestTile;
             }
         }
         
         if (this.elements['score']) {
             this.elements['score'].textContent = this.formatGameScore(this.state.score);
         }
+        
+        // Отображаем соответствующий лучший счет в зависимости от режима
         if (this.elements['best-score']) {
-            this.elements['best-score'].textContent = this.formatNumber(this.state.bestScore);
+            if (this.state.gameMode !== '4x4-time') {
+                this.elements['best-score'].textContent = this.formatNumber(this.state.bestScore);
+            } else {
+                this.elements['best-score'].textContent = this.formatNumber(this.state.bestSpeedScore);
+            }
         }
         
-        if (shouldUpdateBest && window.TelegramApp) {
+        if (window.TelegramApp) {
             window.TelegramApp.showShareButton(this.state.score);
         }
     }
@@ -409,8 +440,9 @@ class Game2048 {
         for (let r = 0; r < this.state.size; r++) {
             for (let c = 0; c < this.state.size; c++) {
                 if (this.state.board[r][c] === this.state.targetTile) {
-                    // ОБНОВЛЕНО: Сохраняем статистику для режима на время при победе
+                    // ИСПРАВЛЕНИЕ: Сохраняем статистику для режима на время при победе
                     if (this.state.gameMode === '4x4-time') {
+                        this.state.totalTimeWins++;
                         // Обновляем лучший счет на время
                         if (this.state.score > this.state.bestSpeedScore) {
                             this.state.bestSpeedScore = this.state.score;
@@ -420,11 +452,18 @@ class Game2048 {
                         if (this.state.bestTile > this.state.bestTimeTile) {
                             this.state.bestTimeTile = this.state.bestTile;
                         }
-                        
-                        // Сохраняем статистику
-                        this.saveStatistics();
+                    } else {
+                        this.state.totalClassicWins++;
+                        // Для классических режимов обновляем классическую статистику
+                        if (this.state.score > this.state.bestScore) {
+                            this.state.bestScore = this.state.score;
+                        }
+                        if (this.state.bestTile > this.state.bestClassicTile) {
+                            this.state.bestClassicTile = this.state.bestTile;
+                        }
                     }
                     
+                    this.saveStatistics();
                     this.showGameEndScreen(true);
                     return;
                 }
@@ -456,6 +495,25 @@ class Game2048 {
         
         if (scoreElement) {
             scoreElement.textContent = this.formatGameScore(this.state.score);
+        }
+        
+        // ИСПРАВЛЕНИЕ: Сохраняем статистику в зависимости от режима игры
+        if (this.state.gameMode === '4x4-time') {
+            // Для режима на время обновляем статистику на время
+            if (this.state.score > this.state.bestSpeedScore) {
+                this.state.bestSpeedScore = this.state.score;
+            }
+            if (this.state.bestTile > this.state.bestTimeTile) {
+                this.state.bestTimeTile = this.state.bestTile;
+            }
+        } else {
+            // Для классических режимов обновляем классическую статистику
+            if (this.state.score > this.state.bestScore) {
+                this.state.bestScore = this.state.score;
+            }
+            if (this.state.bestTile > this.state.bestClassicTile) {
+                this.state.bestClassicTile = this.state.bestTile;
+            }
         }
         
         this.saveStatistics();
@@ -492,7 +550,7 @@ class Game2048 {
     
     // ОБНОВЛЕННЫЙ МЕТОД: Сохранение статистики при завершении игры
     gameOver() {
-        // Сохраняем статистику для режима на время
+        // ИСПРАВЛЕНИЕ: Сохраняем статистику для режима на время
         if (this.state.gameMode === '4x4-time') {
             // Обновляем лучший счет на время
             if (this.state.score > this.state.bestSpeedScore) {
@@ -503,11 +561,17 @@ class Game2048 {
             if (this.state.bestTile > this.state.bestTimeTile) {
                 this.state.bestTimeTile = this.state.bestTile;
             }
-            
-            // Сохраняем статистику
-            this.saveStatistics();
+        } else {
+            // Для классических режимов обновляем классическую статистику
+            if (this.state.score > this.state.bestScore) {
+                this.state.bestScore = this.state.score;
+            }
+            if (this.state.bestTile > this.state.bestClassicTile) {
+                this.state.bestClassicTile = this.state.bestTile;
+            }
         }
         
+        this.saveStatistics();
         this.showGameEndScreen(false);
     }
     
@@ -791,7 +855,12 @@ class Game2048 {
             bestScore: 0, 
             bestSpeedScore: 0, 
             bestTile: 0, 
-            bestTimeTile: 0
+            bestTimeTile: 0,
+            bestClassicTile: 0,
+            totalClassicGames: 0,
+            totalTimeGames: 0,
+            totalClassicWins: 0,
+            totalTimeWins: 0
         };
         
         Object.assign(this.state, stats);
@@ -801,10 +870,15 @@ class Game2048 {
         const stats = {
             totalGames: this.state.totalGames,
             totalWins: this.state.totalWins,
-            bestScore: Math.max(this.state.bestScore, this.state.score),
-            bestSpeedScore: Math.max(this.state.bestSpeedScore, this.state.score),
-            bestTile: Math.max(this.state.bestTile, this.state.bestTile),
-            bestTimeTile: Math.max(this.state.bestTimeTile, this.state.bestTile)
+            bestScore: this.state.bestScore,
+            bestSpeedScore: this.state.bestSpeedScore,
+            bestTile: this.state.bestTile,
+            bestTimeTile: this.state.bestTimeTile,
+            bestClassicTile: this.state.bestClassicTile,
+            totalClassicGames: this.state.totalClassicGames,
+            totalTimeGames: this.state.totalTimeGames,
+            totalClassicWins: this.state.totalClassicWins,
+            totalTimeWins: this.state.totalTimeWins
         };
         
         localStorage.setItem('tg_2048_stats', JSON.stringify(stats));
@@ -816,27 +890,35 @@ class Game2048 {
         if (elements['total-games']) elements['total-games'].textContent = this.state.totalGames;
         if (elements['total-wins']) elements['total-wins'].textContent = this.state.totalWins;
         if (elements['best-score-overall']) {
-            elements['best-score-overall'].textContent = this.formatNumber(this.state.bestScore);
+            // ИСПРАВЛЕНИЕ: Показываем лучший счет из всех режимов (классический или на время)
+            const bestOverallScore = Math.max(this.state.bestScore, this.state.bestSpeedScore);
+            elements['best-score-overall'].textContent = this.formatNumber(bestOverallScore);
         }
     }
     
     resetBestScore() {
+        // ИСПРАВЛЕНИЕ: Сбрасываем только счет, а не плитки
         this.state.bestScore = 0;
         this.state.bestSpeedScore = 0;
-        this.state.bestTimeTile = 0;
         this.saveStatistics();
         this.updateMainMenuStats();
         document.getElementById('stats-modal').style.display = 'none';
     }
     
     resetAllStatistics() {
+        // ИСПРАВЛЕНИЕ: Сбрасываем всю статистику
         Object.assign(this.state, {
             totalGames: 0, 
             totalWins: 0, 
             bestScore: 0, 
             bestSpeedScore: 0, 
             bestTile: 0, 
-            bestTimeTile: 0
+            bestTimeTile: 0,
+            bestClassicTile: 0,
+            totalClassicGames: 0,
+            totalTimeGames: 0,
+            totalClassicWins: 0,
+            totalTimeWins: 0
         });
         this.saveStatistics();
         this.updateMainMenuStats();
@@ -1083,6 +1165,7 @@ class Game2048 {
         document.getElementById('stats-total-games').textContent = this.state.totalGames;
         document.getElementById('stats-total-wins').textContent = this.state.totalWins;
         document.getElementById('stats-best-score').textContent = this.formatNumber(this.state.bestScore);
+        document.getElementById('stats-best-classic-tile').textContent = this.state.bestClassicTile;
         document.getElementById('stats-best-speed-score').textContent = this.formatNumber(this.state.bestSpeedScore);
         document.getElementById('stats-best-time-tile').textContent = this.state.bestTimeTile;
         
@@ -1185,10 +1268,16 @@ class Game2048 {
     }
     
     setupEventListeners() {
+        console.log('Настройка обработчиков событий...');
+        
         // Кнопки режимов игры
-        document.querySelectorAll('.mode-btn').forEach(btn => {
+        const modeButtons = document.querySelectorAll('.mode-btn');
+        console.log('Найдено кнопок режимов:', modeButtons.length);
+        
+        modeButtons.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const mode = e.currentTarget.getAttribute('data-mode');
+                console.log('Нажата кнопка режима:', mode);
                 if (mode) this.start(mode);
             });
         });
@@ -1420,6 +1509,8 @@ class Game2048 {
         // Управление стрелками
         document.addEventListener('keydown', this.handleKeyPress.bind(this));
         this.setupSwipeControls();
+        
+        console.log('Обработчики событий настроены успешно');
     }
     
     handleKeyPress(e) {
@@ -1479,5 +1570,6 @@ class Game2048 {
 
 // Инициализация игры
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM загружен, инициализация игры...');
     window.Game2048 = new Game2048();
 });

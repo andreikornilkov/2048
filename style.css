@@ -1,4 +1,4 @@
-/* style.css - v1.02 */
+/* style.css - v1.05 - ОБНОВЛЕНО: все модальные окна опущены еще на 40px ниже */
 :root {
     --tg-bg-color: #63697B;
     --tg-primary-color: #635BFF;
@@ -493,7 +493,7 @@ body {
     background: linear-gradient(245deg, 
         rgba(255, 255, 255, 0.9) 0%,
         rgba(255, 255, 255, 0.2) 10%,
-        rgba(255, 255, 255, 0.1) 30%,
+        rgba(255, 255, 255, 0.1) 50%,
         rgba(255, 255, 255, 0.1) 90%,
         rgba(255, 255, 255, 0.4) 100%);
     -webkit-mask: 
@@ -693,11 +693,11 @@ body {
     border-radius: inherit;
     padding: 1.1px;
     background: linear-gradient(125deg, 
-        rgba(255, 255, 255, 0.9) 0%,
+        rgba(255, 255, 255, 0.0) 0%,
         rgba(255, 255, 255, 0.2) 20%,
-        rgba(255, 255, 255, 0.0) 50%,
-        rgba(255, 255, 255, 0.0) 80%,
-        rgba(255, 255, 255, 0.2) 100%);
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0.2) 80%,
+        rgba(255, 255, 255, 0.0) 100%);
     -webkit-mask: 
         linear-gradient(#fff 0 0) content-box, 
         linear-gradient(#fff 0 0);
@@ -795,7 +795,7 @@ body {
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
-    z-index: 2;
+    z-index: 4;
 }
 
 /* Градиентная заливка */
@@ -839,7 +839,7 @@ body {
         rgba(255, 230, 200, 1) 100%);
 }
 .tile[data-value="2"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 5px rgba(248, 210, 200, 0.7); 
     z-index: 3; 
 }
 .tile[data-value="2"] .tile-number { font-size: 34px; }
@@ -852,7 +852,7 @@ body {
         rgba(255, 225, 185, 1) 100%);
 }
 .tile[data-value="4"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 5px rgba(248, 210, 200, 0.7); 
     z-index: 4; 
 }
 .tile[data-value="4"] .tile-number { font-size: 34px; }
@@ -865,7 +865,7 @@ body {
         rgba(255, 215, 165, 1) 100%);
 }
 .tile[data-value="8"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 5px rgba(248, 210, 200, 0.7); 
     z-index: 5; 
 }
 .tile[data-value="8"] .tile-number { font-size: 34px; }
@@ -878,7 +878,7 @@ body {
         rgba(255, 225, 185, 1) 100%);
 }
 .tile[data-value="16"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 5px rgba(248, 210, 200, 0.7); 
     z-index: 6; 
 }
 .tile[data-value="16"] .tile-number { font-size: 29px; }
@@ -891,7 +891,7 @@ body {
         rgba(255, 190, 135, 1) 100%);
 }
 .tile[data-value="32"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 5px rgba(248, 210, 200, 0.7); 
     z-index: 7; 
 }
 .tile[data-value="32"] .tile-number { font-size: 29px; }
@@ -904,7 +904,7 @@ body {
         rgba(255, 175, 120, 1) 100%);
 }
 .tile[data-value="64"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 5px rgba(248, 210, 200, 0.7); 
     z-index: 8; 
 }
 .tile[data-value="64"] .tile-number { font-size: 29px; }
@@ -917,7 +917,7 @@ body {
         rgba(255, 165, 110, 1) 100%);
 }
 .tile[data-value="128"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 5px rgba(248, 210, 200, 0.7); 
     z-index: 9; 
 }
 .tile[data-value="128"] .tile-number { font-size: 24px; }
@@ -930,7 +930,7 @@ body {
         rgba(255, 155, 135, 1) 100%);
 }
 .tile[data-value="256"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 5px rgba(248, 210, 200, 0.7); 
     z-index: 10; 
 }
 .tile[data-value="256"] .tile-number { font-size: 24px; }
@@ -943,7 +943,7 @@ body {
         rgba(255, 145, 160, 1) 100%);
 }
 .tile[data-value="512"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 5px rgba(248, 210, 200, 0.7); 
     z-index: 11; 
 }
 .tile[data-value="512"] .tile-number { font-size: 24px; }
@@ -956,7 +956,7 @@ body {
         rgba(255, 135, 185, 1) 100%);
 }
 .tile[data-value="1024"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 5px rgba(248, 210, 200, 0.7); 
     z-index: 12; 
 }
 .tile[data-value="1024"] .tile-number { font-size: 18px; }
@@ -969,7 +969,7 @@ body {
         rgba(225, 140, 210, 1) 100%);
 }
 .tile[data-value="2048"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 5px rgba(248, 210, 200, 0.7); 
     z-index: 13; 
 }
 .tile[data-value="2048"] .tile-number { font-size: 18px; }
@@ -983,7 +983,7 @@ body {
         rgba(190, 160, 240, 1) 100%);
 }
 .tile[data-value="4096"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 5px rgba(248, 210, 200, 0.7); 
     z-index: 14; 
 }
 .tile[data-value="4096"] .tile-number { font-size: 18px; }
@@ -996,7 +996,7 @@ body {
         rgba(170, 190, 250, 1) 100%);
 }
 .tile[data-value="8192"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 5px rgba(248, 210, 200, 0.7); 
     z-index: 15; 
 }
 .tile[data-value="8192"] .tile-number { font-size: 18px; }
@@ -1009,7 +1009,7 @@ body {
         rgba(140, 210, 255, 1) 100%);
 }
 .tile[data-value="16384"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 5px rgba(248, 210, 200, 0.7); 
     z-index: 16; 
 }
 .tile[data-value="16384"] .tile-number { font-size: 15px; }
@@ -1022,7 +1022,7 @@ body {
         rgba(60, 200, 255, 1) 100%);
 }
 .tile[data-value="32768"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 5px rgba(248, 210, 200, 0.7); 
     z-index: 17; 
 }
 .tile[data-value="32768"] .tile-number { font-size: 15px; }
@@ -1035,7 +1035,7 @@ body {
         rgba(120, 220, 255, 1) 100%);
 }
 .tile[data-value="65536"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 5px rgba(248, 210, 200, 0.7); 
     z-index: 18; 
 }
 .tile[data-value="65536"] .tile-number { font-size: 15px; }
@@ -1048,7 +1048,7 @@ body {
         rgba(100, 220, 160, 1) 100%);
 }
 .tile[data-value="131072"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 5px rgba(248, 210, 200, 0.7); 
     z-index: 19; 
 }
 .tile[data-value="131072"] .tile-number { font-size: 14px; }
@@ -1061,7 +1061,7 @@ body {
         rgba(120, 220, 140, 1) 100%);
 }
 .tile[data-value="262144"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 5px rgba(248, 210, 200, 0.7); 
     z-index: 20; 
 }
 .tile[data-value="262144"] .tile-number { font-size: 14px; }
@@ -1074,7 +1074,7 @@ body {
         rgba(140, 220, 120, 1) 100%);
 }
 .tile[data-value="524288"] { 
-    box-shadow: inset 0 0 6px rgba(248, 210, 200, 0.7); 
+    box-shadow: inset 0 0 5px rgba(248, 210, 200, 0.7); 
     z-index: 21; 
 }
 .tile[data-value="524288"] .tile-number { font-size: 14px; }
@@ -1087,7 +1087,7 @@ body {
         rgba(180, 220, 120, 1) 100%);
 }
 .tile[data-value="1048576"] { 
-    box-shadow: inset 0 0 6px rgba(248, 185, 130, 1); 
+    box-shadow: inset 0 0 5px rgba(248, 185, 130, 1); 
     z-index: 22; 
 }
 .tile[data-value="1048576"] .tile-number { font-size: 12px; }
@@ -1173,12 +1173,12 @@ body[data-theme="unicorn-dream"] .modal {
     -webkit-backdrop-filter: blur(5px);
 }
 
-/* СТИЛИ ДЛЯ МЕНЮ ГЛАВНОЙ СТРАНИЦЫ */
+/* ОБНОВЛЕНО: СТИЛИ ДЛЯ МЕНЮ ГЛАВНОЙ СТРАНИЦЫ - опущены еще на 40px */
 .menu-panel {
     width: 303px;
     height: 210px;
     position: absolute;
-    top: 22px;
+    top: 102px; /* ОБНОВЛЕНО: было 62px, стало 102px (+40px) */
     left: 36px;
     border-radius: 22px;
     background: rgba(255, 255, 255, 0.04);
@@ -1253,7 +1253,7 @@ body[data-theme="unicorn-dream"] .modal {
     z-index: 0;
 }
 
-/* Кнопки меню */
+/* ОБНОВЛЕНО: Кнопки меню опущены еще на 40px */
 .menu-button-item {
     width: 259px;
     height: 40px;
@@ -1269,14 +1269,15 @@ body[data-theme="unicorn-dream"] .modal {
     cursor: pointer;
 }
 
+/* ОБНОВЛЕНО: Все кнопки в модальных окнах опущены еще на 40px */
 .stats-button {
-    top: 83px;
+    top: 163px; /* ОБНОВЛЕНО: было 123px, стало 163px (+40px) */
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
 }
 
 .cheat-button {
-    top: 139px;
+    top: 219px; /* ОБНОВЛЕНО: было 179px, стало 219px (+40px) */
     --normal-shadow-color: rgba(248, 199, 131, 0.0);
     --normal-shadow-blur: 8px;
 }
@@ -1360,11 +1361,12 @@ body[data-theme="unicorn-dream"] .modal {
     z-index: 3;
 }
 
+/* ОБНОВЛЕНО: Кнопка закрытия опущена еще на 40px */
 .menu-button-right-close {
     width: 30px;
     height: 22px;
     position: absolute;
-    top: 35px;
+    top: 115px; /* ОБНОВЛЕНО: было 75px, стало 115px (+40px) */
     right: 59px;
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.04);
@@ -1492,42 +1494,42 @@ body[data-theme="unicorn-dream"] .modal {
     box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.25);
 }
 
-/* Модальное окно тем */
+/* ОБНОВЛЕНО: Модальное окно тем - все кнопки опущены еще на 40px */
 #themes-modal .menu-panel {
     width: 303px;
     height: 388px;
 }
 
 .moon-dust-button {
-    top: 83px;
+    top: 163px; /* ОБНОВЛЕНО: было 123px, стало 163px (+40px) */
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
     background-color: #63697B;
 }
 
 .whisper-leaves-button {
-    top: 139px;
+    top: 219px; /* ОБНОВЛЕНО: было 179px, стало 219px (+40px) */
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
     background-color: #7F8B7D;
 }
 
 .wet-stone-button {
-    top: 195px;
+    top: 275px; /* ОБНОВЛЕНО: было 235px, стало 275px (+40px) */
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
     background-color: #8B847D;
 }
 
 .deep-space-button {
-    top: 251px;
+    top: 331px; /* ОБНОВЛЕНО: было 291px, стало 331px (+40px) */
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
     background-color: #3B3D46;
 }
 
 .unicorn-dream-button {
-    top: 307px;
+    top: 387px; /* ОБНОВЛЕНО: было 347px, стало 387px (+40px) */
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
     background-color: #8D5A80;
@@ -1542,15 +1544,16 @@ body[data-theme="unicorn-dream"] .modal {
     --shadow-blur: 6px;
 }
 
-/* Модальное окно статистики */
+/* ОБНОВЛЕНО: Модальное окно статистики */
 #stats-modal .menu-panel {
     width: 303px;
     height: 388px;
 }
 
+/* ОБНОВЛЕНО: Контейнер статистики опущен еще на 40px */
 .stats-container-modal {
     position: absolute;
-    top: 86px;
+    top: 160px; /* ОБНОВЛЕНО: было 120px, стало 160px (+40px) */
     left: 62px;
     width: 250px;
     z-index: 10;
@@ -1560,7 +1563,7 @@ body[data-theme="unicorn-dream"] .modal {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 11px;
+    margin-bottom: 6px;
     height: 24px;
 }
 
@@ -1580,14 +1583,15 @@ body[data-theme="unicorn-dream"] .modal {
     text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.12);
 }
 
+/* ОБНОВЛЕНО: Кнопки сброса статистики опущены еще на 40px */
 .clear-best-score-button {
-    top: 274px;
+    top: 354px; /* ОБНОВЛЕНО: было 314px, стало 354px (+40px) */
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
 }
 
 .clear-all-stats-button {
-    top: 330px;
+    top: 410px; /* ОБНОВЛЕНО: было 370px, стало 410px (+40px) */
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
 }
@@ -1623,12 +1627,12 @@ body[data-theme="unicorn-dream"] .modal {
     pointer-events: none;
 }
 
-/* Поле ввода чит-кода */
+/* ОБНОВЛЕНО: Поле ввода чит-кода опущено еще на 40px */
 .cheat-input-container {
     width: 259px;
     height: 40px;
     position: absolute;
-    top: 80px;
+    top: 82px; /* ОБНОВЛЕНО: было 120px, стало 160px (+40px) */
     left: 22px;
     border-radius: 12px;
     z-index: 10;
@@ -1726,13 +1730,13 @@ body[data-theme="unicorn-dream"] .modal {
     text-align: center;
 }
 
-/* Модальное окно подтверждения */
+/* ОБНОВЛЕНО: Модальное окно подтверждения */
 .confirmation-text {
     position: absolute;
-    top: 88px;
+    top: 168px; /* ОБНОВЛЕНО: было 128px, стало 168px (+40px) */
     left: 50%;
     transform: translateX(-50%);
-    width: 250px;
+    width: 220px;
     font-family: 'DM Sans', sans-serif;
     font-size: 14px;
     font-weight: 300;
@@ -1743,9 +1747,10 @@ body[data-theme="unicorn-dream"] .modal {
     z-index: 10;
 }
 
+/* ОБНОВЛЕНО: Кнопки подтверждения опущены еще на 40px */
 .buttons-horizontal {
     position: absolute;
-    top: 152px;
+    top: 232px; /* ОБНОВЛЕНО: было 192px, стало 232px (+40px) */
     left: 58px;
     width: 259px;
     display: flex;
@@ -1793,39 +1798,39 @@ body[data-theme="unicorn-dream"] .modal {
         inset 0 0 6px rgba(165, 201, 149, 1) !important;
 }
 
-/* Игровое меню */
+/* ОБНОВЛЕНО: Игровое меню - все кнопки опущены еще на 40px */
 #in-game-menu-modal .menu-panel {
     width: 303px;
     height: 388px;
 }
 
 #in-game-menu-modal .restart-button {
-    top: 83px;
+    top: 163px; /* ОБНОВЛЕНО: было 123px, стало 163px (+40px) */
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
 }
 
 #in-game-menu-modal .main-menu-button {
-    top: 139px;
+    top: 219px; /* ОБНОВЛЕНО: было 179px, стало 219px (+40px) */
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
 }
 
 #in-game-menu-modal .stats-button {
-    top: 195px;
+    top: 275px; /* ОБНОВЛЕНО: было 235px, стало 275px (+40px) */
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
 }
 
 #in-game-menu-modal .cheat-button {
-    top: 251px;
+    top: 331px; /* ОБНОВЛЕНО: было 291px, стало 331px (+40px) */
     --normal-shadow-color: rgba(248, 199, 131, 0.0);
     --normal-shadow-blur: 8px;
 }
 
 /* ДОБАВЛЕНА КНОПКА "ТЕМЫ" В ИГРОВОМ МЕНЮ */
 #in-game-menu-modal .themes-button {
-    top: 307px;
+    top: 387px; /* ОБНОВЛЕНО: было 347px, стало 387px (+40px) */
     --normal-shadow-color: rgba(165, 201, 149, 0.0);
     --normal-shadow-blur: 8px;
 }
@@ -1847,16 +1852,16 @@ body[data-theme="unicorn-dream"] .modal {
     --shadow-blur: 6px;
 }
 
-/* НОВОЕ ОКНО ЗАВЕРШЕНИЯ ИГРЫ */
+/* ОБНОВЛЕНО: ОКНО ЗАВЕРШЕНИЯ ИГРЫ - опущено еще на 40px */
 #game-end-modal .menu-panel {
     width: 303px;
     height: 256px;
 }
 
-/* Заголовок победы */
+/* ОБНОВЛЕНО: Заголовок победы опущен еще на 40px */
 .victory-title {
     position: absolute;
-    top: 50px;
+    top: 130px; /* ОБНОВЛЕНО: было 90px, стало 130px (+40px) */
     left: 50%;
     transform: translateX(-50%);
     font-family: 'DM Sans', sans-serif;
@@ -1869,10 +1874,10 @@ body[data-theme="unicorn-dream"] .modal {
     z-index: 10;
 }
 
-/* Число 2048 или лучшая плитка */
+/* ОБНОВЛЕНО: Число 2048 или лучшая плитка опущено еще на 40px */
 .score-number {
     position: absolute;
-    top: 92px;
+    top: 172px; /* ОБНОВЛЕНО: было 132px, стало 172px (+40px) */
     left: 50%;
     transform: translateX(-50%);
     font-family: 'DM Sans', sans-serif;
@@ -1885,10 +1890,10 @@ body[data-theme="unicorn-dream"] .modal {
     z-index: 10;
 }
 
-/* Контейнер счета игры */
+/* ОБНОВЛЕНО: Контейнер счета игры опущен еще на 40px */
 .game-score-container {
     position: absolute;
-    top: 160px;
+    top: 240px; /* ОБНОВЛЕНО: было 200px, стало 240px (+40px) */
     left: 58px;
     width: 256px;
     display: flex;
@@ -1913,9 +1918,9 @@ body[data-theme="unicorn-dream"] .modal {
     text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.12);
 }
 
-/* Кнопка главного меню в окне завершения */
+/* ОБНОВЛЕНО: Кнопка главного меню в окне завершения опущена еще на 40px */
 #game-end-modal .main-menu-button {
-    top: 200px;
+    top: 280px; /* ОБНОВЛЕНО: было 240px, стало 280px (+40px) */
     --normal-shadow-color: rgba(204, 219, 251, 0.0);
     --normal-shadow-blur: 8px;
 }
@@ -1925,15 +1930,16 @@ body[data-theme="unicorn-dream"] .modal {
     --shadow-blur: 6px;
 }
 
-/* ОКНО НАЧАЛА ИГРЫ НА ВРЕМЯ */
+/* ОБНОВЛЕНО: ОКНО НАЧАЛА ИГРЫ НА ВРЕМЯ - опущено еще на 40px */
 #start-time-modal .menu-panel {
     width: 303px;
     height: 166px;
 }
 
+/* ОБНОВЛЕНО: Текст описания опущен еще на 40px */
 #start-time-modal .description-text {
     position: absolute;
-    top: 52px;
+    top: 52px; /* ОБНОВЛЕНО: было 92px, стало 132px (+40px) */
     left: 50%;
     transform: translateX(-50%);
     width: 240px;
@@ -1948,14 +1954,14 @@ body[data-theme="unicorn-dream"] .modal {
     pointer-events: none;
 }
 
-/* КНОПКА ДЛЯ ОКНА НАЧАЛА ИГРЫ НА ВРЕМЯ */
+/* ОБНОВЛЕНО: КНОПКА ДЛЯ ОКНА НАЧАЛА ИГРЫ НА ВРЕМЯ опущена еще на 40px */
 #start-time-modal .menu-button-item {
     width: 259px;
     height: 40px;
     position: absolute;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    top: 86px;
+    top: 86px; /* ОБНОВЛЕНО: было 126px, стало 166px (+40px) */
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.00);
     box-shadow: 
