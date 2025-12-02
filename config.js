@@ -1,9 +1,9 @@
-// CONFIG.js - ОБНОВЛЕННЫЕ НАСТРОЙКИ ТЕМ
+// CONFIG.js - УМЕНЬШЕН ПРОЦЕНТ ПОЯВЛЕНИЯ ПЛИТКИ "4" 
 window.AppConfig = {
     // Настройки игры
     GAME: {
         INITIAL_TILES: 2,
-        PROBABILITY_4: 0.1,
+        PROBABILITY_4: 0.04,
         DEFAULT_SIZE: 4,
         ANIMATION_DURATION: 150,
         TIME_ATTACK_DURATION: 90,

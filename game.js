@@ -4,6 +4,10 @@ class Game2048 {
         this.config = window.AppConfig;
         this.elements = this.cacheElements();
         this.state = this.initialState();
+        
+        // НОВАЯ НАСТРОЙКА: Размер зоны вокруг углов (по умолчанию 2)
+        this.cornerZoneSize = 3; // 1 = только углы, 2 = зона 2x2, 3 = зона 3x3 и т.д.
+        
         this.init();
     }
     
@@ -315,24 +319,222 @@ class Game2048 {
         board.appendChild(fragment);
     }
     
+    // НОВЫЙ УЛУЧШЕННЫЙ МЕТОД: Подсчет плотности заполнения вокруг клетки
+    calculateAreaDensity(row, col) {
+        const { size, board } = this.state;
+        let emptyCount = 0;
+        let totalCells = 0;
+        
+        // Проверяем область 3x3 вокруг клетки
+        for (let dr = -1; dr <= 1; dr++) {
+            for (let dc = -1; dc <= 1; dc++) {
+                const newRow = row + dr;
+                const newCol = col + dc;
+                
+                if (newRow >= 0 && newRow < size && newCol >= 0 && newCol < size) {
+                    totalCells++;
+                    if (board[newRow][newCol] === 0) {
+                        emptyCount++;
+                    }
+                }
+            }
+        }
+        
+        // Возвращаем коэффициент плотности (0 = все пусто, 1 = все заполнено)
+        return totalCells > 0 ? 1 - (emptyCount / totalCells) : 0;
+    }
+    
+    // НОВЫЙ МЕТОД: Подсчет заполненности строки и столбца
+    calculateRowColumnDensity(row, col) {
+        const { size, board } = this.state;
+        let rowEmpty = 0;
+        let colEmpty = 0;
+        
+        // Проверяем строку
+        for (let c = 0; c < size; c++) {
+            if (board[row][c] === 0) {
+                rowEmpty++;
+            }
+        }
+        
+        // Проверяем столбец
+        for (let r = 0; r < size; r++) {
+            if (board[r][col] === 0) {
+                colEmpty++;
+            }
+        }
+        
+        // Возвращаем среднюю заполненность строки и столбца
+        const rowDensity = 1 - (rowEmpty / size);
+        const colDensity = 1 - (colEmpty / size);
+        
+        return (rowDensity + colDensity) / 2;
+    }
+    
+    // НОВЫЙ МЕТОД: Проверка, находится ли клетка в угловой зоне
+    isInCornerZone(row, col) {
+        const { size } = this.state;
+        const zoneSize = this.cornerZoneSize;
+        
+        // Проверяем все 4 угловые зоны
+        
+        // Верхний-левый угол (зона 2x2)
+        if (row < zoneSize && col < zoneSize) {
+            return true;
+        }
+        
+        // Верхний-правый угол (зона 2x2)
+        if (row < zoneSize && col >= size - zoneSize) {
+            return true;
+        }
+        
+        // Нижний-левый угол (зона 2x2)
+        if (row >= size - zoneSize && col < zoneSize) {
+            return true;
+        }
+        
+        // Нижний-правый угол (зона 2x2)
+        if (row >= size - zoneSize && col >= size - zoneSize) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    // НОВЫЙ МЕТОД: Получение коэффициента близости к углу
+    getCornerProximityFactor(row, col) {
+        const { size } = this.state;
+        
+        // Вычисляем расстояние до ближайшего угла
+        const distances = [
+            Math.sqrt(row * row + col * col), // Верхний-левый
+            Math.sqrt(row * row + (size - 1 - col) * (size - 1 - col)), // Верхний-правый
+            Math.sqrt((size - 1 - row) * (size - 1 - row) + col * col), // Нижний-левый
+            Math.sqrt((size - 1 - row) * (size - 1 - row) + (size - 1 - col) * (size - 1 - col)) // Нижний-правый
+        ];
+        
+        const minDistance = Math.min(...distances);
+        const maxPossibleDistance = Math.sqrt((size - 1) * (size - 1) * 2);
+        
+        // Чем ближе к углу, тем выше коэффициент (от 0 до 1)
+        return 1 - (minDistance / maxPossibleDistance);
+    }
+    
+    // ПОЛНОСТЬЮ ПЕРЕРАБОТАННЫЙ МЕТОД: Добавление случайной плитки с умным приоритетом
     addRandomTile() {
         const emptyCells = [];
+        const size = this.state.size;
         
-        for (let r = 0; r < this.state.size; r++) {
-            for (let c = 0; c < this.state.size; c++) {
+        // Собираем все пустые клетки с комплексным весом
+        for (let r = 0; r < size; r++) {
+            for (let c = 0; c < size; c++) {
                 if (this.state.board[r][c] === 0) {
-                    emptyCells.push({ r, c });
+                    // Базовый вес
+                    let weight = 1.0;
+                    
+                    // 1. Приоритет по положению (угловые зоны > края > центр)
+                    const isCornerZone = this.isInCornerZone(r, c);
+                    const isEdge = (r === 0 || r === size - 1 || c === 0 || c === size - 1);
+                    const cornerProximity = this.getCornerProximityFactor(r, c);
+                    
+                    if (isCornerZone) {
+                        // Внутри угловой зоны: плавное уменьшение веса от центра зоны
+                        weight *= (3.0 + cornerProximity * 1.5); // От 3.0 до 4.5
+                    } else if (isEdge) {
+                        weight *= 2.0; // Края - средний приоритет
+                    }
+                    // Центр остается с весом 1.0
+                    
+                    // 2. Приоритет по пустым соседям (только прямые соседи)
+                    let emptyNeighbors = 0;
+                    const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+                    
+                    for (const [dr, dc] of directions) {
+                        const newRow = r + dr;
+                        const newCol = c + dc;
+                        
+                        if (newRow >= 0 && newRow < size && newCol >= 0 && newCol < size) {
+                            if (this.state.board[newRow][newCol] === 0) {
+                                emptyNeighbors++;
+                            }
+                        }
+                    }
+                    
+                    // Больше пустых соседей = выше приоритет
+                    weight *= (1 + emptyNeighbors * 0.5);
+                    
+                    // 3. ШТРАФ за заполненность области (область 3x3)
+                    const areaDensity = this.calculateAreaDensity(r, c);
+                    // Чем плотнее область, тем меньше вес
+                    weight *= (1.5 - areaDensity); // От 0.5 до 1.5
+                    
+                    // 4. ШТРАФ за заполненность строки и столбца
+                    const rowColDensity = this.calculateRowColumnDensity(r, c);
+                    // Чем плотнее строка/столбец, тем меньше вес
+                    weight *= (1.5 - rowColDensity); // От 0.5 до 1.5
+                    
+                    // 5. ДОПОЛНИТЕЛЬНЫЙ ШТРАФ за очень заполненные строки/столбцы
+                    // Если в строке или столбце мало пустых мест, сильно снижаем приоритет
+                    let rowEmpty = 0;
+                    let colEmpty = 0;
+                    
+                    for (let cc = 0; cc < size; cc++) {
+                        if (this.state.board[r][cc] === 0) rowEmpty++;
+                    }
+                    for (let rr = 0; rr < size; rr++) {
+                        if (this.state.board[rr][c] === 0) colEmpty++;
+                    }
+                    
+                    // Если в строке или столбце только 1 пустое место, сильно штрафуем
+                    if (rowEmpty <= 1) weight *= 0.3;
+                    if (colEmpty <= 1) weight *= 0.3;
+                    
+                    // Если в строке или столбце 2 пустых места, умеренно штрафуем
+                    if (rowEmpty === 2) weight *= 0.7;
+                    if (colEmpty === 2) weight *= 0.7;
+                    
+                    // Минимальный вес 0.1, чтобы клетка все же могла быть выбрана
+                    weight = Math.max(weight, 0.1);
+                    
+                    emptyCells.push({ r, c, weight });
                 }
             }
         }
         
         if (emptyCells.length === 0) return false;
         
-        const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+        // Логирование для отладки (можно убрать в продакшене)
+        console.log('Доступные клетки с весами:');
+        emptyCells.forEach(cell => {
+            console.log(`Клетка [${cell.r},${cell.c}]: вес = ${cell.weight.toFixed(2)}`);
+        });
+        
+        // Рассчитываем общий вес для вероятностного выбора
+        const totalWeight = emptyCells.reduce((sum, cell) => sum + cell.weight, 0);
+        
+        // Выбираем случайную клетку с учетом весов
+        let randomWeight = Math.random() * totalWeight;
+        let selectedCell = null;
+        
+        for (const cell of emptyCells) {
+            randomWeight -= cell.weight;
+            if (randomWeight <= 0) {
+                selectedCell = cell;
+                break;
+            }
+        }
+        
+        // На всякий случай, если выбор не произошел (маловероятно)
+        if (!selectedCell) {
+            selectedCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+        }
+        
+        console.log(`Выбрана клетка [${selectedCell.r},${selectedCell.c}] с весом ${selectedCell.weight.toFixed(2)}`);
+        
         const value = Math.random() < this.config.GAME.PROBABILITY_4 ? 4 : 2;
         
-        this.state.board[randomCell.r][randomCell.c] = value;
-        this.state.lastAddedTile = { r: randomCell.r, c: randomCell.c, value: value };
+        this.state.board[selectedCell.r][selectedCell.c] = value;
+        this.state.lastAddedTile = { r: selectedCell.r, c: selectedCell.c, value: value };
         
         this.updateBestTile();
         return true;
