@@ -89,7 +89,7 @@ bot.onText(/\/start/, (msg) => {
   
   updateUserActivity(user);
   
-  const welcomeText = `Игра 2048\n\nВыберите действие:`;
+  const welcomeText = `Привет!\n\nЭто классическая головоломка 2048. Самое время сыграть.`;
   
   bot.sendMessage(chatId, welcomeText, {
     reply_markup: {
