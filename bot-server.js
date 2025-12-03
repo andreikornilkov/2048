@@ -518,3 +518,32 @@ bot.onText(/\/help/, (msg) => {
 console.log('✅ Bot is ready!');
 console.log('📱 Send /start to your bot in Telegram');
 console.log('👑 Admin commands: /admin, /stats, /active, /users, /send');
+
+// =====================================
+// SIMPLE WEB SERVER FOR RENDER HEALTH CHECK
+// =====================================
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/html' });
+  res.end(`
+    <!DOCTYPE html>
+    <html>
+      <head><title>2048 Telegram Bot</title></head>
+      <body style="font-family: Arial, sans-serif; padding: 20px;">
+        <h1>🎮 2048 Telegram Bot</h1>
+        <p>✅ Bot is running successfully!</p>
+        <p>👥 Users: ${users.length}</p>
+        <p>📊 Active users (30 days): ${getActiveUsersCount()}</p>
+        <p>🔗 Game URL: <a href="${GAME_URL}">${GAME_URL}</a></p>
+        <p>⏰ Started: ${new Date().toLocaleString()}</p>
+      </body>
+    </html>
+  `);
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`🌐 Web server listening on port ${PORT}`);
+  console.log(`📊 Stats: ${users.length} users, ${getActiveUsersCount()} active`);
+});
